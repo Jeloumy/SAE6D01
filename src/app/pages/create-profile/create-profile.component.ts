@@ -19,7 +19,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   loadProfiles(): void {
-    this.profiles = this.profileService.getProfiles();
+    this.profiles = this.profileService.getProfilesList();
     if (this.profiles.length === 1) {
       this.selectProfile(this.profiles[0]);
     }
