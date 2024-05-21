@@ -1,1 +1,10 @@
-<p>create-profile works!</p>
+<form (ngSubmit)="createProfile()">
+    <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required>
+    <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required>
+    <button type="submit">Créer Profil</button>
+  </form>
+  
+  <div *ngFor="let profile of profiles" (click)="selectProfile(profile)">
+    <p>{{ profile.pseudo }} - {{ profile.typeHandicap }}</p>
+  </div>
+  
