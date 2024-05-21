@@ -10,6 +10,7 @@ import { UserProfile } from '../../models/user-profile';
 export class CreateProfileComponent implements OnInit {
   profile: UserProfile = { id: 0, pseudo: '', typeHandicap: '' };
   profiles: UserProfile[] = [];
+  editingProfile: UserProfile | null = null;
 
   constructor(private profileService: ProfileService) { }
 
@@ -25,9 +26,24 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    this.profileService.createProfile(this.profile);
-    this.profile = { id: 0, pseudo: '', typeHandicap: '' }; // Réinitialisation du formulaire
-    this.loadProfiles();  // Recharger les profils après la création d'un nouveau
+    if (this.editingProfile) {
+      this.profileService.updateProfile(this.profile);
+      this.editingProfile = null;
+    } else {
+      this.profileService.createProfile(this.profile);
+    }
+    this.profile = { id: 0, pseudo: '', typeHandicap: '' };
+    this.loadProfiles();
+  }
+
+  deleteProfile(profileId: number): void {
+    this.profileService.deleteProfile(profileId);
+    this.loadProfiles();
+  }
+
+  editProfile(profile: UserProfile): void {
+    this.profile = {...profile};
+    this.editingProfile = profile;
   }
 
   selectProfile(profile: UserProfile): void {
