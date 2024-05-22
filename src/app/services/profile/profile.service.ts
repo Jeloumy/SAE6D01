@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile, Handicap } from '../../models/user-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,16 @@ export class ProfileService {
   constructor() { 
     this.loadProfileFromStorage();
     this.loadProfilesListFromStorage();
+  }
+
+  getHandicapTypes(): Handicap[] {
+    return [
+      { id: 1, name: 'Difficulté à voir' },
+      { id: 2, name: 'En fauteuil roulant' },
+      { id: 3, name: 'Difficulté à marcher' },
+      { id: 4, name: 'Difficulté à entendre' },
+      { id: 5, name: 'Difficulté à comprendre' }
+    ];
   }
 
   createProfile(profile: UserProfile): boolean {

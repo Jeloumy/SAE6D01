@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile, Handicap } from '../../models/user-profile';
 
 @Component({
   selector: 'app-create-profile',
@@ -8,17 +9,21 @@ import { UserProfile } from '../../models/user-profile';
   styleUrls: ['./create-profile.component.scss']
 })
 export class CreateProfileComponent implements OnInit {
-  profile: UserProfile = { id: 0, pseudo: '', typeHandicap: '' };
+  @ViewChild('profileForm') profileForm!: NgForm;
+
+  profile: UserProfile = { id: 0, pseudo: '', typeHandicaps: [] };
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
   showModal: boolean = false;
+  handicapTypes: Handicap[] = [];
 
   constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
     this.loadProfiles();
     this.loadCurrentProfile();
+    this.handicapTypes = this.profileService.getHandicapTypes();
   }
 
   loadProfiles(): void {
@@ -36,8 +41,8 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    if (!this.profile.pseudo || !this.profile.typeHandicap) {
-      alert('Pseudo et type d\'handicap sont requis.');
+    if (!this.profile.pseudo || this.profile.typeHandicaps.length === 0) {
+      alert('Pseudo et au moins un type d\'handicap sont requis.');
       return;
     }
 
@@ -51,6 +56,8 @@ export class CreateProfileComponent implements OnInit {
         this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
       }
     }
+    this.resetForm();
+    this.loadProfiles();
   }
 
   deleteProfile(profileId: number): void {
@@ -108,5 +115,18 @@ export class CreateProfileComponent implements OnInit {
 
   toggleModal(): void {
     this.showModal = !this.showModal;
+  }
+
+  onHandicapChange(handicap: Handicap, event: any): void {
+    if (event.target.checked) {
+      this.profile.typeHandicaps.push(handicap);
+    } else {
+      this.profile.typeHandicaps = this.profile.typeHandicaps.filter(h => h.id !== handicap.id);
+    }
+  }
+
+  resetForm(): void {
+    this.profile = { id: 0, pseudo: '', typeHandicaps: [] };
+    this.profileForm.resetForm();
   }
 }

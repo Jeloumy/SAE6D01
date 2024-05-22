@@ -1,0 +1,12 @@
+<div class="form-control">
+    <label class="label">
+      <span class="label-text">Types d'handicap</span>
+    </label>
+    <div *ngFor="let handicap of handicapTypes" class="form-control">
+      <label class="label cursor-pointer">
+        <span class="label-text">{{ handicap.name }}</span> 
+        <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" class="checkbox checkbox-primary">
+      </label>
+    </div>
+  </div>
+  

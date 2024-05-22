@@ -1,5 +1,5 @@
 <div>
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
+  <form #profileForm="ngForm" (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
     <!-- Input for pseudo with DaisyUI classes -->
     <label class="label">
       <span class="label-text">Pseudo</span>
@@ -10,14 +10,10 @@
       Pseudo est requis.
     </div>
 
-    <!-- Input for type of handicap avec DaisyUI classes -->
-    <label class="label">
-      <span class="label-text">Type d'handicap</span>
-    </label>
-    <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required
-      class="input input-bordered w-full max-w-xs" #typeHandicap="ngModel">
-    <div *ngIf="typeHandicap.invalid && (typeHandicap.dirty || typeHandicap.touched)" class="text-red-500">
-      Type d'handicap est requis.
+    <!-- Handicap Selector Component -->
+    <app-handicap-selector [(selectedHandicaps)]="profile.typeHandicaps"></app-handicap-selector>
+    <div *ngIf="profile.typeHandicaps.length === 0 && (pseudo.dirty || pseudo.touched)" class="text-red-500">
+      Au moins un type d'handicap est requis.
     </div>
 
     <!-- Submit button with DaisyUI class -->
@@ -29,7 +25,9 @@
          [ngClass]="{'bg-green-500': profile.pseudo === currentProfile?.pseudo}">
       <div class="flex gap-4 flex-grow items-center">
         <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.pseudo }}</b></p>
-        <p class="" (click)="selectProfile(profile, true)">{{ profile.typeHandicap }}</p>
+        <p class="" (click)="selectProfile(profile, true)">
+          <span *ngFor="let handicap of profile.typeHandicaps">{{ handicap.name }} </span>
+        </p>
       </div>
       <div class="flex gap-4">
         <button class="btn btn-primary" (click)="editProfile(profile); $event.stopPropagation();">Modifier</button>
