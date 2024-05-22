@@ -1,0 +1,42 @@
+<h1>Bienvenue sur ma première page Angular !</h1>
+<p>Ceci est un contenu de démonstration pour ma première page.</p>
+
+<div>
+    <h1>Filtres de Recherche</h1>
+    <form (ngSubmit)="onSubmit()">
+      <div>
+        <label for="enseigne">Nom d'enseigne ou activité :</label>
+        <input id="enseigne" name="enseigne" [(ngModel)]="filters.enseigne">
+      </div>
+      <div>
+        <label for="ville">Nom de ville :</label>
+        <input id="ville" name="ville" [(ngModel)]="filters.ville">
+      </div>
+      <div>
+        <label>Types de handicaps :</label>
+        <div *ngFor="let handicap of handicapOptions">
+          <input type="checkbox" [id]="handicap" [value]="handicap" (change)="onCheckboxChange($event)">
+          <label [for]="handicap">{{handicap}}</label>
+        </div>
+      </div>
+      <button type="submit">Rechercher</button>
+    </form>
+</div>
+
+<div>
+    <button *ngIf="results && results.previous" (click)="goToPage(results.previous)">Page précédente</button>
+    <button *ngIf="results && results.next" (click)="goToPage(results.next)">Page suivante</button>
+</div>
+
+<div class="card-container" *ngIf="results">
+    <div class="card" *ngFor="let result of results.results">
+        <h2>{{ result.nom }}</h2>
+        <p>{{ result.activite.nom }}</p>
+        <p>{{ result.adresse }}<!-- , {{ result.commune }} --></p>
+    </div>
+</div>
+
+<!-- <div *ngIf="results">
+  <h2>Résultats</h2>
+  <pre>{{ results | json }}</pre>
+</div> -->
