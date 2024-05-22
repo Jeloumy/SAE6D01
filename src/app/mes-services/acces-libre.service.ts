@@ -22,15 +22,13 @@ export class AccesLibreService {
 
   getErp(filters: any, apiKey: string): Observable<any> {
     // Construire l'URL avec les filtres
-    /* const params = new URLSearchParams();
-    if (filters.enseigne) params.append('enseigne', filters.enseigne);
-    if (filters.ville) params.append('ville', filters.ville);
-    if (filters.handicaps) params.append('handicaps', filters.handicaps.join(',')); */
+    // const params = new URLSearchParams();
 
     let params = new HttpParams();
+    if (filters.quantity) params = params.set('page_size', filters.quantity);
     if (filters.enseigne) params = params.set('q', filters.enseigne);
     if (filters.ville) params = params.set('commune', filters.ville);
-    if (filters.handicaps && filters.handicaps.length > 0) params = params.set('handicaps', filters.handicaps.join(','));
+    if (filters.handicaps && filters.handicaps.length > 0) params = params.set('equipments', filters.handicaps.join(','));
 
     // Construction des en-têtes de la requête avec la clé d'API
     const headers = new HttpHeaders({
@@ -39,12 +37,8 @@ export class AccesLibreService {
     });
 
     //return this.http.get<any>(`${this.apiUrl}/endpoint?${params.toString()}`);
+    console.log(params);
 
-    console.log('URL de la requête :', this.apiUrl); // Affiche l'URL de la requête
-    console.log('Params de la requête :', params); // Affiche les paramètres de la requête
-    console.log('Headers de la requête :', headers); // Affiche les en-têtes de la requête
-
-    
     return this.http.get<any>(this.apiUrl, { params: params, headers: headers });
   }
 
