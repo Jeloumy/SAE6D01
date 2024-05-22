@@ -1,21 +1,27 @@
 <div>
-  <form (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
     <!-- Input for pseudo with DaisyUI classes -->
     <label class="label">
       <span class="label-text">Pseudo</span>
     </label>
     <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required
-      class="input input-bordered w-full max-w-xs">
+      class="input input-bordered w-full max-w-xs" #pseudo="ngModel">
+    <div *ngIf="pseudo.invalid && (pseudo.dirty || pseudo.touched)" class="text-red-500">
+      Pseudo est requis.
+    </div>
 
     <!-- Input for type of handicap avec DaisyUI classes -->
     <label class="label">
       <span class="label-text">Type d'handicap</span>
     </label>
     <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required
-      class="input input-bordered w-full max-w-xs">
+      class="input input-bordered w-full max-w-xs" #typeHandicap="ngModel">
+    <div *ngIf="typeHandicap.invalid && (typeHandicap.dirty || typeHandicap.touched)" class="text-red-500">
+      Type d'handicap est requis.
+    </div>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="btn btn-primary mt-4" type="submit">Créer</button>
+    <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
   <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">

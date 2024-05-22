@@ -36,6 +36,11 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
+    if (!this.profile.pseudo || !this.profile.typeHandicap) {
+      alert('Pseudo et type d\'handicap sont requis.');
+      return;
+    }
+
     const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
