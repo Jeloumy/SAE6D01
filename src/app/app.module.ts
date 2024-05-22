@@ -10,6 +10,7 @@ import { HandicapFormComponent } from './pages/handicap-form/handicap-form.compo
 import { FooterComponent } from './footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/
     MapComponent,
     FooterComponent,
     ProfileSelectorDialogComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
