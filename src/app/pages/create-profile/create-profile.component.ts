@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
 import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
@@ -10,13 +10,15 @@ import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile
 })
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
-  profile: UserProfile = { id: 0, username: '', handicapList: [] , dispositifLieu: [] };
+  profile: UserProfile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '' };
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
   showModal: boolean = false;
   handicapTypes: Handicap[] = [];
+  photoPreview: string | ArrayBuffer | null = '';
 
   constructor(private profileService: ProfileService) { }
 
@@ -89,6 +91,7 @@ export class CreateProfileComponent implements OnInit {
   editProfile(profile: UserProfile): void {
     this.profile = { ...profile };
     this.editingProfile = profile;
+    this.photoPreview = profile.photo || '';
   }
 
   selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
@@ -117,8 +120,22 @@ export class CreateProfileComponent implements OnInit {
     this.showModal = !this.showModal;
   }
 
+  onFileChange(event: any): void {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.profile.photo = reader.result as string;
+        this.photoPreview = reader.result;
+      };
+    }
+  }
+
   resetForm(): void {
-    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [] };
+    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '' };
+    this.photoPreview = '';
     this.profileForm.resetForm();
+    this.fileInput.nativeElement.value = '';
   }
 }

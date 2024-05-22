@@ -3,11 +3,6 @@ export interface Handicap {
   handicap: string;
 }
 
-// export interface Preference {
-//   id: number;
-//   name: string;
-// }
-
 export interface DispositifLieu {
   id: number;
   name: string;
@@ -18,4 +13,11 @@ export interface UserProfile {
   username: string;
   handicapList: Handicap[];
   dispositifLieu: DispositifLieu[];
+  photo?: string;  
 }
+
+
+// export interface Preference {
+//   id: number;
+//   name: string;
+// }
