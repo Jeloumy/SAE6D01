@@ -1,16 +1,21 @@
 export interface Handicap {
   id: number;
-  name: string;
+  handicap: string;
 }
 
-export interface Preference {
+// export interface Preference {
+//   id: number;
+//   name: string;
+// }
+
+export interface DispositifLieu {
   id: number;
   name: string;
 }
 
 export interface UserProfile {
   id: number;
-  pseudo: string;
-  typeHandicaps: Handicap[];
-  preferences: Preference[];
+  username: string;
+  handicapList: Handicap[];
+  dispositifLieu: DispositifLieu[];
 }

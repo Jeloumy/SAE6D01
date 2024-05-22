@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserProfile, Handicap, Preference } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +15,15 @@ export class ProfileService {
 
   getHandicapTypes(): Handicap[] {
     return [
-      { id: 1, name: 'Difficulté à voir' },
-      { id: 2, name: 'En fauteuil roulant' },
-      { id: 3, name: 'Difficulté à marcher' },
-      { id: 4, name: 'Difficulté à entendre' },
-      { id: 5, name: 'Difficulté à comprendre' }
+      { id: 1, handicap: 'Difficulté à voir' },
+      { id: 2, handicap: 'En fauteuil roulant' },
+      { id: 3, handicap: 'Difficulté à marcher' },
+      { id: 4, handicap: 'Difficulté à entendre' },
+      { id: 5, handicap: 'Difficulté à comprendre' }
     ];
   }
 
-  getPreferences(): Preference[] {
+  getDispositifLieu(): DispositifLieu[] {
     return [
       { id: 1, name: 'Chemin vers l\'accueil accessible' },
       { id: 2, name: 'Dispositif d\'appel à l\'entrée' },
@@ -54,9 +54,9 @@ export class ProfileService {
   }
 
   createProfile(profile: UserProfile): boolean {
-    const existingProfile = this.profilesList.find(p => p.pseudo.toLowerCase() === profile.pseudo.toLowerCase());
+    const existingProfile = this.profilesList.find(p => p.username.toLowerCase() === profile.username.toLowerCase());
     if (existingProfile) {
-      console.log('Profile creation failed: Pseudo already exists.');
+      console.log('Profile creation failed: username already exists.');
       return false;
     }
 

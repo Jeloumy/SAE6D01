@@ -1,18 +1,19 @@
 <div>
   <form #profileForm="ngForm" (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
-    <!-- Input for pseudo with DaisyUI classes -->
+    <!-- Input for username with DaisyUI classes -->
     <label class="label">
-      <span class="label-text">Pseudo</span>
+      <span class="label-text">username</span>
     </label>
-    <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required
-      class="input input-bordered w-full max-w-xs" #pseudo="ngModel">
-    <div *ngIf="pseudo.invalid && (pseudo.dirty || pseudo.touched)" class="text-red-500">
-      Pseudo est requis.
+    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="username" required
+      class="input input-bordered w-full max-w-xs" #username="ngModel">
+    <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
+      username est requis.
     </div>
 
     <!-- Handicap Selector Component -->
-    <app-handicap-selector [(selectedHandicaps)]="profile.typeHandicaps" (selectedPreferencesChange)="profile.preferences = $event"></app-handicap-selector>
-    <div *ngIf="profile.typeHandicaps.length === 0 && (pseudo.dirty || pseudo.touched)" class="text-red-500">
+    <app-handicap-selector [(selectedHandicaps)]="profile.handicapList"
+      (selectedDispositifLieuChange)="profile.dispositifLieu = $event"></app-handicap-selector>
+    <div *ngIf="profile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-red-500">
       Au moins un type d'handicap est requis.
     </div>
 
@@ -22,14 +23,14 @@
 
   <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
     <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
-         [ngClass]="{'bg-green-500': profile.pseudo === currentProfile?.pseudo}">
+      [ngClass]="{'bg-green-500': profile.username === currentProfile?.username}">
       <div class="flex gap-4 flex-grow items-center">
-        <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.pseudo }}</b></p>
+        <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.username }}</b></p>
         <p class="" (click)="selectProfile(profile, true)">
-          <span *ngFor="let handicap of profile.typeHandicaps">{{ handicap.name }} </span>
+          <span *ngFor="let handicap of profile.handicapList">{{ handicap.handicap }} </span>
         </p>
         <p class="">
-          <span *ngFor="let preference of profile.preferences">{{ preference.name }} </span>
+          <span *ngFor="let dispositif of profile.dispositifLieu">{{ dispositif.name }} </span>
         </p>
       </div>
       <div class="flex gap-4">
@@ -46,9 +47,7 @@
   </div>
 
   <div *ngIf="showModal">
-    <app-profile-selector-dialog 
-      [profiles]="profiles" 
-      (selectionConfirmed)="onProfileSelected($event)">
+    <app-profile-selector-dialog [profiles]="profiles" (selectionConfirmed)="onProfileSelected($event)">
     </app-profile-selector-dialog>
   </div>
 </div>

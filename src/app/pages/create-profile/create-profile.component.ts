@@ -11,7 +11,7 @@ import { UserProfile, Handicap } from '../../models/user-profile';
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
 
-  profile: UserProfile = { id: 0, pseudo: '', typeHandicaps: [] , preferences: [] };
+  profile: UserProfile = { id: 0, username: '', handicapList: [] , dispositifLieu: [] };
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
@@ -33,7 +33,7 @@ export class CreateProfileComponent implements OnInit {
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
-      const matchedProfile = this.profiles.find(profile => profile.pseudo === storedProfile.pseudo);
+      const matchedProfile = this.profiles.find(profile => profile.username === storedProfile.username);
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
@@ -41,8 +41,8 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    if (!this.profile.pseudo || this.profile.typeHandicaps.length === 0) {
-      alert('Pseudo et au moins un type d\'handicap sont requis.');
+    if (!this.profile.username || this.profile.handicapList.length === 0) {
+      alert('username et au moins un type d\'handicap sont requis.');
       return;
     }
 
@@ -62,7 +62,7 @@ export class CreateProfileComponent implements OnInit {
 
   deleteProfile(profileId: number): void {
     const wasCurrentProfile = this.currentProfile?.id === profileId;
-    const currentProfilePseudo = this.currentProfile?.pseudo;
+    const currentProfilePseudo = this.currentProfile?.username;
     this.profileService.deleteProfile(profileId);
     this.loadProfiles();
 
@@ -79,7 +79,7 @@ export class CreateProfileComponent implements OnInit {
         this.profileService.setCurrentProfile(null);
       }
     } else if (currentProfilePseudo) {
-      const matchedProfile = this.profiles.find(profile => profile.pseudo === currentProfilePseudo);
+      const matchedProfile = this.profiles.find(profile => profile.username === currentProfilePseudo);
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false);
       }
@@ -92,7 +92,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (confirmChange && this.currentProfile && this.currentProfile.pseudo !== profile.pseudo) {
+    if (confirmChange && this.currentProfile && this.currentProfile.username !== profile.username) {
       const userConfirmed = confirm("Êtes-vous sûr de vouloir changer de profil ?");
       if (!userConfirmed) {
         return;
@@ -119,14 +119,14 @@ export class CreateProfileComponent implements OnInit {
 
   onHandicapChange(handicap: Handicap, event: any): void {
     if (event.target.checked) {
-      this.profile.typeHandicaps.push(handicap);
+      this.profile.handicapList.push(handicap);
     } else {
-      this.profile.typeHandicaps = this.profile.typeHandicaps.filter(h => h.id !== handicap.id);
+      this.profile.handicapList = this.profile.handicapList.filter(h => h.id !== handicap.id);
     }
   }
 
   resetForm(): void {
-    this.profile = { id: 0, pseudo: '', typeHandicaps: [], preferences: [] };
+    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [] };
     this.profileForm.resetForm();
   }
 }
