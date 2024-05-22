@@ -11,7 +11,7 @@ import { UserProfile, Handicap } from '../../models/user-profile';
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
 
-  profile: UserProfile = { id: 0, pseudo: '', typeHandicaps: [] };
+  profile: UserProfile = { id: 0, pseudo: '', typeHandicaps: [] , preferences: [] };
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
@@ -126,7 +126,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.profile = { id: 0, pseudo: '', typeHandicaps: [] };
+    this.profile = { id: 0, pseudo: '', typeHandicaps: [], preferences: [] };
     this.profileForm.resetForm();
   }
 }
