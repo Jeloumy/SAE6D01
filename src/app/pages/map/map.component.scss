@@ -1,3 +1,13 @@
-.leaflet-container{
-    background: #ced4da;
+
+
+@media (prefers-color-scheme: dark) {
+    .leaflet-container{
+        background: #343a40;
+    }
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .leaflet-container{
+        background: #ced4da;
+    }
 }
