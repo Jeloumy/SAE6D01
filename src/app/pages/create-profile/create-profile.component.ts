@@ -51,8 +51,6 @@ export class CreateProfileComponent implements OnInit {
         this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
       }
     }
-    this.profile = { id: 0, pseudo: '', typeHandicap: '' };
-    this.loadProfiles();
   }
 
   deleteProfile(profileId: number): void {

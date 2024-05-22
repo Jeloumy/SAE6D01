@@ -1,24 +1,22 @@
-<!-- Bouton pour ouvrir le modal -->
-<button class="btn btn-primary" (click)="toggleDropdown()">Choisir type(s) d'handicap</button>
-
-<!-- Modal pour les types d'handicap -->
-<div class="modal" [class.modal-open]="dropdownOpen">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">Sélectionnez le type d'handicap</h3>
-        <div class="form-control">
-            <label class="label cursor-pointer">
-                <span class="label-text">Difficulté à entendre</span> 
-                <input type="checkbox" [(ngModel)]="types['Difficulté à entendre']" class="checkbox checkbox-primary">
-            </label>
-            <label class="label cursor-pointer">
-                <span class="label-text">Difficulté à comprendre</span>
-                <input type="checkbox" [(ngModel)]="types['Difficulté à comprendre']" class="checkbox checkbox-primary">
-            </label>
-            <!-- Ajoutez plus de cases à cocher comme ci-dessus pour d'autres types d'handicap -->
-        </div>
-        <div class="modal-action">
-            <button class="btn btn-primary" (click)="applyTypes()">Appliquer</button>
-            <button class="btn btn-ghost" (click)="toggleDropdown()">Fermer</button>
+<div class="flex justify-center m-8 align-middle">
+    <button class="btn btn-primary" (click)="toggleDropdown()">Choisir type(s) d'handicap</button>
+    <div class="modal" [class.modal-open]="dropdownOpen">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Sélectionnez le type d'handicap</h3>
+            <div class="form-control">
+                <label class="cursor-pointer label">
+                    <span class="label-text">Difficulté à entendre</span> 
+                    <input type="checkbox" [(ngModel)]="types['Difficulté à entendre']" class="checkbox checkbox-primary">
+                </label>
+                <label class="cursor-pointer label">
+                    <span class="label-text">Difficulté à comprendre</span>
+                    <input type="checkbox" [(ngModel)]="types['Difficulté à comprendre']" class="checkbox checkbox-primary">
+                </label>
+            </div>
+            <div class="modal-action">
+                <button class="btn btn-error" (click)="toggleDropdown()">Fermer</button>
+                <button class="btn btn-primary" (click)="applyTypes()">Appliquer</button>
+            </div>
         </div>
     </div>
 </div>
