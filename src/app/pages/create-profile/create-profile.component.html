@@ -1,10 +1,10 @@
-<div>
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-xs p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
+<div class="flex flex-col justify-center align-middle">
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="justify-center max-w-screen-md p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
     <label class="label">
       <span class="label-text">Nom d'utilisateur</span>
     </label>
     <input type="text" [(ngModel)]="profile.username" name="username" placeholder="Nom d'utilisateur" required
-      class="w-full max-w-xs input input-bordered" #username="ngModel">
+      class="w-full input input-bordered" #username="ngModel">
     <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
       Le nom d'utilisateur est requis.
     </div>
@@ -13,15 +13,15 @@
       <span class="label-text">Type d'handicap</span>
     </label>
     <input type="text" [(ngModel)]="profile.handicapList[0].handicap" name="handicapList" placeholder="Type d'handicap" required
-      class="w-full max-w-xs input input-bordered" #handicapList="ngModel">
+      class="w-full input input-bordered" #handicapList="ngModel">
     <div *ngIf="handicapList.invalid && (handicapList.dirty || handicapList.touched)" class="text-red-500">
       Au moins 1 handicap est requis.
     </div>
 
-    <button type="submit" class="mt-4 btn btn-primary" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <button type="submit" class="w-full mt-6 btn btn-primary" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
-  <div class="flex flex-col gap-4 p-4 m-8 rounded-md bg-slate-100 dark:bg-slate-700">
+  <div class="max-w-screen-md gap-4 p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
     <div class="flex flex-grow gap-4" *ngFor="let profile of profilesList; let i = index"
          [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
       <div class="flex items-center flex-grow gap-4">
