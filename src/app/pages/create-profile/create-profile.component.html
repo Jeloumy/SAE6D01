@@ -1,52 +1,55 @@
 <div>
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
-    <!-- Input for pseudo with DaisyUI classes -->
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-xs p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
     <label class="label">
-      <span class="label-text">Pseudo</span>
+      <span class="label-text">Nom d'utilisateur</span>
     </label>
-    <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required
-      class="input input-bordered w-full max-w-xs" #pseudo="ngModel">
-    <div *ngIf="pseudo.invalid && (pseudo.dirty || pseudo.touched)" class="text-red-500">
-      Pseudo est requis.
+    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="Nom d'utilisateur" required
+      class="w-full max-w-xs input input-bordered" #username="ngModel">
+    <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
+      Le nom d'utilisateur est requis.
     </div>
 
-    <!-- Input for type of handicap avec DaisyUI classes -->
     <label class="label">
       <span class="label-text">Type d'handicap</span>
     </label>
-    <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required
-      class="input input-bordered w-full max-w-xs" #typeHandicap="ngModel">
-    <div *ngIf="typeHandicap.invalid && (typeHandicap.dirty || typeHandicap.touched)" class="text-red-500">
-      Type d'handicap est requis.
+    <input type="text" [(ngModel)]="profile.handicapList[0].handicap" name="handicapList" placeholder="Type d'handicap" required
+      class="w-full max-w-xs input input-bordered" #handicapList="ngModel">
+    <div *ngIf="handicapList.invalid && (handicapList.dirty || handicapList.touched)" class="text-red-500">
+      Au moins 1 handicap est requis.
     </div>
 
-    <!-- Submit button with DaisyUI class -->
-    <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <button type="submit" class="mt-4 btn btn-primary" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
-  <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
-    <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
-         [ngClass]="{'bg-green-500': profile.pseudo === currentProfile?.pseudo}">
-      <div class="flex gap-4 flex-grow items-center">
-        <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.pseudo }}</b></p>
-        <p class="" (click)="selectProfile(profile, true)">{{ profile.typeHandicap }}</p>
+  <div class="flex flex-col gap-4 p-4 m-8 rounded-md bg-slate-100 dark:bg-slate-700">
+    <div class="flex flex-grow gap-4" *ngFor="let profile of profilesList; let i = index"
+         [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
+      <div class="flex items-center flex-grow gap-4">
+        <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.username }}</b></p>
+        <p class="" (click)="selectProfile(profile, true)">
+          {{ profile.handicapList && profile.handicapList.length ? profile.handicapList[0].handicap : 'N/A' }}
+        </p>        
       </div>
       <div class="flex gap-4">
-        <button class="btn btn-primary" (click)="editProfile(profile); $event.stopPropagation();">Modifier</button>
-        <button class="btn btn-error" (click)="deleteProfile(profile.id); $event.stopPropagation();">Supprimer</button>
+        <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
     </div>
-    <div *ngIf="profiles.length === 0 && currentProfile === null" class="alert alert-warning mt-4">
-      Aucun profil disponible. Veuillez créer un nouveau profil.
+    <div *ngIf="profilesList.length === 0 && currentProfile === null" class="alert alert-warning">
+      <span><b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.</span>
     </div>
-    <div *ngIf="profiles.length > 0 && currentProfile === null" class="alert alert-warning mt-4">
-      Veuillez sélectionner un profil parmi les profils existants.
+    <div *ngIf="profilesList.length > 0 && currentProfile === null" class="alert alert-warning">
+      <span>Veuillez sélectionner un profil parmi les profils existants.</span>
     </div>
   </div>
 
   <div *ngIf="showModal">
     <app-profile-selector-dialog 
-      [profiles]="profiles" 
+      [profilesList]="profilesList" 
       (selectionConfirmed)="onProfileSelected($event)">
     </app-profile-selector-dialog>
   </div>

@@ -5,16 +5,20 @@ import { UserProfile } from '../../models/user-profile';
 @Component({
   selector: 'app-create-profile',
   templateUrl: './create-profile.component.html',
-  styleUrls: ['./create-profile.component.scss']
+  styleUrls: ['./create-profile.component.scss'],
 })
 export class CreateProfileComponent implements OnInit {
-  profile: UserProfile = { id: 0, pseudo: '', typeHandicap: '' };
-  profiles: UserProfile[] = [];
+  profile: UserProfile = {
+    id: 0,
+    username: '',
+    handicapList: [{ id: 0, handicap: '' }], 
+  };
+  profilesList: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
   showModal: boolean = false;
 
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -22,13 +26,15 @@ export class CreateProfileComponent implements OnInit {
   }
 
   loadProfiles(): void {
-    this.profiles = this.profileService.getProfilesList();
+    this.profilesList = this.profileService.getProfilesList();
   }
 
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
-      const matchedProfile = this.profiles.find(profile => profile.pseudo === storedProfile.pseudo);
+      const matchedProfile = this.profilesList.find(
+        (profile) => profile.username === storedProfile.username
+      );
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
@@ -36,12 +42,12 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    if (!this.profile.pseudo || !this.profile.typeHandicap) {
-      alert('Pseudo et type d\'handicap sont requis.');
+    if (!this.profile.username || !this.profile.handicapList) {
+      alert("Le nom d'utilisateur et au moins 1 handicap sont requis.");
       return;
     }
 
-    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
+    const isInitialProfile = this.profilesList.length === 0; // Vérifie s'il n'y a pas de profils existants
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
       this.editingProfile = null;
@@ -55,24 +61,28 @@ export class CreateProfileComponent implements OnInit {
 
   deleteProfile(profileId: number): void {
     const wasCurrentProfile = this.currentProfile?.id === profileId;
-    const currentProfilePseudo = this.currentProfile?.pseudo;
+    const currentProfilePseudo = this.currentProfile?.username;
     this.profileService.deleteProfile(profileId);
     this.loadProfiles();
 
-    console.log("Profil supprimé, wasCurrentProfile:", wasCurrentProfile);
+    console.log('Profil supprimé, wasCurrentProfile:', wasCurrentProfile);
 
     if (wasCurrentProfile) {
-      if (this.profiles.length > 0) {
-        console.log("Afficher le modal pour la sélection du profil");
+      if (this.profilesList.length > 0) {
+        console.log('Afficher le modal pour la sélection du profil');
         this.showModal = true;
-        console.log("showModal:", this.showModal);
+        console.log('showModal:', this.showModal);
       } else {
-        alert("Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.");
+        alert(
+          'Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.'
+        );
         this.currentProfile = null;
         this.profileService.setCurrentProfile(null);
       }
     } else if (currentProfilePseudo) {
-      const matchedProfile = this.profiles.find(profile => profile.pseudo === currentProfilePseudo);
+      const matchedProfile = this.profilesList.find(
+        (profile) => profile.username === currentProfilePseudo
+      );
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false);
       }
@@ -85,8 +95,14 @@ export class CreateProfileComponent implements OnInit {
   }
 
   selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (confirmChange && this.currentProfile && this.currentProfile.pseudo !== profile.pseudo) {
-      const userConfirmed = confirm("Êtes-vous sûr de vouloir changer de profil ?");
+    if (
+      confirmChange &&
+      this.currentProfile &&
+      this.currentProfile.username !== profile.username
+    ) {
+      const userConfirmed = confirm(
+        'Êtes-vous sûr de vouloir changer de profil ?'
+      );
       if (!userConfirmed) {
         return;
       }
@@ -96,7 +112,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   onProfileSelected(profile: UserProfile | null): void {
-    console.log("Profil sélectionné:", profile);
+    console.log('Profil sélectionné:', profile);
     this.showModal = false;
     if (profile) {
       this.selectProfile(profile, false);

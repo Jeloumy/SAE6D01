@@ -1,6 +1,10 @@
 export interface UserProfile {
-    id: number;
-    pseudo: string;
-    typeHandicap: string;
-  }
-  
+  id: number;
+  username: string;
+  handicapList: Handicap[];
+}
+
+export interface Handicap {
+  id: number;
+  handicap: string;
+}

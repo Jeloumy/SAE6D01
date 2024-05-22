@@ -1,15 +1,15 @@
 <div class="modal" [class.modal-open]="true">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">Choisissez un profil</h3>
-    <div *ngIf="profiles.length > 0">
-      <div *ngFor="let profile of profiles" class="form-control">
-        <label class="label cursor-pointer">
-          <span class="label-text">{{ profile.pseudo }}</span> 
+    <h3 class="text-lg font-bold">Choisissez un profil</h3>
+    <div *ngIf="profilesList.length > 0">
+      <div *ngFor="let profile of profilesList" class="form-control">
+        <label class="cursor-pointer label">
+          <span class="label-text">{{ profile.username }}</span> 
           <input type="radio" [value]="profile" [(ngModel)]="selectedProfile" name="profile" class="radio radio-primary">
         </label>
       </div>
     </div>
-    <div *ngIf="profiles.length === 0">
+    <div *ngIf="profilesList.length === 0">
       <p>Aucun profil existant. Veuillez créer un nouveau profil.</p>
     </div>
     <div class="modal-action">

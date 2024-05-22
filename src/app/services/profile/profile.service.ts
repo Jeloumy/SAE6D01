@@ -14,9 +14,9 @@ export class ProfileService {
   }
 
   createProfile(profile: UserProfile): boolean {
-    const existingProfile = this.profilesList.find(p => p.pseudo.toLowerCase() === profile.pseudo.toLowerCase());
+    const existingProfile = this.profilesList.find(p => p.username.toLowerCase() === profile.username.toLowerCase());
     if (existingProfile) {
-      console.log('Profile creation failed: Pseudo already exists.');
+      console.log('Profile creation failed: Username already exists.');
       return false;
     }
 
