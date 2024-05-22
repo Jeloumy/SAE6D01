@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import * as L from 'leaflet';
+import 'leaflet-extra-markers';
 
 @Component({
   selector: 'app-map',
@@ -18,6 +20,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     // Ajoutez d'autres couches de carte ici
   };
   private layerControl: L.Control.Layers = L.control.layers();
+  private monuments: { name: string, coordinates: L.LatLngExpression }[] = [
+    { name: 'Tour Eiffel', coordinates: [48.8584, 2.2945] },
+    { name: 'Louvre Museum', coordinates: [48.8606, 2.3376] },
+    // Ajoutez d'autres monuments ici
+  ];
 
   @ViewChild('map', { static: false }) private mapContainer!: ElementRef<HTMLDivElement>;
 
@@ -26,6 +33,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.addMarkers();
   }
 
   ngOnDestroy(): void {
@@ -44,5 +52,19 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.layerControl.addTo(this.map);
     this.layers['OpenStreetMap'].addTo(this.map);
+  }
+
+  private addMarkers(): void {
+    this.monuments.forEach(monument => {
+      const customMarker = L.ExtraMarkers.icon({
+        icon: 'fa-number',
+        number: '1',
+        markerColor: 'green',
+        shape: 'square',
+        prefix: 'fa'
+      });
+  
+      L.marker(monument.coordinates, { icon: customMarker }).addTo(this.map).bindPopup(`<b>${monument.name}</b><br>Click to see more information`);
+    });
   }
 }
