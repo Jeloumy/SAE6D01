@@ -15,7 +15,6 @@ export class ProfileService {
   }
 
   createProfile(profile: UserProfile): boolean {
- 
     const existingProfile = this.profilesList.find(p => p.pseudo.toLowerCase() === profile.pseudo.toLowerCase());
     if (existingProfile) {
       console.log('Profile creation failed: Pseudo already exists.');
@@ -68,8 +67,16 @@ export class ProfileService {
     }
   }
   
-  setCurrentProfile(profile: UserProfile): void {
+  setCurrentProfile(profile: UserProfile | null): void {
     this.currentProfile = profile;
-    localStorage.setItem('currentProfile', JSON.stringify(profile));
+    if (profile) {
+      localStorage.setItem('currentProfile', JSON.stringify(profile));
+    } else {
+      localStorage.removeItem('currentProfile');
+    }
+  }
+
+  getCurrentProfile(): UserProfile | null {
+    return this.currentProfile;
   }
 }
