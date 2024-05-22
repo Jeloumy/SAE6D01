@@ -26,14 +26,18 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    if (this.editingProfile) {
-      this.profileService.updateProfile(this.profile);
-      this.editingProfile = null;
+    if (this.profile.pseudo.trim() !== '' && this.profile.typeHandicap.trim() !== '') {
+      if (this.editingProfile) {
+        this.profileService.updateProfile(this.profile);
+        this.editingProfile = null;
+      } else {
+        this.profileService.createProfile(this.profile);
+      }
+      this.profile = { id: 0, pseudo: '', typeHandicap: '' };
+      this.loadProfiles();
     } else {
-      this.profileService.createProfile(this.profile);
+      alert('Veuillez remplir tous les champs du formulaire.');
     }
-    this.profile = { id: 0, pseudo: '', typeHandicap: '' };
-    this.loadProfiles();
   }
 
   deleteProfile(profileId: number): void {
@@ -42,7 +46,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   editProfile(profile: UserProfile): void {
-    this.profile = {...profile};
+    this.profile = { ...profile };
     this.editingProfile = profile;
   }
 
