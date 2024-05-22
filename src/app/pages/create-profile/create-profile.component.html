@@ -11,7 +11,9 @@
     </div>
 
     <!-- Handicap Selector Component -->
-    <app-handicap-selector [(selectedHandicaps)]="profile.handicapList"
+    <app-handicap-selector 
+      [(selectedHandicaps)]="profile.handicapList" 
+      [(selectedDispositifLieu)]="profile.dispositifLieu"
       (selectedDispositifLieuChange)="profile.dispositifLieu = $event"></app-handicap-selector>
     <div *ngIf="profile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-red-500">
       Au moins un type d'handicap est requis.

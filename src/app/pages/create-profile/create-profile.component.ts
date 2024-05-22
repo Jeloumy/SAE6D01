@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
 
 @Component({
   selector: 'app-create-profile',
@@ -115,14 +115,6 @@ export class CreateProfileComponent implements OnInit {
 
   toggleModal(): void {
     this.showModal = !this.showModal;
-  }
-
-  onHandicapChange(handicap: Handicap, event: any): void {
-    if (event.target.checked) {
-      this.profile.handicapList.push(handicap);
-    } else {
-      this.profile.handicapList = this.profile.handicapList.filter(h => h.id !== handicap.id);
-    }
   }
 
   resetForm(): void {
