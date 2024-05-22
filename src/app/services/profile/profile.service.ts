@@ -7,7 +7,6 @@ import { UserProfile } from '../../models/user-profile';
 export class ProfileService {
   private profilesList: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
-  private static nextId: number = 1;
 
   constructor() { 
     this.loadProfileFromStorage();
@@ -21,7 +20,7 @@ export class ProfileService {
       return false;
     }
 
-    profile.id = ProfileService.nextId++;
+    profile.id = this.getNextId();
     this.profilesList.push(profile);
     this.saveProfilesListToStorage();
     console.log('Profile created:', profile);
@@ -34,6 +33,7 @@ export class ProfileService {
 
   deleteProfile(profileId: number): void {
     this.profilesList = this.profilesList.filter(profile => profile.id !== profileId);
+    this.reassignIds(); // Réassigne les IDs pour maintenir une séquence continue
     this.saveProfilesListToStorage();
     if (this.currentProfile?.id === profileId) {
       this.currentProfile = null;
@@ -78,5 +78,17 @@ export class ProfileService {
 
   getCurrentProfile(): UserProfile | null {
     return this.currentProfile;
+  }
+
+  private getNextId(): number {
+    const maxId = this.profilesList.reduce((max, profile) => profile.id > max ? profile.id : max, 0);
+    return maxId + 1;
+  }
+
+  private reassignIds(): void {
+    this.profilesList = this.profilesList.map((profile, index) => ({
+      ...profile,
+      id: index + 1
+    }));
   }
 }

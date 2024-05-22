@@ -7,6 +7,8 @@ import { CreateProfileComponent } from './pages/create-profile/create-profile.co
 import { SearchComponent } from './pages/search/search.component';
 import { MapComponent } from './pages/map/map.component';
 import { HandicapFormComponent } from './pages/handicap-form/handicap-form.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
 
 @NgModule({
   declarations: [
@@ -15,13 +17,16 @@ import { HandicapFormComponent } from './pages/handicap-form/handicap-form.compo
     SearchComponent,
     HandicapFormComponent,
     MapComponent,
+    ProfileSelectorDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

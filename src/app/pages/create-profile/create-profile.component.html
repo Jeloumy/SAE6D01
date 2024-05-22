@@ -1,35 +1,53 @@
 <div>
-    <form (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
-      <!-- Input for pseudo with DaisyUI classes -->
-      <label class="label">
-        <span class="label-text">Pseudo</span>
-      </label>
-      <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required
-        class="input input-bordered w-full max-w-xs">
-  
-      <!-- Input for type of handicap with DaisyUI classes -->
-      <label class="label">
-        <span class="label-text">Type d'handicap</span>
-      </label>
-      <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required
-        class="input input-bordered w-full max-w-xs">
-  
-      <!-- Submit button with DaisyUI class -->
-      <button class="btn btn-primary mt-4" type="submit">Créer</button>
-    </form>
-  
-    <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
-      <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
-           [ngClass]="{'bg-green-500': profile === currentProfile}">
-        <div class="flex gap-4 flex-grow items-center">
-          <p class="" (click)="selectProfile(profile)"><b>{{ profile.pseudo }}</b></p>
-          <p class="" (click)="selectProfile(profile)">{{ profile.typeHandicap }}</p>
-        </div>
-        <div class="flex gap-4">
-          <button class="btn btn-primary" (click)="editProfile(profile); $event.stopPropagation();">Modifier</button>
-          <button class="btn btn-error" (click)="deleteProfile(profile.id); $event.stopPropagation();">Supprimer</button>
-        </div>
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
+    <!-- Input for pseudo with DaisyUI classes -->
+    <label class="label">
+      <span class="label-text">Pseudo</span>
+    </label>
+    <input type="text" [(ngModel)]="profile.pseudo" name="pseudo" placeholder="Pseudo" required
+      class="input input-bordered w-full max-w-xs" #pseudo="ngModel">
+    <div *ngIf="pseudo.invalid && (pseudo.dirty || pseudo.touched)" class="text-red-500">
+      Pseudo est requis.
+    </div>
+
+    <!-- Input for type of handicap avec DaisyUI classes -->
+    <label class="label">
+      <span class="label-text">Type d'handicap</span>
+    </label>
+    <input type="text" [(ngModel)]="profile.typeHandicap" name="typeHandicap" placeholder="Type d'handicap" required
+      class="input input-bordered w-full max-w-xs" #typeHandicap="ngModel">
+    <div *ngIf="typeHandicap.invalid && (typeHandicap.dirty || typeHandicap.touched)" class="text-red-500">
+      Type d'handicap est requis.
+    </div>
+
+    <!-- Submit button with DaisyUI class -->
+    <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>
+  </form>
+
+  <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
+    <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
+         [ngClass]="{'bg-green-500': profile.pseudo === currentProfile?.pseudo}">
+      <div class="flex gap-4 flex-grow items-center">
+        <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.pseudo }}</b></p>
+        <p class="" (click)="selectProfile(profile, true)">{{ profile.typeHandicap }}</p>
+      </div>
+      <div class="flex gap-4">
+        <button class="btn btn-primary" (click)="editProfile(profile); $event.stopPropagation();">Modifier</button>
+        <button class="btn btn-error" (click)="deleteProfile(profile.id); $event.stopPropagation();">Supprimer</button>
       </div>
     </div>
+    <div *ngIf="profiles.length === 0 && currentProfile === null" class="alert alert-warning mt-4">
+      Aucun profil disponible. Veuillez créer un nouveau profil.
+    </div>
+    <div *ngIf="profiles.length > 0 && currentProfile === null" class="alert alert-warning mt-4">
+      Veuillez sélectionner un profil parmi les profils existants.
+    </div>
   </div>
-  
+
+  <div *ngIf="showModal">
+    <app-profile-selector-dialog 
+      [profiles]="profiles" 
+      (selectionConfirmed)="onProfileSelected($event)">
+    </app-profile-selector-dialog>
+  </div>
+</div>

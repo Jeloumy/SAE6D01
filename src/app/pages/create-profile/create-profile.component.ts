@@ -12,6 +12,7 @@ export class CreateProfileComponent implements OnInit {
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
+  showModal: boolean = false;
 
   constructor(private profileService: ProfileService) { }
 
@@ -27,7 +28,7 @@ export class CreateProfileComponent implements OnInit {
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
-      const matchedProfile = this.profiles.find(profile => profile.id === storedProfile.id);
+      const matchedProfile = this.profiles.find(profile => profile.pseudo === storedProfile.pseudo);
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
@@ -35,6 +36,11 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
+    if (!this.profile.pseudo || !this.profile.typeHandicap) {
+      alert('Pseudo et type d\'handicap sont requis.');
+      return;
+    }
+
     const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
@@ -50,11 +56,28 @@ export class CreateProfileComponent implements OnInit {
   }
 
   deleteProfile(profileId: number): void {
+    const wasCurrentProfile = this.currentProfile?.id === profileId;
+    const currentProfilePseudo = this.currentProfile?.pseudo;
     this.profileService.deleteProfile(profileId);
     this.loadProfiles();
-    if (this.currentProfile?.id === profileId) {
-      this.currentProfile = null;
-      this.profileService.setCurrentProfile(null);
+
+    console.log("Profil supprimé, wasCurrentProfile:", wasCurrentProfile);
+
+    if (wasCurrentProfile) {
+      if (this.profiles.length > 0) {
+        console.log("Afficher le modal pour la sélection du profil");
+        this.showModal = true;
+        console.log("showModal:", this.showModal);
+      } else {
+        alert("Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.");
+        this.currentProfile = null;
+        this.profileService.setCurrentProfile(null);
+      }
+    } else if (currentProfilePseudo) {
+      const matchedProfile = this.profiles.find(profile => profile.pseudo === currentProfilePseudo);
+      if (matchedProfile) {
+        this.selectProfile(matchedProfile, false);
+      }
     }
   }
 
@@ -64,7 +87,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (confirmChange && this.currentProfile && this.currentProfile.id !== profile.id) {
+    if (confirmChange && this.currentProfile && this.currentProfile.pseudo !== profile.pseudo) {
       const userConfirmed = confirm("Êtes-vous sûr de vouloir changer de profil ?");
       if (!userConfirmed) {
         return;
@@ -72,5 +95,20 @@ export class CreateProfileComponent implements OnInit {
     }
     this.currentProfile = profile;
     this.profileService.setCurrentProfile(profile);
+  }
+
+  onProfileSelected(profile: UserProfile | null): void {
+    console.log("Profil sélectionné:", profile);
+    this.showModal = false;
+    if (profile) {
+      this.selectProfile(profile, false);
+    } else {
+      this.currentProfile = null;
+      this.profileService.setCurrentProfile(null);
+    }
+  }
+
+  toggleModal(): void {
+    this.showModal = !this.showModal;
   }
 }
