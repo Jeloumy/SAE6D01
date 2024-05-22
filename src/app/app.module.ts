@@ -11,6 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
 import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-selector.component';
+import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-se
     FooterComponent,
     ProfileSelectorDialogComponent,
     HandicapSelectorComponent,
+    SystemPreferencesComponent,
   ],
   imports: [
     BrowserModule,

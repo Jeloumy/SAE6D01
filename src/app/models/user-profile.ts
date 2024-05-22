@@ -8,16 +8,19 @@ export interface DispositifLieu {
   name: string;
 }
 
+export interface SystemPreferences {
+  colorBlindMode?: boolean;
+  highContrast?: boolean;
+  brightness?: number;
+  blackAndWhite?: boolean;
+  [key: string]: any;
+}
+
 export interface UserProfile {
   id: number;
   username: string;
   handicapList: Handicap[];
   dispositifLieu: DispositifLieu[];
-  photo?: string;  
+  photo?: string;
+  systemPreferences?: SystemPreferences;
 }
-
-
-// export interface Preference {
-//   id: number;
-//   name: string;
-// }

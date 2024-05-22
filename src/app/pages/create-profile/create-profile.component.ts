@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
 
 @Component({
   selector: 'app-create-profile',
@@ -12,7 +12,7 @@ export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  profile: UserProfile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '' };
+  profile: UserProfile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '', systemPreferences: {} as SystemPreferences };
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
@@ -26,6 +26,10 @@ export class CreateProfileComponent implements OnInit {
     this.loadProfiles();
     this.loadCurrentProfile();
     this.handicapTypes = this.profileService.getHandicapTypes();
+  }
+
+  get systemPreferences(): SystemPreferences {
+    return this.profile.systemPreferences || {} as SystemPreferences;
   }
 
   loadProfiles(): void {
@@ -89,7 +93,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   editProfile(profile: UserProfile): void {
-    this.profile = { ...profile };
+    this.profile = { ...profile, systemPreferences: profile.systemPreferences || {} as SystemPreferences };
     this.editingProfile = profile;
     this.photoPreview = profile.photo || '';
   }
@@ -101,8 +105,8 @@ export class CreateProfileComponent implements OnInit {
         return;
       }
     }
-    this.currentProfile = profile;
-    this.profileService.setCurrentProfile(profile);
+    this.currentProfile = { ...profile, systemPreferences: profile.systemPreferences || {} as SystemPreferences };
+    this.profileService.setCurrentProfile(this.currentProfile);
   }
 
   onProfileSelected(profile: UserProfile | null): void {
@@ -133,7 +137,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '' };
+    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '', systemPreferences: {} as SystemPreferences };
     this.photoPreview = '';
     this.profileForm.resetForm();
     this.fileInput.nativeElement.value = '';
