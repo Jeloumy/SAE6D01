@@ -4,22 +4,22 @@
 <div>
     <h1>Filtres de Recherche</h1>
     <form (ngSubmit)="onSubmit()">
-      <div>
-        <label for="enseigne">Nom d'enseigne ou activité :</label>
-        <input id="enseigne" name="enseigne" [(ngModel)]="filters.enseigne">
-      </div>
-      <div>
-        <label for="ville">Nom de ville :</label>
-        <input id="ville" name="ville" [(ngModel)]="filters.ville">
-      </div>
-      <div>
-        <label>Types de handicaps :</label>
-        <div *ngFor="let handicap of handicapOptions">
-          <input type="checkbox" [id]="handicap" [value]="handicap" (change)="onCheckboxChange($event)">
-          <label [for]="handicap">{{handicap}}</label>
+        <div>
+            <label for="enseigne">Nom d'enseigne ou activité :</label>
+            <input id="enseigne" name="enseigne" [(ngModel)]="filters.enseigne">
         </div>
-      </div>
-      <button type="submit">Rechercher</button>
+        <div>
+            <label for="ville">Nom de ville :</label>
+            <input id="ville" name="ville" [(ngModel)]="filters.ville">
+        </div>
+        <div>
+            <label>Types de handicaps :</label>
+            <div *ngFor="let handicap of handicapOptions">
+                <input type="checkbox" [id]="handicap" [value]="handicap" (change)="onCheckboxChange($event)">
+                <label [for]="handicap">{{handicap}}</label>
+            </div>
+        </div>
+        <button type="submit">Rechercher</button>
     </form>
 </div>
 
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<!-- <div *ngIf="results">
-  <h2>Résultats</h2>
-  <pre>{{ results | json }}</pre>
-</div> -->
+<div *ngIf="results">
+    <h2>Résultats</h2>
+    <pre>{{ results | json }}</pre>
+</div>

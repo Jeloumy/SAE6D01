@@ -14,7 +14,59 @@ export class MaPremierePageComponent {
   }; */
   filters: any = {};
   results: any;
-  handicapOptions = ['Auditif', 'Mental', 'Moteur', 'Visuel'];
+  handicapOptions = [
+    'Dispositif d\'appel à l\'entrée',
+    'Proximité de l\'accueil',
+    'Présence de personnel',
+    'Personnel sensibilisé ou formé',
+    'Audiodescription',
+    'Equipements spécifiques pour personne malentendante',
+    'Chemin sans rétrécissement jusqu\'à l\'accueil ou information inconnue',
+    'Chambre accessible',
+    'Toilettes PMR',
+    'Établissement labellisé',
+    'Stationnement à proximité',
+    'Transport en commun à proximité',
+    'Stationnement PMR (dans l\'établissement ou à proximité)',
+    'Maximum une marche à l\'entrée',
+    'Maximum une marche à l\'accueil',
+    'Entrée accessible',
+    'Largeur de porte supérieure à 80cm ou information inconnue',
+    'Entrée spécifique PMR',
+    'Balise sonore',
+    'Pas de chemin extérieur ou information inconnue',
+    'Chemin adapté aux personnes mal marchantes',
+    'Extérieur - plain-pied ou accessible via rampe ou ascenseur',
+    'Chemin extérieur accessible',
+    'Extérieur - bande de guidage'
+  ];
+  mapping = {
+    'Dispositif d\'appel à l\'entrée' : 'entree_dispositif_appel',
+    'Proximité de l\'accueil' : '',
+    'Présence de personnel' : '',
+    'Personnel sensibilisé ou formé' : 'accueil_personnels',
+    'Audiodescription' : 'accueil_audiodescription_presence',
+    'Equipements spécifiques pour personne malentendante' : 'accueil_equipements_malentendants_presence',
+    'Chemin sans rétrécissement jusqu\'à l\'accueil ou information inconnue' : 'cheminement_ext_retrecissement',
+    'Chambre accessible' : 'accueil_chambre_nombre_accessibles',
+    'Toilettes PMR' : 'sanitaires_adaptes',
+    'Établissement labellisé' : 'labels',
+    'Stationnement à proximité' : 'stationnement_presence',
+    'Transport en commun à proximité' : 'transport_station_presence',
+    'Stationnement PMR (dans l\'établissement ou à proximité)' : 'stationnement_pmr',
+    'Maximum une marche à l\'entrée' : 'entree_marches',
+    'Maximum une marche à l\'accueil' : 'accueil_cheminement_nombre_marches',
+    'Entrée accessible' : 'entree_pmr',
+    'Largeur de porte supérieure à 80cm ou information inconnue' : 'entree_porte_type',
+    'Entrée spécifique PMR' : 'entree_pmr_informations',
+    'Balise sonore' : 'entree_balise_sonore',
+    'Pas de chemin extérieur ou information inconnue' : 'cheminement_ext_presence',
+    'Extérieur - plain-pied ou accessible via rampe ou ascenseur' : 'cheminement_ext_plain_pied',
+    'Chemin extérieur accessible' : 'cheminement_ext_presence',
+    'Extérieur - bande de guidage': 'cheminement_ext_bande_guidage'
+  };
+  
+  
 
   constructor(private accesLibreService: AccesLibreService) {}
 
