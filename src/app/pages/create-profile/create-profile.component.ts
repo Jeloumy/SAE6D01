@@ -6,7 +6,7 @@ import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../
 @Component({
   selector: 'app-create-profile',
   templateUrl: './create-profile.component.html',
-  styleUrls: ['./create-profile.component.scss']
+  styleUrls: ['./create-profile.component.scss'],
 })
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
@@ -20,7 +20,7 @@ export class CreateProfileComponent implements OnInit {
   handicapTypes: Handicap[] = [];
   photoPreview: string | ArrayBuffer | null = '';
 
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -78,15 +78,17 @@ export class CreateProfileComponent implements OnInit {
     this.profileService.deleteProfile(profileId);
     this.loadProfiles();
 
-    console.log("Profil supprimé, wasCurrentProfile:", wasCurrentProfile);
+    console.log('Profil supprimé, wasCurrentProfile:', wasCurrentProfile);
 
     if (wasCurrentProfile) {
       if (this.profiles.length > 0) {
-        console.log("Afficher le modal pour la sélection du profil");
+        console.log('Afficher le modal pour la sélection du profil');
         this.showModal = true;
-        console.log("showModal:", this.showModal);
+        console.log('showModal:', this.showModal);
       } else {
-        alert("Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.");
+        alert(
+          'Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.'
+        );
         this.currentProfile = null;
         this.profileService.setCurrentProfile(null);
       }
@@ -116,7 +118,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   onProfileSelected(profile: UserProfile | null): void {
-    console.log("Profil sélectionné:", profile);
+    console.log('Profil sélectionné:', profile);
     this.showModal = false;
     if (profile) {
       this.selectProfile(profile, false);

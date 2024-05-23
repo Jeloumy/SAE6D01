@@ -12,6 +12,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
 import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-selector.component';
 import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
+import { HomeComponent } from './home/home.component';
+import { SearchFormComponent } from './pages/search-form/search-form.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { SystemPreferencesComponent } from './system-preferences/system-preferen
     ProfileSelectorDialogComponent,
     HandicapSelectorComponent,
     SystemPreferencesComponent,
+    HomeComponent,
+    SearchFormComponent,
   ],
   imports: [
     BrowserModule,

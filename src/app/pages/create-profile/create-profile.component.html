@@ -1,11 +1,10 @@
-<div>
-  <form #profileForm="ngForm" (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
-    <!-- Input for username with DaisyUI classes -->
+<div class="flex flex-col justify-center align-middle">
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="justify-center max-w-screen-md p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
     <label class="label">
       <span class="label-text">username</span>
     </label>
-    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="username" required
-      class="input input-bordered w-full max-w-xs" #username="ngModel">
+    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="Nom d'utilisateur" required
+      class="w-full input input-bordered" #username="ngModel">
     <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
       username est requis.
     </div>
@@ -24,40 +23,40 @@
       <span class="label-text">Photo de Profil</span>
     </label>
     <div class="flex items-center">
-      <input type="file" (change)="onFileChange($event)" #fileInput class="input input-bordered w-full max-w-xs">
-      <div class="avatar ml-4" *ngIf="photoPreview">
-        <div class="rounded-full w-24">
+      <input type="file" (change)="onFileChange($event)" #fileInput class="w-full max-w-xs input input-bordered">
+      <div class="ml-4 avatar" *ngIf="photoPreview">
+        <div class="w-24 rounded-full">
           <img [src]="photoPreview" alt="Aperçu de la photo de profil">
         </div>
       </div>
-      <div class="avatar placeholder ml-4" *ngIf="!photoPreview">
-        <div class="bg-neutral text-neutral-content rounded-full w-24">
+      <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
+        <div class="w-24 rounded-full bg-neutral text-neutral-content">
           <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
         </div>
       </div>
     </div>
 
     <!-- System Preferences Component -->
-    <label class="label mt-4">
+    <label class="mt-4 label">
       <span class="label-text">Préférences Système</span>
     </label>
     <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <button class="mt-4 btn btn-primary" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
-  <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
+  <div class="flex flex-col gap-4 p-4 m-8 rounded-md bg-slate-100 dark:bg-slate-700">
     <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
-      [ngClass]="{'bg-green-500': profile.username === currentProfile?.username}">
-      <div class="flex gap-4 flex-grow items-center">
+      [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
+      <div class="flex items-center flex-grow gap-4">
         <div *ngIf="profile.photo" class="avatar">
-          <div class="rounded-full w-24">
+          <div class="w-24 rounded-full">
             <img [src]="profile.photo" alt="Photo de profil">
           </div>
         </div>
         <div *ngIf="!profile.photo" class="avatar placeholder">
-          <div class="bg-neutral text-neutral-content rounded-full w-24">
+          <div class="w-24 rounded-full bg-neutral text-neutral-content">
             <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
           </div>
         </div>
@@ -70,20 +69,24 @@
         </p>
       </div>
       <div class="flex gap-4">
-        <button class="btn btn-primary" (click)="editProfile(profile); $event.stopPropagation();">Modifier</button>
-        <button class="btn btn-error" (click)="deleteProfile(profile.id); $event.stopPropagation();">Supprimer</button>
+        <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
     </div>
-    <div *ngIf="profiles.length === 0 && currentProfile === null" class="alert alert-warning mt-4">
-      Aucun profil disponible. Veuillez créer un nouveau profil.
+    <div *ngIf="profiles.length === 0 && currentProfile === null" class="alert alert-warning">
+      <span><b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.</span>
     </div>
-    <div *ngIf="profiles.length > 0 && currentProfile === null" class="alert alert-warning mt-4">
-      Veuillez sélectionner un profil parmi les profils existants.
+    <div *ngIf="profiles.length > 0 && currentProfile === null" class="alert alert-warning">
+      <span>Veuillez sélectionner un profil parmi les profils existants.</span>
     </div>
   </div>
 
   <div *ngIf="showModal">
-    <app-profile-selector-dialog [profiles]="profiles" (selectionConfirmed)="onProfileSelected($event)">
+    <app-profile-selector-dialog [profilesList]="profiles" (selectionConfirmed)="onProfileSelected($event)">
     </app-profile-selector-dialog>
   </div>
 </div>

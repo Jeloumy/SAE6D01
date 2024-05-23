@@ -7,7 +7,7 @@ import { UserProfile } from '../../models/user-profile';
   styleUrls: ['./profile-selector-dialog.component.scss']
 })
 export class ProfileSelectorDialogComponent {
-  @Input() profiles: UserProfile[] = [];
+  @Input() profilesList: UserProfile[] = [];
   @Output() selectionConfirmed = new EventEmitter<UserProfile | null>();
   selectedProfile: UserProfile | null = null;
 

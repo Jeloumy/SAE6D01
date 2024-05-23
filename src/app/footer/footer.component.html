@@ -1,11 +1,22 @@
-<footer class="flex flex-row justify-center p-4 align-middle -z-10 bg-base-200 text-base-content">
-      <div class="flex gap-4">
-        <a class="link link-hover" routerLink="/search" routerLinkActive="active">
-          <i class="text-2xl fas fa-search"></i>
-        </a>
-        <a class="link link-hover" routerLink="/create-profile" routerLinkActive="active">
-          <i class="text-2xl fas fa-user"></i>
-        </a>
-    </div>
-  </footer>
-  
+<footer
+  class="flex flex-row justify-center py-8 overflow-visible align-middle -z-10 bg-base-200 text-base-content"
+>
+  <div class="flex gap-4 btm-nav">
+    <a class="link link-hover" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <i class="fa-solid fa-house"></i>
+      <span class="btm-nav-label">Home</span>
+    </a>
+    <a class="link link-hover" routerLink="/search" routerLinkActive="active">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span class="btm-nav-label">Search</span>
+    </a>
+    <a
+      class="link link-hover"
+      routerLink="/profile"
+      routerLinkActive="active"
+    >
+    <i class="fa-solid fa-user"></i>
+    <span class="btm-nav-label">Profile</span>
+    </a>
+  </div>
+</footer>
