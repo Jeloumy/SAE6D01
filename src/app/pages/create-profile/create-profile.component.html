@@ -1,34 +1,73 @@
 <div>
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-xs p-4 m-8 rounded-md form-control bg-slate-100 dark:bg-slate-700">
+  <form #profileForm="ngForm" (ngSubmit)="createProfile()" class="form-control w-full max-w-xs bg-slate-100 m-8 p-4">
+    <!-- Input for username with DaisyUI classes -->
     <label class="label">
-      <span class="label-text">Nom d'utilisateur</span>
+      <span class="label-text">username</span>
     </label>
-    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="Nom d'utilisateur" required
-      class="w-full max-w-xs input input-bordered" #username="ngModel">
+    <input type="text" [(ngModel)]="profile.username" name="username" placeholder="username" required
+      class="input input-bordered w-full max-w-xs" #username="ngModel">
     <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
-      Le nom d'utilisateur est requis.
+      username est requis.
     </div>
 
+    <!-- Handicap Selector Component -->
+    <app-handicap-selector 
+      [(selectedHandicaps)]="profile.handicapList" 
+      [(selectedDispositifLieu)]="profile.dispositifLieu"
+      (selectedDispositifLieuChange)="profile.dispositifLieu = $event"></app-handicap-selector>
+    <div *ngIf="profile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-red-500">
+      Au moins un type d'handicap est requis.
+    </div>
+
+    <!-- Photo de Profil -->
     <label class="label">
-      <span class="label-text">Type d'handicap</span>
+      <span class="label-text">Photo de Profil</span>
     </label>
-    <input type="text" [(ngModel)]="profile.handicapList[0].handicap" name="handicapList" placeholder="Type d'handicap" required
-      class="w-full max-w-xs input input-bordered" #handicapList="ngModel">
-    <div *ngIf="handicapList.invalid && (handicapList.dirty || handicapList.touched)" class="text-red-500">
-      Au moins 1 handicap est requis.
+    <div class="flex items-center">
+      <input type="file" (change)="onFileChange($event)" #fileInput class="input input-bordered w-full max-w-xs">
+      <div class="avatar ml-4" *ngIf="photoPreview">
+        <div class="rounded-full w-24">
+          <img [src]="photoPreview" alt="Aperçu de la photo de profil">
+        </div>
+      </div>
+      <div class="avatar placeholder ml-4" *ngIf="!photoPreview">
+        <div class="bg-neutral text-neutral-content rounded-full w-24">
+          <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+        </div>
+      </div>
     </div>
 
-    <button type="submit" class="mt-4 btn btn-primary" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <!-- System Preferences Component -->
+    <label class="label mt-4">
+      <span class="label-text">Préférences Système</span>
+    </label>
+    <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
+
+    <!-- Submit button with DaisyUI class -->
+    <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
-  <div class="flex flex-col gap-4 p-4 m-8 rounded-md bg-slate-100 dark:bg-slate-700">
-    <div class="flex flex-grow gap-4" *ngFor="let profile of profilesList; let i = index"
-         [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
-      <div class="flex items-center flex-grow gap-4">
+  <div class="flex gap-4 flex-col bg-slate-100 p-4 m-8 rounded-md">
+    <div class="flex flex-grow gap-4" *ngFor="let profile of profiles; let i = index"
+      [ngClass]="{'bg-green-500': profile.username === currentProfile?.username}">
+      <div class="flex gap-4 flex-grow items-center">
+        <div *ngIf="profile.photo" class="avatar">
+          <div class="rounded-full w-24">
+            <img [src]="profile.photo" alt="Photo de profil">
+          </div>
+        </div>
+        <div *ngIf="!profile.photo" class="avatar placeholder">
+          <div class="bg-neutral text-neutral-content rounded-full w-24">
+            <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+          </div>
+        </div>
         <p class="" (click)="selectProfile(profile, true)"><b>{{ profile.username }}</b></p>
         <p class="" (click)="selectProfile(profile, true)">
-          {{ profile.handicapList && profile.handicapList.length ? profile.handicapList[0].handicap : 'N/A' }}
-        </p>        
+          <span *ngFor="let handicap of profile.handicapList">{{ handicap.handicap }} </span>
+        </p>
+        <p class="">
+          <span *ngFor="let dispositif of profile.dispositifLieu">{{ dispositif.name }} </span>
+        </p>
       </div>
       <div class="flex gap-4">
         <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
@@ -48,9 +87,7 @@
   </div>
 
   <div *ngIf="showModal">
-    <app-profile-selector-dialog 
-      [profilesList]="profilesList" 
-      (selectionConfirmed)="onProfileSelected($event)">
+    <app-profile-selector-dialog [profiles]="profiles" (selectionConfirmed)="onProfileSelected($event)">
     </app-profile-selector-dialog>
   </div>
 </div>
