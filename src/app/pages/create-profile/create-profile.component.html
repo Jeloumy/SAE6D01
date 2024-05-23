@@ -41,7 +41,7 @@
     <label class="label mt-4">
       <span class="label-text">Préférences Système</span>
     </label>
-    <app-system-preferences [(preferences)]="systemPreferences"></app-system-preferences>
+    <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
     <button class="btn btn-primary mt-4" type="submit" [disabled]="profileForm.invalid">Créer</button>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SystemPreferences } from '../models/user-profile'; // Correction de l'importation
+import { SystemPreferences } from '../models/user-profile';
 
 @Component({
   selector: 'app-system-preferences',
@@ -7,32 +7,20 @@ import { SystemPreferences } from '../models/user-profile'; // Correction de l'i
   styleUrls: ['./system-preferences.component.scss']
 })
 export class SystemPreferencesComponent {
-  private _preferences: SystemPreferences = {};
-
-  @Input()
-  get preferences(): SystemPreferences {
-    return this._preferences;
-  }
-
-  set preferences(value: SystemPreferences) {
-    this._preferences = value || {};
-    this.preferencesChange.emit(this._preferences);
-  }
-
+  @Input() preferences: SystemPreferences = {} as SystemPreferences;
   @Output() preferencesChange = new EventEmitter<SystemPreferences>();
 
   updatePreferences(key: string, value: any): void {
-    this._preferences[key] = value;
-    this.preferencesChange.emit(this._preferences);
+    const newPreferences = { ...this.preferences, [key]: value };
+    this.preferences = newPreferences;
+    this.preferencesChange.emit(newPreferences);
   }
 
-  onCheckboxChange(event: Event, key: string): void {
-    const target = event.target as HTMLInputElement;
-    this.updatePreferences(key, target.checked);
+  onCheckboxChange(event: any, key: string): void {
+    this.updatePreferences(key, event.target.checked);
   }
 
-  onRangeChange(event: Event, key: string): void {
-    const target = event.target as HTMLInputElement;
-    this.updatePreferences(key, target.valueAsNumber);
+  onRangeChange(event: any, key: string): void {
+    this.updatePreferences(key, event.target.value);
   }
 }

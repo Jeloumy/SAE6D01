@@ -32,6 +32,12 @@ export class CreateProfileComponent implements OnInit {
     return this.profile.systemPreferences || {} as SystemPreferences;
   }
 
+  set systemPreferences(value: SystemPreferences) {
+    if (this.profile) {
+      this.profile.systemPreferences = value;
+    }
+  }
+
   loadProfiles(): void {
     this.profiles = this.profileService.getProfilesList();
   }
@@ -141,5 +147,9 @@ export class CreateProfileComponent implements OnInit {
     this.photoPreview = '';
     this.profileForm.resetForm();
     this.fileInput.nativeElement.value = '';
+  }
+
+  updateSystemPreferences(preferences: SystemPreferences): void {
+    this.systemPreferences = preferences;
   }
 }
