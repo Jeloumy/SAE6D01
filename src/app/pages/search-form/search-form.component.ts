@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Handicap, DispositifLieu } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 
@@ -7,12 +7,10 @@ import { ProfileService } from '../../services/profile/profile.service';
   templateUrl: './search-form.component.html',
   styleUrls: ['./search-form.component.scss']
 })
-export class SearchFormComponent implements OnInit {
+export class SearchFormComponent {
   searchQuery: string = '';
   selectedHandicaps: Handicap[] = [];
   selectedDispositifLieu: DispositifLieu[] = [];
-
-  @Output() searchEvent = new EventEmitter<any>();
 
   constructor(private profileService: ProfileService) {}
 
@@ -29,10 +27,7 @@ export class SearchFormComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.searchEvent.emit({
-      query: this.searchQuery,
-      handicaps: this.selectedHandicaps,
-      dispositifs: this.selectedDispositifLieu
-    });
+    // Logique de recherche à implémenter
+    console.log('Recherche effectuée:', this.searchQuery, this.selectedHandicaps, this.selectedDispositifLieu);
   }
 }

@@ -5,10 +5,7 @@
       </div>
   
       <!-- Handicap Selector Component -->
-      <app-handicap-selector 
-        [(selectedHandicaps)]="selectedHandicaps" 
-        [(selectedDispositifLieu)]="selectedDispositifLieu"
-        (selectedDispositifLieuChange)="selectedDispositifLieu = $event"></app-handicap-selector>
+      <app-handicap-selector [(selectedHandicaps)]="selectedHandicaps" [(selectedDispositifLieu)]="selectedDispositifLieu"></app-handicap-selector>
   
       <button class="btn btn-primary mt-4" type="submit">Rechercher</button>
     </form>
