@@ -39,7 +39,7 @@ export class CreateProfileComponent implements OnInit {
   }
 
   loadProfiles(): void {
-    this.profilesList = this.profileService.getProfilesList();
+    this.profiles = this.profileService.getProfilesList();
   }
 
   loadCurrentProfile(): void {
@@ -58,7 +58,7 @@ export class CreateProfileComponent implements OnInit {
       return;
     }
 
-    const isInitialProfile = this.profilesList.length === 0; // Vérifie s'il n'y a pas de profils existants
+    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
       this.editingProfile = null;
@@ -81,7 +81,7 @@ export class CreateProfileComponent implements OnInit {
     console.log('Profil supprimé, wasCurrentProfile:', wasCurrentProfile);
 
     if (wasCurrentProfile) {
-      if (this.profilesList.length > 0) {
+      if (this.profiles.length > 0) {
         console.log('Afficher le modal pour la sélection du profil');
         this.showModal = true;
         console.log('showModal:', this.showModal);

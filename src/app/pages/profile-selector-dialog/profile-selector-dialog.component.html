@@ -1,8 +1,8 @@
 <div class="modal" [class.modal-open]="true">
   <div class="modal-box">
     <h3 class="font-bold text-lg">Choisissez un profil</h3>
-    <div *ngIf="profiles.length > 0">
-      <div *ngFor="let profile of profiles" class="form-control">
+    <div *ngIf="profilesList.length > 0">
+      <div *ngFor="let profile of profilesList" class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text">{{ profile.username }}</span> 
           <input type="radio" [value]="profile" [(ngModel)]="selectedProfile" name="profile" class="radio radio-primary">

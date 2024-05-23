@@ -78,16 +78,16 @@
         </button>
       </div>
     </div>
-    <div *ngIf="profilesList.length === 0 && currentProfile === null" class="alert alert-warning">
+    <div *ngIf="profiles.length === 0 && currentProfile === null" class="alert alert-warning">
       <span><b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.</span>
     </div>
-    <div *ngIf="profilesList.length > 0 && currentProfile === null" class="alert alert-warning">
+    <div *ngIf="profiles.length > 0 && currentProfile === null" class="alert alert-warning">
       <span>Veuillez sélectionner un profil parmi les profils existants.</span>
     </div>
   </div>
 
   <div *ngIf="showModal">
-    <app-profile-selector-dialog [profiles]="profiles" (selectionConfirmed)="onProfileSelected($event)">
+    <app-profile-selector-dialog [profilesList]="profiles" (selectionConfirmed)="onProfileSelected($event)">
     </app-profile-selector-dialog>
   </div>
 </div>
