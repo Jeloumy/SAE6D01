@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers';
+import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 
 @Component({
   selector: 'app-map',
