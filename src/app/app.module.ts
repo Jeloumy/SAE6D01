@@ -13,6 +13,7 @@ import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/
 import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-selector.component';
 import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
 import { HomeComponent } from './home/home.component';
+import { SearchFormComponent } from './pages/search-form/search-form.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { HomeComponent } from './home/home.component';
     HandicapSelectorComponent,
     SystemPreferencesComponent,
     HomeComponent,
+    SearchFormComponent,
   ],
   imports: [
     BrowserModule,
