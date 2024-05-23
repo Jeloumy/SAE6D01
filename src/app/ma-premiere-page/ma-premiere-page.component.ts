@@ -8,7 +8,6 @@ import { AccesLibreService } from '../mes-services/acces-libre.service';
 })
 export class MaPremierePageComponent {
   filters: any = {
-    /* quantity: 5, */
     handicaps: [] as string[] // Initialiser handicaps comme un tableau de chaînes
   };
   results: any;
@@ -60,7 +59,7 @@ export class MaPremierePageComponent {
   }
 
   onSubmit() {
-    const apiKey = 'oU6JwJ1T.himZfVvhB5F0JqY6YeU2A2cDbgbr0tzN'; // Remplace par ta clé d'API réelle
+    const apiKey = 'oU6JwJ1T.himZfVvhB5F0JqY6YeU2A2cDbgbr0tzN';
 
     this.accesLibreService.getErp(this.filters, apiKey).subscribe(data => {
       this.results = data;
@@ -68,7 +67,7 @@ export class MaPremierePageComponent {
   }
 
   goToPage(url: string) {
-    const apiKey = 'oU6JwJ1T.himZfVvhB5F0JqY6YeU2A2cDbgbr0tzN'; // Remplace par ta clé d'API réelle
+    const apiKey = 'oU6JwJ1T.himZfVvhB5F0JqY6YeU2A2cDbgbr0tzN';
 
     this.accesLibreService.getResultsByUrl(url, apiKey).subscribe(data => {
       this.results = data;
