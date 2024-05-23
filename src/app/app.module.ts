@@ -10,6 +10,8 @@ import { HandicapFormComponent } from './pages/handicap-form/handicap-form.compo
 import { FooterComponent } from './footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
+import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-selector.component';
+import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
 import { HomeComponent } from './home/home.component';
 
 @NgModule({
@@ -21,6 +23,8 @@ import { HomeComponent } from './home/home.component';
     MapComponent,
     FooterComponent,
     ProfileSelectorDialogComponent,
+    HandicapSelectorComponent,
+    SystemPreferencesComponent,
     HomeComponent,
   ],
   imports: [

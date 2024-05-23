@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
 
 @Component({
   selector: 'app-create-profile',
@@ -8,33 +9,43 @@ import { UserProfile } from '../../models/user-profile';
   styleUrls: ['./create-profile.component.scss'],
 })
 export class CreateProfileComponent implements OnInit {
-  profile: UserProfile = {
-    id: 0,
-    username: '',
-    handicapList: [{ id: 0, handicap: '' }], 
-  };
-  profilesList: UserProfile[] = [];
+  @ViewChild('profileForm') profileForm!: NgForm;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  profile: UserProfile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '', systemPreferences: {} as SystemPreferences };
+  profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
   showModal: boolean = false;
+  handicapTypes: Handicap[] = [];
+  photoPreview: string | ArrayBuffer | null = '';
 
   constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
     this.loadProfiles();
     this.loadCurrentProfile();
+    this.handicapTypes = this.profileService.getHandicapTypes();
+  }
+
+  get systemPreferences(): SystemPreferences {
+    return this.profile.systemPreferences || {} as SystemPreferences;
+  }
+
+  set systemPreferences(value: SystemPreferences) {
+    if (this.profile) {
+      this.profile.systemPreferences = value;
+    }
   }
 
   loadProfiles(): void {
-    this.profilesList = this.profileService.getProfilesList();
+    this.profiles = this.profileService.getProfilesList();
   }
 
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
-      const matchedProfile = this.profilesList.find(
-        (profile) => profile.username === storedProfile.username
-      );
+      const matchedProfile = this.profiles.find(profile => profile.username === storedProfile.username);
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
@@ -42,12 +53,12 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
-    if (!this.profile.username || !this.profile.handicapList) {
-      alert("Le nom d'utilisateur et au moins 1 handicap sont requis.");
+    if (!this.profile.username || this.profile.handicapList.length === 0) {
+      alert('username et au moins un type d\'handicap sont requis.');
       return;
     }
 
-    const isInitialProfile = this.profilesList.length === 0; // Vérifie s'il n'y a pas de profils existants
+    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
       this.editingProfile = null;
@@ -57,6 +68,8 @@ export class CreateProfileComponent implements OnInit {
         this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
       }
     }
+    this.resetForm();
+    this.loadProfiles();
   }
 
   deleteProfile(profileId: number): void {
@@ -68,7 +81,7 @@ export class CreateProfileComponent implements OnInit {
     console.log('Profil supprimé, wasCurrentProfile:', wasCurrentProfile);
 
     if (wasCurrentProfile) {
-      if (this.profilesList.length > 0) {
+      if (this.profiles.length > 0) {
         console.log('Afficher le modal pour la sélection du profil');
         this.showModal = true;
         console.log('showModal:', this.showModal);
@@ -80,9 +93,7 @@ export class CreateProfileComponent implements OnInit {
         this.profileService.setCurrentProfile(null);
       }
     } else if (currentProfilePseudo) {
-      const matchedProfile = this.profilesList.find(
-        (profile) => profile.username === currentProfilePseudo
-      );
+      const matchedProfile = this.profiles.find(profile => profile.username === currentProfilePseudo);
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false);
       }
@@ -90,25 +101,20 @@ export class CreateProfileComponent implements OnInit {
   }
 
   editProfile(profile: UserProfile): void {
-    this.profile = { ...profile };
+    this.profile = { ...profile, systemPreferences: profile.systemPreferences || {} as SystemPreferences };
     this.editingProfile = profile;
+    this.photoPreview = profile.photo || '';
   }
 
   selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (
-      confirmChange &&
-      this.currentProfile &&
-      this.currentProfile.username !== profile.username
-    ) {
-      const userConfirmed = confirm(
-        'Êtes-vous sûr de vouloir changer de profil ?'
-      );
+    if (confirmChange && this.currentProfile && this.currentProfile.username !== profile.username) {
+      const userConfirmed = confirm("Êtes-vous sûr de vouloir changer de profil ?");
       if (!userConfirmed) {
         return;
       }
     }
-    this.currentProfile = profile;
-    this.profileService.setCurrentProfile(profile);
+    this.currentProfile = { ...profile, systemPreferences: profile.systemPreferences || {} as SystemPreferences };
+    this.profileService.setCurrentProfile(this.currentProfile);
   }
 
   onProfileSelected(profile: UserProfile | null): void {
@@ -124,5 +130,28 @@ export class CreateProfileComponent implements OnInit {
 
   toggleModal(): void {
     this.showModal = !this.showModal;
+  }
+
+  onFileChange(event: any): void {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.profile.photo = reader.result as string;
+        this.photoPreview = reader.result;
+      };
+    }
+  }
+
+  resetForm(): void {
+    this.profile = { id: 0, username: '', handicapList: [], dispositifLieu: [], photo: '', systemPreferences: {} as SystemPreferences };
+    this.photoPreview = '';
+    this.profileForm.resetForm();
+    this.fileInput.nativeElement.value = '';
+  }
+
+  updateSystemPreferences(preferences: SystemPreferences): void {
+    this.systemPreferences = preferences;
   }
 }
