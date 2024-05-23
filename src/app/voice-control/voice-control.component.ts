@@ -4,7 +4,7 @@ import { SpeechRecognitionService } from '../speech-recognition.service';
 @Component({
   selector: 'app-voice-control',
   templateUrl: './voice-control.component.html',
-  styleUrls: ['./voice-control.component.css']
+  styleUrls: ['./voice-control.component.scss']
 })
 export class VoiceControlComponent implements OnInit, OnDestroy {
   public message: string = '';
