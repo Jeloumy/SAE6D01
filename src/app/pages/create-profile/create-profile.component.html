@@ -87,7 +87,7 @@
                 <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
               </ul>
             </td>
-            <td class="flex">
+            <td>
               <div class="flex flex-col items-center gap-2 sm:gap-4">
                 <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
                   <i class="fas fa-edit"></i>
