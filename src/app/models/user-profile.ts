@@ -13,6 +13,7 @@ export interface SystemPreferences {
   highContrast?: boolean;
   brightness?: number;
   blackAndWhite?: boolean;
+  darkMode?: boolean,
   [key: string]: any;
 }
 

@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-slate-100 dark:bg-slate-700">
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 form-control sm:w-2/3">
     <div class="mt-2">
       <label class="label">
         <span class="font-bold label-text">Nom d'utilisateur</span>
@@ -33,7 +33,7 @@
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-4 avatar placeholder" *ngIf="!photoPreview">
         <div class="w-24 rounded-full bg-neutral text-neutral-content">
-          <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+          <span class="text-3xl">{{ profile.username?.toUpperCase() | slice:0:2 }}</span>
         </div>
       </div>
     </div>
@@ -47,10 +47,13 @@
     <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">
+      {{ editingProfile ? 'Modifier' : 'Créer' }}
+    </button>
+    
   </form>
 
-  <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-slate-100 dark:bg-slate-700">
+  <div class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 sm:w-2/3 form-control">
     <div *ngIf="profiles.length > 0; else noProfiles">
       <table class="table w-full">
         <thead>
@@ -71,8 +74,8 @@
                 </div>
               </div>
               <div *ngIf="!profile.photo" class="avatar placeholder">
-                <div class="w-16 rounded-full bg-neutral text-neutral-content">
-                  <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+                <div class="w-24 rounded-full bg-neutral text-neutral-content">
+                  <span class="text-3xl">{{ profile.username.toUpperCase() | slice:0:2 }}</span>
                 </div>
               </div>
               <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>

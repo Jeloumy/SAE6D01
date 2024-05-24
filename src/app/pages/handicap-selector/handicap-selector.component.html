@@ -11,7 +11,20 @@
     </div>
   
     <button class="mt-4 btn btn-primary" (click)="toggleDispositifLieu($event)">Afficher les préférences</button>
-  
+
+    <details class="dropdown">
+      <summary class="m-1 btn btn-secondary">Afficher les préférences</summary>
+      <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+        <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+          <label class="cursor-pointer label">
+            <span class="label-text">{{ dispositiflieu.name }}</span>
+            <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)"
+              (change)="onDispositifLieuChange(dispositiflieu, $event)" class="checkbox checkbox-primary">
+          </label>
+        </div>
+      </ul>
+    </details>
+    
     <div *ngIf="showDispositifLieu" class="mt-4 form-control">
       <label class="label">
         <span class="font-bold label-text">Préférences</span>
