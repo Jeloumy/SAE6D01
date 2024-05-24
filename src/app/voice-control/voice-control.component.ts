@@ -26,9 +26,9 @@ export class VoiceControlComponent implements OnInit, OnDestroy {
       console.error('Speech recognition error', event);
     });
 
-    this.speechRecognitionService.onEnd(() => {
-      console.log('Speech recognition ended');
-    });
+    // this.speechRecognitionService.onEnd(() => {
+    //   console.log('Speech recognition ended');
+    // });
 
     this.startListening();
   }

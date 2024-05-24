@@ -13,6 +13,7 @@ export class SpeechRecognitionService {
     this.recognition.continuous = true;
     this.recognition.interimResults = false;
     this.recognition.lang = 'fr-FR'; // Set your desired language
+    this.start();
   }
 
   start() {
@@ -22,6 +23,7 @@ export class SpeechRecognitionService {
   }
 
   stop() {
+    console.log("je suis dans stop()")
     if (!this.isListening) return;
     this.recognition.stop();
     this.isListening = false;
@@ -39,9 +41,9 @@ export class SpeechRecognitionService {
   }
 
   onEnd(callback: () => void) {
-    this.recognition.onend = () => {
-      this.isListening = false;
-      callback();
-    };
+    // this.recognition.onend = () => {
+    //   this.isListening = false;
+    //   callback();
+    // };
   }
 }
