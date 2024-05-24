@@ -16,7 +16,7 @@ export class AccesLibreService {
     if (filters.quantity) params = params.set('page_size', filters.quantity);
     if (filters.enseigne) params = params.set('q', filters.enseigne);
     if (filters.ville) params = params.set('commune', filters.ville);
-    //if (filters.handicaps && filters.handicaps.length > 0) params = params.set('equipments', filters.handicaps.join('&equipments='));
+    if (filters.zone && filters.zone.length > 0) params = params.set('zone', filters.zone.join(','));
     if (filters.handicaps && filters.handicaps.length > 0) {
       filters.handicaps.forEach((equipment: string) => {
           params = params.append('equipments', equipment);

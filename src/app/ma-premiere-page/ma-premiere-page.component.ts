@@ -8,7 +8,9 @@ import { AccesLibreService } from '../mes-services/acces-libre.service';
 })
 export class MaPremierePageComponent {
   filters: any = {
-    handicaps: [] as string[] // Initialiser handicaps comme un tableau de chaînes
+    /* quantity: 1, */
+    handicaps: [] as string[], // Initialiser handicaps comme un tableau de chaînes
+    zone: [4.268188476562501,48.16242149265213,4.74884033203125,48.43648995594418]
   };
   results: any;
   filteredResults: any;
