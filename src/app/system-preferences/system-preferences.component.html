@@ -14,7 +14,7 @@
   <label class="label">
     <span class="label-text">Luminosité</span>
   </label>
-  <input type="range" min="0" max="100" [value]="preferences?.brightness" (change)="onRangeChange($event, 'brightness')" class="range range-primary">
+  <input type="range" min="0" max="100" [value]="preferences?.brightness" (change)="onRangeChange($event, 'brightness')" class="range range-primary -z-10">
   <label class="label">
     <span class="label-text">Thème</span>
     <label class="flex gap-2 cursor-pointer">
