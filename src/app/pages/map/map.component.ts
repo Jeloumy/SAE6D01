@@ -50,8 +50,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.layerControl.addBaseLayer(this.layers[layerName], layerName);
     }
 
+    // Vérifier si l'utilisateur a le mode sombre activé
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const defaultLayer = prefersDark ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
+
     this.layerControl.addTo(this.map);
-    this.layers['OpenStreetMap'].addTo(this.map);
+    defaultLayer.addTo(this.map);
   }
 
   private addMarkers(): void {
