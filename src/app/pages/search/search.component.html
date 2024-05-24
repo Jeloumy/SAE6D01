@@ -1,2 +1,2 @@
-<app-search-form (searchEvent)="onSearchResults($event)"></app-search-form>
-<app-map class="flex flex-grow" [results]="searchResults"></app-map>
+<app-search-form (searchEvent)="onSearchResults($event.results, $event.filters)"></app-search-form>
+<app-map class="flex flex-grow" [results]="searchResults" [filters]="filters"></app-map>

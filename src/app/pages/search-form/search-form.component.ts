@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Handicap, DispositifLieu } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AccesLibreService } from '../../services/acces-libre/acces-libre.service';
+import { OpenCageService } from '../../services/open-cage/open-cage.service';
 
 @Component({
   selector: 'app-search-form',
@@ -12,9 +13,11 @@ export class SearchFormComponent implements OnInit {
   searchQuery: string = '';
   selectedHandicaps: Handicap[] = [];
   selectedDispositifLieu: DispositifLieu[] = [];
+  useGeolocation: boolean = false;
+  radius: number = 15; 
   results: any;
 
-  @Output() searchEvent = new EventEmitter<any>();
+  @Output() searchEvent = new EventEmitter<{ results: any, filters: any }>(); 
 
   private dispositifMapping: { [key: string]: string } = {
     'Chemin vers l\'accueil accessible': 'having_accessible_exterior_path',
@@ -44,7 +47,11 @@ export class SearchFormComponent implements OnInit {
     'Extérieur - bande de guidage': 'having_guide_band'
   };
 
-  constructor(private profileService: ProfileService, private accesLibreService: AccesLibreService) {}
+  constructor(
+    private profileService: ProfileService,
+    private accesLibreService: AccesLibreService,
+    private openCageService: OpenCageService
+  ) {}
 
   ngOnInit(): void {
     this.loadProfilePreferences();
@@ -59,21 +66,84 @@ export class SearchFormComponent implements OnInit {
   }
 
   onSearch(): void {
+    const filters = this.buildFilters();
+
+    this.accesLibreService.getErp(filters).subscribe(data => {
+      if (this.useGeolocation) {
+        this.getGeolocation().then((position) => {
+          const filteredResults = this.filterResultsByDistance(data.results, position.coords.latitude, position.coords.longitude, this.radius);
+          data.results = filteredResults;
+          this.results = data;
+          this.searchEvent.emit({ results: data, filters: filters }); 
+        }).catch((error) => {
+          console.error('Error getting geolocation', error);
+          this.results = data;
+          this.searchEvent.emit({ results: data, filters: filters }); 
+        });
+      } else {
+        this.openCageService.getGeolocation(this.searchQuery).subscribe(response => {
+          const location = response.results[0].geometry;
+          const filteredResults = this.filterResultsByDistance(data.results, location.lat, location.lng, this.radius);
+          data.results = filteredResults;
+          this.results = data;
+          this.searchEvent.emit({ results: data, filters: filters }); 
+        }, error => {
+          console.error('Error getting geolocation from OpenCage', error);
+          this.results = data;
+          this.searchEvent.emit({ results: data, filters: filters }); 
+        });
+      }
+    });
+  }
+
+  getGeolocation(): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      } else {
+        reject(new Error('Geolocation is not supported by this browser.'));
+      }
+    });
+  }
+
+  buildFilters(): any {
     const dispositifsFiltered = this.selectedDispositifLieu
       .map(d => this.dispositifMapping[d.name])
-      .filter(d => d); // Filtre les valeurs vides
-  
-    const filters = {
+      .filter(d => d); 
+
+    const filters: any = {
       query: this.searchQuery,
-      dispositifs: dispositifsFiltered
+      dispositifs: dispositifsFiltered,
+      handicaps: this.selectedHandicaps.map(h => h.handicap)
     };
-  
-    console.log('Filters:', filters);
-  
-    this.accesLibreService.getErp(filters).subscribe(data => {
-      this.results = data;
-      console.log('API Response:', data);
-      this.searchEvent.emit(data); // Émettez les résultats
+
+    return filters;
+  }
+
+  filterResultsByDistance(results: any[], userLat: number, userLon: number, maxDistance: number): any[] {
+    return results.filter(result => {
+      if (result.geom && result.geom.coordinates && result.geom.coordinates.length === 2) {
+        const [lon, lat] = result.geom.coordinates;
+        const distance = this.calculateDistance(userLat, userLon, lat, lon);
+        return distance <= maxDistance;
+      }
+      return false;
     });
+  }
+
+  calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; 
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  }
+
+  deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }

@@ -1,8 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.active{
+.active {
     @apply text-blue-500;
 }
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active {
+    @apply text-blue-500;
+}
+
+

@@ -7,9 +7,12 @@ import { Component } from '@angular/core';
 })
 export class SearchComponent {
   searchResults: any;
+  filters: any = {}; 
 
-  onSearchResults(results: any): void {
+  onSearchResults(results: any, filters: any): void { 
     this.searchResults = results;
+    this.filters = filters; 
     console.log('Résultats de la recherche:', results);
+    console.log('Filtres de la recherche:', filters);
   }
 }
