@@ -13,6 +13,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   @Input() results: any;
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
+  private layerControl: L.Control.Layers = L.control.layers();
+  private layers: { [name: string]: L.TileLayer } = {
+    'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }),
+    'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+    })
+    // Ajoutez d'autres couches de carte ici
+  };
 
   ngOnInit(): void {}
 
@@ -35,7 +45,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   private initMap(): void {
     const coordinates: L.LatLngTuple = [48.8566, 2.3522];
     this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(this.map);
+    for (const layerName in this.layers) {
+      this.layerControl.addBaseLayer(this.layers[layerName], layerName);
+    }
+
+    // Vérifier si l'utilisateur a le mode sombre activé
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const defaultLayer = prefersDark ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
+
+    this.layerControl.addTo(this.map);
+    defaultLayer.addTo(this.map);
 
     // Initialize the LayerGroup to hold markers
     this.markersLayer = L.layerGroup().addTo(this.map);
