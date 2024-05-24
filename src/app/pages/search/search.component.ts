@@ -6,9 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent {
+  searchResults: any;
 
-  handleSearch(event: any): void {
-    console.log('Recherche effectuée:', event);
-    // Logique de recherche et mise à jour de la carte
+  onSearchResults(results: any): void {
+    this.searchResults = results;
+    console.log('Résultats de la recherche:', results);
   }
 }

@@ -1,39 +1,23 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers';
+import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 
 @Component({
   selector: 'app-map',
   template: '<div #map class="w-screen flex flex-1"></div>',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
-  private map!: L.Map;
-  private layers: { [name: string]: L.TileLayer } = {
-    'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }),
-    'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-    })
-    // Ajoutez d'autres couches de carte ici
-  };
-  private layerControl: L.Control.Layers = L.control.layers();
-  private monuments: { name: string, coordinates: L.LatLngExpression }[] = [
-    { name: 'Tour Eiffel', coordinates: [48.8584, 2.2945] },
-    { name: 'Louvre Museum', coordinates: [48.8606, 2.3376] },
-    // Ajoutez d'autres monuments ici
-  ];
-
+export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @ViewChild('map', { static: false }) private mapContainer!: ElementRef<HTMLDivElement>;
+  @Input() results: any;
+  private map!: L.Map;
+  private markersLayer!: L.LayerGroup;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.addMarkers();
   }
 
   ngOnDestroy(): void {
@@ -42,29 +26,48 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private initMap(): void {
-    const coordinates: L.LatLngTuple = [48.8566, 2.3522]; // Coordonnées de Paris
-    this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
-
-    for (const layerName in this.layers) {
-      this.layerControl.addBaseLayer(this.layers[layerName], layerName);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['results'] && this.results) {
+      this.updateMarkers();
     }
-
-    this.layerControl.addTo(this.map);
-    this.layers['OpenStreetMap'].addTo(this.map);
   }
 
-  private addMarkers(): void {
-    this.monuments.forEach(monument => {
-      const customMarker = L.ExtraMarkers.icon({
-        icon: 'fa-number',
-        number: '1',
-        markerColor: 'green',
-        shape: 'square',
-        prefix: 'fa'
+  private initMap(): void {
+    const coordinates: L.LatLngTuple = [48.8566, 2.3522];
+    this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(this.map);
+
+    // Initialize the LayerGroup to hold markers
+    this.markersLayer = L.layerGroup().addTo(this.map);
+  }
+
+  private updateMarkers(): void {
+    // Clear existing markers
+    this.markersLayer.clearLayers();
+
+    // Add new markers
+    if (this.results && this.results.results) {
+      this.results.results.forEach((result: any) => {
+        const { geom, nom, adresse } = result;
+        if (geom && geom.coordinates && geom.coordinates.length === 2) {
+          const [longitude, latitude] = geom.coordinates;
+          const customMarker = L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            number: '1',
+            markerColor: 'green',
+            shape: 'square',
+            prefix: 'fa'
+          });
+
+          const marker = L.marker([latitude, longitude], { icon: customMarker })
+            .bindPopup(`<b>${nom}</b><br>${adresse}`);
+
+          // Add marker to the markers layer
+          this.markersLayer.addLayer(marker);
+        } else {
+          console.error(`Invalid coordinates for result: ${nom}`, result);
+        }
       });
-  
-      L.marker(monument.coordinates, { icon: customMarker }).addTo(this.map).bindPopup(`<b>${monument.name}</b><br>Click to see more information`);
-    });
+    }
   }
 }
