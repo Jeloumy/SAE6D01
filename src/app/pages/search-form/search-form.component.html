@@ -1,0 +1,13 @@
+<div class="search-form">
+    <form (ngSubmit)="onSearch()">
+      <div class="form-group">
+        <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche par ville, lieu ou catégorie" class="input input-bordered w-full" />
+      </div>
+  
+      <!-- Handicap Selector Component -->
+      <app-handicap-selector [(selectedHandicaps)]="selectedHandicaps" [(selectedDispositifLieu)]="selectedDispositifLieu"></app-handicap-selector>
+  
+      <button class="btn btn-primary mt-4" type="submit">Rechercher</button>
+    </form>
+  </div>
+  

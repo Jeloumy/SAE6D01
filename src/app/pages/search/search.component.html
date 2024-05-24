@@ -1,2 +1,2 @@
-<app-handicap-form/>
-<app-map class="flex flex-grow"/>
+<app-search-form (searchEvent)="onSearchResults($event)"></app-search-form>
+<app-map class="flex flex-grow" [results]="searchResults"></app-map>
