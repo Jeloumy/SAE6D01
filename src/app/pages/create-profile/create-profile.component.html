@@ -1,8 +1,5 @@
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm"
-    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-slate-100 dark:bg-slate-700"
-    aria-label="Formulaire de création de profil">
-
+  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 form-control sm:w-2/3">
     <div class="mt-2">
       <label class="label" for="username">
         <span class="font-bold label-text">Nom d'utilisateur</span>
@@ -35,15 +32,7 @@
             <img [src]="photoPreview" alt="Aperçu de la photo de profil" title="Cliquez pour afficher la photo">
           </div>
         </div>
-        <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
-          <div class="w-24 rounded-full bg-neutral text-neutral-content">
-            <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
-          </div>
-        </div>
-        <div class="absolute bottom-0 right-0 p-1 bg-white rounded-full">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M6.385 19.616q-.587 0-1.168-.204q-.58-.204-1.025-.566q.496-.327.844-.878t.349-1.352q0-.847.577-1.424q.577-.576 1.423-.576t1.423.576t.577 1.424q0 1.246-.877 2.123t-2.123.877M11.25 14.5l-1.711-1.711l8.18-8.181q.275-.275.688-.288t.712.288l.312.311q.3.3.3.7t-.3.7z"/></svg>
-        </div>
-      </label>
+      </div>
     </div>
 
     <div class="mt-2" aria-label="Préférences système">
@@ -54,13 +43,16 @@
     <app-system-preferences [(preferences)]="systemPreferences"
       (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
 
-    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <!-- Submit button with DaisyUI class -->
+    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">
+      {{ editingProfile ? 'Modifier' : 'Créer' }}
+    </button>
+    
   </form>
 
-  <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-slate-100 dark:bg-slate-700"
-    aria-label="Liste des profils">
+  <div class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 sm:w-2/3 form-control">
     <div *ngIf="profiles.length > 0; else noProfiles">
-      <table class="table w-full">
+      <table class="table w-full sm:table-sm md:table-md lg:table-lg">
         <thead>
           <tr>
             <th>Profil</th>
@@ -70,40 +62,32 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let profile of profiles; let i = index"
-            [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}"
-            (click)="selectProfile(profile, true)">
+          <tr class="" *ngFor="let profile of profiles; let i = index" 
+              [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}" (click)="selectProfile(profile, true)">
             <td class="flex flex-col items-center justify-center">
               <div *ngIf="profile.photo" class="avatar">
-                <div class="w-16">
+                <div class="w-12">
                   <img class="rounded-full" [src]="profile.photo" alt="Photo de profil">
-                </div>
-              </div>
-              <div *ngIf="!profile.photo" class="avatar placeholder">
-                <div class="w-16 rounded-full bg-neutral text-neutral-content">
-                  <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
                 </div>
               </div>
               <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>
             </td>
-            <td>
+            <td class="">
               <ul>
                 <li *ngFor="let handicap of profile.handicapList" class="mb-2">{{ handicap.handicap }}</li>
               </ul>
             </td>
-            <td>
+            <td class="">
               <ul>
                 <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
               </ul>
             </td>
-            <td>
+            <td class="">
               <div class="flex flex-col items-center gap-2 sm:gap-4">
-                <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();"
-                  aria-label="Modifier le profil">
+                <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();"
-                  aria-label="Supprimer le profil">
+                <button class="btn btn-error btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="deleteProfile(profile.id); $event.stopPropagation();">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>

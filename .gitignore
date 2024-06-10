@@ -9,10 +9,16 @@
 # Node
 /node_modules
 npm-debug.log
+yarn-debug.log*
 yarn-error.log
 
-# IDEs and editors
+# IDEs and editors  
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .project
 .classpath
 .c9/
@@ -40,3 +46,23 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Angular files
+.angular/
+.angular-build/
+e2e/
+
+# Capacitor files
+android/app/build/
+android/.gradle/
+android/capacitor.settings.gradle
+android/variables.gradle
+android/capacitor.build.gradle
+android/local.properties
+
+# Environment files
+.env
+.env.*.local
+
+# Firebase cache
+.firebase/

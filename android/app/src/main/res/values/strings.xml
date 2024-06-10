@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SAE6D01</string>
+    <string name="title_activity_main">SAE6D01</string>
+    <string name="package_name">dev.iut.beziers.handiplace</string>
+    <string name="custom_url_scheme">dev.iut.beziers.handiplace</string>
+</resources>
