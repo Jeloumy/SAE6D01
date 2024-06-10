@@ -10,3 +10,11 @@
 .link-hover:hover{
     text-decoration: none;
 }
+
+.leaflet-control-attribution {
+    display: none;
+}
+
+.leaflet-pane, .leaflet-top, .leaflet-bottom{
+    z-index: 0 !important;
+}
