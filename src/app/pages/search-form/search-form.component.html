@@ -5,9 +5,33 @@
         type="text"
         [(ngModel)]="searchQuery"
         name="searchQuery"
-        placeholder="Recherche par ville, lieu ou catégorie"
+        placeholder="Recherche par catégorie"
         class="w-full input input-bordered"
       />
+    </div>
+    <div class="relative form-group">
+      <input
+        type="text"
+        [(ngModel)]="communeQuery"
+        name="communeQuery"
+        placeholder="Commune"
+        class="w-full input input-bordered"
+        (input)="onCommuneQueryChange($event)"
+        (focus)="isCommuneInputFocused = true"
+        (focusout)="isCommuneInputFocused = false"
+      />
+      <ul
+        *ngIf="communes.length > 0 && isCommuneInputFocused"
+        class="absolute left-0 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-base-200 border-base-300 max-h-60"
+      >
+        <li
+          *ngFor="let commune of communes"
+          (mousedown)="selectCommune(commune)"
+          class="p-4 cursor-pointer hover:bg-base-100"
+        >
+          {{ commune.name }}
+        </li>
+      </ul>
     </div>
     <div class="mx-8 my-4">
       <app-handicap-selector
@@ -15,7 +39,9 @@
         [(selectedDispositifLieu)]="selectedDispositifLieu"
       ></app-handicap-selector>
       <div class="flex items-center justify-center">
-        <button class="flex-grow mt-4 font-bold btn btn-primary" type="submit">Rechercher</button>
+        <button class="flex-grow mt-4 font-bold btn btn-primary" type="submit">
+          Rechercher
+        </button>
       </div>
     </div>
   </form>
