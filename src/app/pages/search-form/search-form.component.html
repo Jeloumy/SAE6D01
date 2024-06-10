@@ -57,7 +57,7 @@
       </label>
       <ul
         *ngIf="communes.length > 0 && isCommuneInputFocused"
-        class="absolute left-0 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-base-200 border-base-300 max-h-60"
+        class="absolute left-0 z-10 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-base-200 border-base-300 max-h-60"
       >
         <li
           *ngFor="let commune of communes"

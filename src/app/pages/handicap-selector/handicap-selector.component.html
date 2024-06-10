@@ -1,46 +1,71 @@
 <div class="justify-center form-control">
-    <label class="label">
-      <span class="font-bold label-text">Types d'handicap</span>
-    </label>
-    <div *ngFor="let handicap of handicapTypes" class="form-control">
-      <label class="cursor-pointer label">
+  <label class="label">
+    <span class="font-bold label-text">Types d'handicap</span>
+  </label>
+  <div class="flex flex-row flex-wrap items-center justify-center gap-4">
+  <div *ngFor="let handicap of handicapTypes" class="form-control">
+      <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" id={{handicap.handicap}} class="hidden peer" />
+      <label
+        for={{handicap.handicap}}
+        class="px-2 py-1 font-bold text-center transition-colors duration-200 ease-in-out border-2 rounded-lg cursor-pointer select-none text-base-content peer-checked:bg-secondary peer-checked:text-gray-900 peer-checked:border-secondary"
+      >
+        {{ handicap.handicap }}</label
+      >
+    </div>
+    <!-- <label class="cursor-pointer label">
         <span class="label-text">{{ handicap.handicap }}</span>
         <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)"
           class="checkbox checkbox-primary">
-      </label>
-    </div>
+      </label> -->
+  </div>
 
-    <div class="drawer">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="mt-4 drawer-content">
-        <label for="my-drawer" class="font-bold btn btn-accent text-base-content drawer-button">Préférences</label>
-      </div> 
-      <div class="justify-center drawer-side">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul tabindex="0" class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-base-200 text-base-content"> 
-          <label class="font-bold cursor-pointer label">Dispositifs</label>
-          <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
-            <label class="cursor-pointer label">
-              <span class="label-text">{{ dispositiflieu.name }}</span>
-              <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)" class="checkbox checkbox-primary" />
-            </label>
-          </div>
-          <div class="mb-16"></div>
-        </ul>
-      </div>
+  <div class="drawer">
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="mt-4 drawer-content">
+      <label for="my-drawer" class="font-bold btn btn-accent drawer-button"
+        >Préférences</label
+      >
     </div>
-
-    <div *ngIf="showDispositifLieu" class="mt-4 form-control">
-      <label class="label">
-        <span class="font-bold label-text">Préférences</span>
-      </label>
-      <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
-        <label class="cursor-pointer label">
-          <span class="label-text">{{ dispositiflieu.name }}</span>
-          <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)"
-            (change)="onDispositifLieuChange(dispositiflieu, $event)" class="checkbox checkbox-primary">
-        </label>
-      </div>
+    <div class="justify-center drawer-side">
+      <label
+        for="my-drawer"
+        aria-label="close sidebar"
+        class="drawer-overlay"
+      ></label>
+      <ul
+        tabindex="0"
+        class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-base-200"
+      >
+        <label class="font-bold cursor-pointer label">Dispositifs</label>
+        <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+          <label class="cursor-pointer label">
+            <span class="label-text">{{ dispositiflieu.name }}</span>
+            <input
+              type="checkbox"
+              [checked]="isDispositifLieuChecked(dispositiflieu)"
+              class="checkbox checkbox-primary"
+            />
+          </label>
+        </div>
+        <div class="mb-16"></div>
+      </ul>
     </div>
   </div>
-  
+
+  <div *ngIf="showDispositifLieu" class="mt-4 form-control">
+    <label class="label">
+      <span class="font-bold label-text">Préférences</span>
+    </label>
+    <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+      <label class="cursor-pointer label">
+        <span class="label-text">{{ dispositiflieu.name }}</span>
+        <input
+          type="checkbox"
+          [checked]="isDispositifLieuChecked(dispositiflieu)"
+          (change)="onDispositifLieuChange(dispositiflieu, $event)"
+          class="checkbox checkbox-primary"
+        />
+      </label>
+    </div>
+  </div>
+</div>
