@@ -15,6 +15,7 @@ import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-se
 import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
 import { HomeComponent } from './home/home.component';
 import { SearchFormComponent } from './pages/search-form/search-form.component';
+import { ProfileService } from './services/profile/profile.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SearchFormComponent } from './pages/search-form/search-form.component';
     HttpClientModule
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    ProfileService
   ],
   bootstrap: [AppComponent]
 })

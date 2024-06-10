@@ -59,17 +59,22 @@ export class CreateProfileComponent implements OnInit {
     this.profiles = this.profileService.getProfilesList();
   }
 
+
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
       const matchedProfile = this.profiles.find(
-        (profile) => profile.username === storedProfile.username
+        (profile) => {
+          //console.log('Logging profile:', profile.username, profile);
+          return profile.username === storedProfile.username;
+        }
       );
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
     }
   }
+  
 
   private generateRandomColor(): string {
     const letters = '0123456789ABCDEF';
