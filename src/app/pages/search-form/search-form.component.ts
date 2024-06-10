@@ -64,9 +64,10 @@ export class SearchFormComponent implements OnInit {
   constructor(
     private profileService: ProfileService,
     private accesLibreService: AccesLibreService,
-    private communeService: CommuneService
-  ) {}
+    private communeService: CommuneService,
     public dialog: MatDialog
+  ) {}
+
 
   ngOnInit(): void {
     this.loadProfilePreferences();
