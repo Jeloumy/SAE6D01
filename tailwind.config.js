@@ -19,6 +19,6 @@ module.exports = {
       },
       "light",
     ],
-  }
+  },
   important: true,
 }
