@@ -62,8 +62,18 @@ export class MapComponent
   }
 
   private initMap(): void {
-    const coordinates: L.LatLngTuple = [48.8566, 2.3522];
-    this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
+    const franceCenter: L.LatLngExpression = [46.603354, 1.888334];
+    const franceBounds: L.LatLngBoundsLiteral = [
+      [41.33, -5.14], // Sud-Ouest (point bas)
+      [51.124, 9.662], // Nord-Est (point haut)
+    ];
+
+    this.map = L.map(this.mapContainer.nativeElement, {
+      maxBounds: franceBounds,
+      maxBoundsViscosity: 1.0,
+      minZoom: 5,
+    }).setView(franceCenter, 5);
+
     for (const layerName in this.layers) {
       this.layerControl.addBaseLayer(this.layers[layerName], layerName);
     }
