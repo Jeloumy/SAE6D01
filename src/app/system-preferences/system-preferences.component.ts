@@ -6,33 +6,38 @@ import { ThemeService } from '../services/theme/theme.service';
 @Component({
   selector: 'app-system-preferences',
   templateUrl: './system-preferences.component.html',
-  styleUrls: ['./system-preferences.component.scss']
+  styleUrls: ['./system-preferences.component.scss'],
 })
 export class SystemPreferencesComponent implements OnInit {
   @Input() preferences: SystemPreferences | null = null;
   @Output() preferencesChange = new EventEmitter<SystemPreferences>();
-  
+
+  darkModeEnabled: boolean = false;
+
   constructor(
     private profileService: ProfileService,
     private themeService: ThemeService
   ) {}
-  darkModeEnabled: boolean = false;
 
   ngOnInit(): void {
     let profile = this.profileService.getCurrentProfile();
 
-    // Vérifier si l'utilisateur a défini une préférence de thème dans son profil
-    if (profile?.systemPreferences?.darkMode !== undefined) {
-      this.darkModeEnabled = profile.systemPreferences.darkMode;
-    } else {
-      // Si aucune préférence définie, utiliser le thème en fonction du thème système de l'appareil
-      this.darkModeEnabled = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
+    if (profile) {
+      // Vérifier si l'utilisateur a défini une préférence de thème dans son profil
+      if (profile.systemPreferences?.darkMode !== undefined) {
+        this.darkModeEnabled = profile.systemPreferences.darkMode;
+      } else {
+        // Si aucune préférence définie, utiliser le thème en fonction du thème système de l'appareil
+        this.darkModeEnabled = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+      }
 
-    // Mettre à jour les préférences dans le profil
-    this.updatePreferences('darkMode', this.darkModeEnabled);
-    // Appliquer le thème
-    this.themeService.setTheme(this.darkModeEnabled);
+      // Mettre à jour les préférences dans le profil
+      this.updatePreferences('darkMode', this.darkModeEnabled);
+      // Appliquer le thème
+      this.themeService.setTheme(this.darkModeEnabled);
+    }
   }
 
   updatePreferences(key: string, value: any): void {
@@ -52,8 +57,11 @@ export class SystemPreferencesComponent implements OnInit {
   }
 
   onThemeChange(event: any, key: string): void {
-    const isDarkMode = event.target.checked;
-    this.themeService.setTheme(isDarkMode);
-    this.updatePreferences(key, isDarkMode);
+    const profile = this.profileService.getCurrentProfile();
+    if (profile) {
+      const isDarkMode = event.target.checked;
+      this.themeService.setTheme(isDarkMode);
+      this.updatePreferences(key, isDarkMode);
+    }
   }
 }
