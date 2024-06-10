@@ -70,19 +70,20 @@ export class MapComponent
 
     // Accède à l'attribut data-theme de la balise <html>
     const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer = theme === 'dark'
-      ? this.layers['CartoDB Dark']
-      : this.layers['OpenStreetMap'];
+    const defaultLayer =
+      theme === 'dark'
+        ? this.layers['CartoDB Dark']
+        : this.layers['OpenStreetMap'];
 
-      // Sélectionne la balise contenant la carte Leaflet
-      const leafletContainer = document.querySelector('.leaflet-container');
+    // Sélectionne la balise contenant la carte Leaflet
+    const leafletContainer = document.querySelector('.leaflet-container');
 
-      // Applique la classe CSS appropriée en fonction du thème
-      if (theme === 'dark') {
-        leafletContainer?.classList.add('bg-slate-700');
-      } else {
-        leafletContainer?.classList.add('bg-slate-100');
-      }
+    // Applique la classe CSS appropriée en fonction du thème
+    if (theme === 'dark') {
+      leafletContainer?.classList.add('bg-slate-700');
+    } else {
+      leafletContainer?.classList.add('bg-slate-100');
+    }
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
@@ -94,6 +95,9 @@ export class MapComponent
   private updateMarkers(): void {
     // Clear existing markers
     this.markersLayer.clearLayers();
+
+    // Initialize LatLngBounds to hold all marker coordinates
+    let newMarkers = new L.LatLngBounds([]);
 
     // Add new markers
     if (this.results && this.results.results) {
@@ -114,10 +118,19 @@ export class MapComponent
 
           // Add marker to the markers layer
           this.markersLayer.addLayer(marker);
+
+          // Add marker coordinates to the LatLngBounds
+          newMarkers.extend([latitude, longitude]);
         } else {
           console.error(`Invalid coordinates for result: ${nom}`, result);
         }
       });
+    }
+
+    // Fit map bounds to markers
+    if (newMarkers.isValid()) {
+      console.log('test')
+      this.map.fitBounds(newMarkers);
     }
   }
 }
