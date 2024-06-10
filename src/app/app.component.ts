@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'SAE6D01';
+
+  constructor(private themeService: ThemeService){}
+
+  toggleTheme(){
+    const currentTheme = this.themeService.getTheme();
+    const newTheme = currentTheme === 'light'?'hightContrast' : 'light';
+    this.themeService.setTheme(newTheme);
+  }
 }

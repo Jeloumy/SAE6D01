@@ -10,6 +10,14 @@ module.exports = {
     require('daisyui'),
   ],
   daisyui:{
-    themes: ["light", "dark", "synthwave"],
+    themes: [
+      {
+        hightContrast:{
+          'primary': '#000000',
+          'neutral': '#000000',
+        },
+      },
+      "light",
+    ],
   }
 }
