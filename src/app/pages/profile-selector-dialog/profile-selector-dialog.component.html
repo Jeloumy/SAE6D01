@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="profilesList.length > 0">
       <div *ngFor="let profile of profilesList" class="form-control">
-        <label class="label cursor-pointer">
+        <label class="cursor-pointer label">
           <span class="label-text">{{ profile.username }}</span> 
           <input type="radio" [value]="profile" [(ngModel)]="selectedProfile" name="profile" class="radio radio-primary">
         </label>

@@ -87,7 +87,7 @@ export class MapComponent
 
     // Sélectionne la balise contenant la carte Leaflet
     const leafletContainer = document.querySelector('.leaflet-container');
-    leafletContainer?.classList.add('bg-base-700');
+    leafletContainer?.classList.add('bg-base-100');
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
