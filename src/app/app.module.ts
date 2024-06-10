@@ -15,6 +15,9 @@ import { HandicapSelectorComponent } from './pages/handicap-selector/handicap-se
 import { SystemPreferencesComponent } from './system-preferences/system-preferences.component';
 import { HomeComponent } from './home/home.component';
 import { SearchFormComponent } from './pages/search-form/search-form.component';
+import { GeolocationDialogComponent } from './pages/geolocation-dialog/geolocation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -29,12 +32,15 @@ import { SearchFormComponent } from './pages/search-form/search-form.component';
     SystemPreferencesComponent,
     HomeComponent,
     SearchFormComponent,
+    GeolocationDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatButtonModule,
   ],
   providers: [
     provideAnimationsAsync()

@@ -1,10 +1,13 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Handicap, DispositifLieu } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AccesLibreService } from '../../services/acces-libre/acces-libre.service';
 import { CommuneService } from '../../services/commune/commune.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { GeolocationDialogComponent } from '../geolocation-dialog/geolocation-dialog.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-search-form',
@@ -17,11 +20,13 @@ export class SearchFormComponent implements OnInit {
   selectedHandicaps: Handicap[] = [];
   selectedDispositifLieu: DispositifLieu[] = [];
   results: any;
+  isLocationActive: boolean = false;
   communes: { id: string; name: string }[] = [];
   private searchTerms = new Subject<string>();
   isCommuneInputFocused: boolean = false;
 
   @Output() searchEvent = new EventEmitter<any>();
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   private dispositifMapping: { [key: string]: string } = {
     "Chemin vers l'accueil accessible": 'having_accessible_exterior_path',
@@ -61,6 +66,7 @@ export class SearchFormComponent implements OnInit {
     private accesLibreService: AccesLibreService,
     private communeService: CommuneService
   ) {}
+    public dialog: MatDialog
 
   ngOnInit(): void {
     this.loadProfilePreferences();
@@ -91,8 +97,8 @@ export class SearchFormComponent implements OnInit {
 
   onSearch(): void {
     const dispositifsFiltered = this.selectedDispositifLieu
-      .map((d) => this.dispositifMapping[d.name])
-      .filter((d) => d);
+      .map(d => this.dispositifMapping[d.name])
+      .filter(d => d); // Filtre les valeurs vides
 
     const filters = {
       query: this.searchQuery,
@@ -102,11 +108,68 @@ export class SearchFormComponent implements OnInit {
 
     console.log('Filters:', filters);
 
-    this.accesLibreService.getErp(filters).subscribe((data) => {
+    this.accesLibreService.getErp(filters).subscribe(data => {
       this.results = data;
       console.log('API Response:', data);
       this.searchEvent.emit(data);
     });
+  }
+
+  toggleLocation(): void {
+    if (!this.isLocationActive) {
+      this.requestGeolocation();
+    } else {
+      this.isLocationActive = false;
+      // Vous pouvez également réinitialiser les résultats de recherche ici si nécessaire
+    }
+  }
+
+  requestGeolocation(): void {
+    const dialogRef = this.dialog.open(GeolocationDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getUserLocation();
+      } else {
+        console.log('Géolocalisation refusée');
+      }
+    });
+  }
+
+  getUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const dispositifsFiltered = this.selectedDispositifLieu
+          .map(d => this.dispositifMapping[d.name])
+          .filter(d => d); // Filtre les valeurs vides
+
+        const filters = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          dispositifs: dispositifsFiltered
+        };
+
+        console.log('Filters for search around me:', filters);
+
+        this.accesLibreService.getErp(filters).subscribe(data => {
+          this.results = data;
+          console.log('API Response:', data);
+          this.isLocationActive = true;
+          this.searchEvent.emit(this.results); // Émettez les résultats
+
+          const map = this.mapComponent.getMap();
+          map.whenReady(() => {
+            this.mapComponent.flyToLocation(position.coords.latitude, position.coords.longitude);
+          });
+        });
+      }, error => {
+        console.error('Geolocation error:', error);
+        // Gérer les erreurs de géolocalisation
+      });
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      // Gérer le cas où la géolocalisation n'est pas supportée
+    }
   }
 
   onCommuneQueryChange(event: any): void {
