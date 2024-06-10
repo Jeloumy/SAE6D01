@@ -2,7 +2,7 @@
   <label class="label">
     <span class="font-bold label-text">Types d'handicap</span>
   </label>
-  <div class="flex flex-row gap-4">
+  <div class="flex flex-row flex-wrap items-center justify-center gap-4">
   <div *ngFor="let handicap of handicapTypes" class="form-control">
       <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" id={{handicap.handicap}} class="hidden peer" />
       <label
