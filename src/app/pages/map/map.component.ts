@@ -77,13 +77,7 @@ export class MapComponent
 
     // Sélectionne la balise contenant la carte Leaflet
     const leafletContainer = document.querySelector('.leaflet-container');
-
-    // Applique la classe CSS appropriée en fonction du thème
-    if (theme === 'dark') {
-      leafletContainer?.classList.add('bg-slate-700');
-    } else {
-      leafletContainer?.classList.add('bg-slate-100');
-    }
+    leafletContainer?.classList.add('bg-base-700');
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
