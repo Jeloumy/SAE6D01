@@ -90,6 +90,7 @@ export class SearchFormComponent implements OnInit {
 
   loadProfilePreferences(): void {
     const currentProfile = this.profileService.getCurrentProfile();
+    console.log("current profile : ", currentProfile?.dispositifLieu);
     if (currentProfile) {
       this.selectedHandicaps = currentProfile.handicapList;
       this.selectedDispositifLieu = currentProfile.dispositifLieu;

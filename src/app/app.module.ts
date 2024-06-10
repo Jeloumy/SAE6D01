@@ -18,6 +18,7 @@ import { SearchFormComponent } from './pages/search-form/search-form.component';
 import { GeolocationDialogComponent } from './pages/geolocation-dialog/geolocation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { ProfileService } from './services/profile/profile.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    ProfileService
   ],
   bootstrap: [AppComponent]
 })
