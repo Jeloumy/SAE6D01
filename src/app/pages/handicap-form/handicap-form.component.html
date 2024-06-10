@@ -1,21 +1,30 @@
 <div class="flex justify-center m-8 align-middle">
-    <button class="btn btn-primary" (click)="toggleDropdown()">Choisir type(s) d'handicap</button>
-    <div class="modal" [class.modal-open]="dropdownOpen">
+    <button class="btn btn-primary" (click)="toggleDropdown()" aria-controls="handicapDropdown">
+        Choisir type(s) d'handicap
+    </button>
+    <div id="handicapDropdown" class="modal" [class.modal-open]="dropdownOpen" role="dialog"
+        aria-labelledby="dropdownTitle">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">Sélectionnez le type d'handicap</h3>
+            <h3 id="dropdownTitle" class="text-lg font-bold">Sélectionnez le type d'handicap</h3>
             <div class="form-control">
-                <label class="cursor-pointer label">
-                    <span class="label-text">Difficulté à entendre</span> 
-                    <input type="checkbox" [(ngModel)]="types['Difficulté à entendre']" class="checkbox checkbox-primary">
+                <label class="cursor-pointer label" for="hearingDifficulty">
+                    <span class="label-text">Difficulté à entendre</span>
+                    <input id="hearingDifficulty" type="checkbox" [(ngModel)]="types['Difficulté à entendre']"
+                        class="checkbox checkbox-primary">
                 </label>
-                <label class="cursor-pointer label">
+                <label class="cursor-pointer label" for="understandingDifficulty">
                     <span class="label-text">Difficulté à comprendre</span>
-                    <input type="checkbox" [(ngModel)]="types['Difficulté à comprendre']" class="checkbox checkbox-primary">
+                    <input id="understandingDifficulty" type="checkbox" [(ngModel)]="types['Difficulté à comprendre']"
+                        class="checkbox checkbox-primary">
                 </label>
             </div>
             <div class="modal-action">
-                <button class="btn btn-error" (click)="toggleDropdown()">Fermer</button>
-                <button class="btn btn-primary" (click)="applyTypes()">Appliquer</button>
+                <button class="btn btn-error" (click)="toggleDropdown()" aria-label="Fermer la fenêtre de sélection">
+                    Fermer
+                </button>
+                <button class="btn btn-primary" (click)="applyTypes()" aria-label="Appliquer la sélection">
+                    Appliquer
+                </button>
             </div>
         </div>
     </div>

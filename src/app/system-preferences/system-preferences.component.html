@@ -1,18 +1,25 @@
 <div class="form-control">
-  <label class="label cursor-pointer">
-    <span class="label-text">Mode Daltonien</span>
-    <input type="checkbox" [checked]="preferences.colorBlindMode" (change)="onCheckboxChange($event, 'colorBlindMode')" class="checkbox checkbox-primary">
-  </label>
-  <label class="label cursor-pointer">
-    <span class="label-text">Contraste Élevé</span>
-    <input type="checkbox" [checked]="preferences.highContrast" (change)="onCheckboxChange($event, 'highContrast')" class="checkbox checkbox-primary">
-  </label>
-  <label class="label">
-    <span class="label-text">Luminosité</span>
-  </label>
-  <input type="range" min="0" max="100" [value]="preferences.brightness" (change)="onRangeChange($event, 'brightness')" class="range range-primary">
-  <label class="label cursor-pointer">
-    <span class="label-text">Noir et Blanc</span>
-    <input type="checkbox" [checked]="preferences.blackAndWhite" (change)="onCheckboxChange($event, 'blackAndWhite')" class="checkbox checkbox-primary">
-  </label>
+  <fieldset>
+    <legend class="sr-only">Paramètres d'accessibilité</legend>
+
+    <label for="colorBlindMode" class="cursor-pointer label">
+      <span class="label-text">Mode Daltonien</span>
+      <input type="checkbox" id="colorBlindMode" [checked]="preferences.colorBlindMode" (change)="onCheckboxChange($event, 'colorBlindMode')" class="checkbox checkbox-primary">
+    </label>
+
+    <label for="highContrast" class="cursor-pointer label">
+      <span class="label-text">Contraste Élevé</span>
+      <input type="checkbox" id="highContrast" [checked]="preferences.highContrast" (change)="onCheckboxChange($event, 'highContrast')" class="checkbox checkbox-primary">
+    </label>
+
+    <label for="blackAndWhite" class="cursor-pointer label">
+      <span class="label-text">Noir et Blanc</span>
+      <input type="checkbox" id="blackAndWhite" [checked]="preferences.blackAndWhite" (change)="onCheckboxChange($event, 'blackAndWhite')" class="checkbox checkbox-primary">
+    </label>
+
+    <label for="brightness" class="label">
+      <span class="label-text">Luminosité</span>
+    </label>
+    <input type="range" id="brightness" min="0" max="100" [value]="preferences.brightness" (change)="onRangeChange($event, 'brightness')" class="range range-primary">
+  </fieldset>
 </div>

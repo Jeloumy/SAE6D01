@@ -1,16 +1,20 @@
 <div class="search-form">
-    <form (ngSubmit)="onSearch()">
+  <form (ngSubmit)="onSearch()" aria-labelledby="searchFormTitle">
+    <fieldset>
+      <legend id="searchFormTitle" class="sr-only">Formulaire de recherche</legend>
       <div class="form-group">
-        <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche par ville, lieu ou catégorie" class="input input-bordered w-full" />
+        <label for="searchQuery" class="sr-only">Recherche par ville, lieu ou catégorie</label>
+        <input type="text" id="searchQuery" [(ngModel)]="searchQuery" name="searchQuery"
+          placeholder="Recherche par ville, lieu ou catégorie" class="input input-bordered w-full"
+          aria-describedby="searchQueryDesc" />
+        <p id="searchQueryDesc" class="sr-only">Entrez une ville, un lieu ou une catégorie pour rechercher</p>
       </div>
-  
+
       <!-- Handicap Selector Component -->
-      <app-handicap-selector 
-        [(selectedHandicaps)]="selectedHandicaps" 
-        [(selectedDispositifLieu)]="selectedDispositifLieu"
-        (selectedDispositifLieuChange)="selectedDispositifLieu = $event"></app-handicap-selector>
-  
+      <app-handicap-selector [(selectedHandicaps)]="selectedHandicaps"
+        [(selectedDispositifLieu)]="selectedDispositifLieu"></app-handicap-selector>
+
       <button class="btn btn-primary mt-4" type="submit">Rechercher</button>
-    </form>
-  </div>
-  
+    </fieldset>
+  </form>
+</div>
