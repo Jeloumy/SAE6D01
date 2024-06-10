@@ -1,7 +1,10 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Handicap, DispositifLieu } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AccesLibreService } from '../../services/acces-libre/acces-libre.service';
+import { GeolocationDialogComponent } from '../geolocation-dialog/geolocation-dialog.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-search-form',
@@ -13,14 +16,20 @@ export class SearchFormComponent implements OnInit {
   selectedHandicaps: Handicap[] = [];
   selectedDispositifLieu: DispositifLieu[] = [];
   results: any;
+  isLocationActive: boolean = false;
 
   @Output() searchEvent = new EventEmitter<any>();
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   private dispositifMapping: { [key: string]: string } = {
     // Mapping des dispositifs
   };
 
-  constructor(private profileService: ProfileService, private accesLibreService: AccesLibreService) {}
+  constructor(
+    private profileService: ProfileService,
+    private accesLibreService: AccesLibreService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadProfilePreferences();
@@ -53,7 +62,28 @@ export class SearchFormComponent implements OnInit {
     });
   }
 
-  onSearchAroundMe(): void {
+  toggleLocation(): void {
+    if (!this.isLocationActive) {
+      this.requestGeolocation();
+    } else {
+      this.isLocationActive = false;
+      // Vous pouvez également réinitialiser les résultats de recherche ici si nécessaire
+    }
+  }
+
+  requestGeolocation(): void {
+    const dialogRef = this.dialog.open(GeolocationDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getUserLocation();
+      } else {
+        console.log('Géolocalisation refusée');
+      }
+    });
+  }
+
+  getUserLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
         const dispositifsFiltered = this.selectedDispositifLieu
@@ -71,7 +101,13 @@ export class SearchFormComponent implements OnInit {
         this.accesLibreService.getErp(filters).subscribe(data => {
           this.results = data;
           console.log('API Response:', data);
+          this.isLocationActive = true;
           this.searchEvent.emit(this.results); // Émettez les résultats
+
+          const map = this.mapComponent.getMap();
+          map.whenReady(() => {
+            this.mapComponent.flyToLocation(position.coords.latitude, position.coords.longitude);
+          });
         });
       }, error => {
         console.error('Geolocation error:', error);

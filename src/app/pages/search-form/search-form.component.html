@@ -14,11 +14,15 @@
         [(selectedHandicaps)]="selectedHandicaps"
         [(selectedDispositifLieu)]="selectedDispositifLieu"
       ></app-handicap-selector>
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center space-x-4">
         <button class="flex-grow mt-4 font-bold btn btn-primary" type="submit">Rechercher</button>
-      </div>
-      <div class="flex items-center justify-center">
-        <button class="flex-grow mt-4 font-bold btn btn-secondary" type="button" (click)="onSearchAroundMe()">Rechercher autour de moi</button>
+        <div
+          class="w-12 h-12 flex items-center justify-center rounded-full cursor-pointer bg-white"
+          [ngClass]="{'text-blue-500': isLocationActive, 'text-black': !isLocationActive}"
+          (click)="toggleLocation()"
+        >
+          <i class="fas fa-location-arrow"></i>
+        </div>
       </div>
     </div>
   </form>

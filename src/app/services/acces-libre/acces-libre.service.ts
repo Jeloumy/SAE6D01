@@ -66,3 +66,4 @@ function getBoundingBox(lat: number, lon: number, distanceInKm: number) {
 }
 
 
+
