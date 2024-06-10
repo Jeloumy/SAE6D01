@@ -123,7 +123,6 @@ export class MapComponent
 
     // Fit map bounds to markers
     if (newMarkers.isValid()) {
-      console.log('test')
       this.map.fitBounds(newMarkers);
     }
   }
