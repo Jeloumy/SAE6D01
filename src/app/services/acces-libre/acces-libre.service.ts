@@ -12,6 +12,7 @@ export class AccesLibreService {
   constructor(private http: HttpClient) {}
 
   getErp(filters: any): Observable<any> {
+    // Debouncer Filter
     let params = new HttpParams();
     if (filters.query) {
       params = params.set('q', filters.query);

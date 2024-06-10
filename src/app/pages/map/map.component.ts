@@ -15,7 +15,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   @Input() results: any = { results: [] };
   @Input() filters: any;
   private map!: L.Map;
-  private markersLayer!: L.MarkerClusterGroup;
+  private markersLayer = L.markerClusterGroup();
   private currentBounds!: L.LatLngBounds;
   private page: number = 1;
   private pageSize: number = 50;
@@ -51,7 +51,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(this.map);
 
-    this.markersLayer = L.markerClusterGroup();
     this.map.addLayer(this.markersLayer);
 
     this.map.on('moveend', () => {
@@ -112,9 +111,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private updateMarkers(): void {
-    // Effacez les marqueurs existants
     this.markersLayer.clearLayers();
-
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
         const { geom, nom, adresse } = result;
@@ -136,6 +133,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
           console.error(`Invalid coordinates for result: ${nom}`, result);
         }
       });
+      this.map.addLayer(this.markersLayer);
     }
     this.page++;
   }
