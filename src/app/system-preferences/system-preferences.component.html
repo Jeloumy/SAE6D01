@@ -16,10 +16,5 @@
       <span class="label-text">Noir et Blanc</span>
       <input type="checkbox" id="blackAndWhite" [checked]="preferences.blackAndWhite" (change)="onCheckboxChange($event, 'blackAndWhite')" class="checkbox checkbox-primary">
     </label>
-
-    <label for="brightness" class="label">
-      <span class="label-text">Luminosité</span>
-    </label>
-    <input type="range" id="brightness" min="0" max="100" [value]="preferences.brightness" (change)="onRangeChange($event, 'brightness')" class="range range-primary">
   </fieldset>
 </div>
