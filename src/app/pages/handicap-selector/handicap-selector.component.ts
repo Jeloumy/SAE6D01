@@ -69,7 +69,7 @@ export class HandicapSelectorComponent implements OnInit {
       this.selectedDispositifLieu = this.selectedDispositifLieu.filter(p => p.id !== dispositiflieu.id);
     }
     this.selectedDispositifLieuChange.emit(this.selectedDispositifLieu);
-  }
+}
 
   isDispositifLieuChecked(dispositiflieu: DispositifLieu): boolean {
     const currentProfile = this.getCurrentProfile();

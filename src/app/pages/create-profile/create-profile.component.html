@@ -42,7 +42,7 @@
     <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">
+    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid" (click)="reloadCurrentPage()">
       {{ editingProfile ? 'Modifier' : 'Créer' }}
     </button>
     

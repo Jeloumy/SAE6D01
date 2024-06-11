@@ -55,10 +55,13 @@ export class CreateProfileComponent implements OnInit {
     }
   }
 
+  reloadCurrentPage(): void {
+    location.reload();
+  }
+
   loadProfiles(): void {
     this.profiles = this.profileService.getProfilesList();
   }
-
 
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
