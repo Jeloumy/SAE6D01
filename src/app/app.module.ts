@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileService } from './services/profile/profile.service';
 import { ListComponent } from './pages/list/list.component';
+import { ErpListComponent } from './components/erp-list/erp-list.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ListComponent } from './pages/list/list.component';
     SearchFormComponent,
     GeolocationDialogComponent,
     ListComponent,
+    ErpListComponent,
   ],
   imports: [
     BrowserModule,

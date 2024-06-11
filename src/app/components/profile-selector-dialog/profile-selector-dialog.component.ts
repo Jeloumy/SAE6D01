@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile } from '../../models/definitions';
 
 @Component({
   selector: 'app-profile-selector-dialog',

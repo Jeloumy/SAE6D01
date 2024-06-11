@@ -6,7 +6,7 @@ import {
   Handicap,
   DispositifLieu,
   SystemPreferences,
-} from '../../models/user-profile';
+} from '../../models/definitions';
 import { HttpClient } from '@angular/common/http'; // Import HttpClient
 import Swal from 'sweetalert2';
 

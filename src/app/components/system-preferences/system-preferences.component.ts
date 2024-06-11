@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { SystemPreferences } from '../../models/user-profile';
+import { SystemPreferences } from '../../models/definitions';
 import { ProfileService } from '../../services/profile/profile.service';
 import { ThemeService } from '../../services/theme/theme.service';
 
