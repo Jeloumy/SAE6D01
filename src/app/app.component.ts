@@ -18,4 +18,10 @@ export class AppComponent implements OnInit {
     const profile = this.profileService.getCurrentProfile();
     this.themeService.initializeTheme(profile);
   }
+
+  toggleTheme(){
+    const currentTheme = this.themeService.getTheme();
+    const newTheme = currentTheme === 'light'?'hightContrast' : 'light';
+    this.themeService.setTheme(newTheme);
+  }
 }
