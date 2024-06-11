@@ -1,9 +1,7 @@
 <div class="search-form">
   <form (ngSubmit)="onSearch()">
     <div class="form-group">
-      <label
-        class="flex items-center gap-2 rounded-bl-none rounded-br-none input input-bordered"
-      >
+      <label class="flex items-center gap-2 rounded-bl-none rounded-br-none input input-bordered">
         <input
           type="text"
           [(ngModel)]="searchQuery"
@@ -26,9 +24,7 @@
       </label>
     </div>
     <div class="relative form-group">
-      <label
-        class="flex items-center gap-2 rounded-tl-none rounded-tr-none input input-bordered"
-      >
+      <label class="flex items-center gap-2 rounded-tl-none rounded-tr-none input input-bordered">
         <input
           type="text"
           [(ngModel)]="communeQuery"
@@ -75,13 +71,9 @@
       ></app-handicap-selector>
       <div class="flex items-center justify-center space-x-4">
         <button class="flex-grow mt-4 font-bold btn btn-primary" type="submit">Rechercher</button>
-        <div
-          class="w-12 h-12 flex items-center justify-center rounded-full cursor-pointer bg-white"
-          [ngClass]="{'text-blue-500': isLocationActive, 'text-black': !isLocationActive}"
-          (click)="toggleLocation()"
-        >
-          <i class="fas fa-location-arrow"></i>
-        </div>
+        <app-geolocation-button
+          (locationToggled)="onLocationToggled($event)"
+        ></app-geolocation-button>
       </div>
     </div>
   </form>

@@ -7,10 +7,27 @@ import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile
 export class ProfileService {
   private profilesList: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
+  private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
 
   constructor() { 
     this.loadProfileFromStorage();
     this.loadProfilesListFromStorage();
+  }
+
+  // Ajout de méthodes pour gérer les données de géolocalisation
+  setGeolocationData(latitude: number | null, longitude: number | null): void {
+    this.geolocationData = { latitude, longitude };
+    localStorage.setItem('geolocationData', JSON.stringify(this.geolocationData));
+  }
+
+  getGeolocationData(): { latitude: number | null, longitude: number | null } | null {
+    if (!this.geolocationData) {
+      const storedData = localStorage.getItem('geolocationData');
+      if (storedData) {
+        this.geolocationData = JSON.parse(storedData);
+      }
+    }
+    return this.geolocationData;
   }
 
   getHandicapTypes(): Handicap[] {
