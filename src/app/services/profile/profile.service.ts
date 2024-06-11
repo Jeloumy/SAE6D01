@@ -1,4 +1,3 @@
-// profile.service.ts
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
 import { BehaviorSubject } from 'rxjs';
@@ -11,6 +10,9 @@ export class ProfileService {
   currentProfile: UserProfile | null = null;
   private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
   private geolocationSubject = new BehaviorSubject<{ latitude: number | null, longitude: number | null }>({ latitude: null, longitude: null });
+
+  // Ajout d'un BehaviorSubject pour isLocationActive
+  private isLocationActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor() { 
     this.loadProfileFromStorage();
@@ -35,6 +37,15 @@ export class ProfileService {
 
   getGeolocationUpdates() {
     return this.geolocationSubject.asObservable(); // Retourner l'observable pour les mises à jour de la géolocalisation
+  }
+
+  // Méthodes pour isLocationActive
+  setIsLocationActive(isActive: boolean): void {
+    this.isLocationActiveSubject.next(isActive);
+  }
+
+  getIsLocationActive() {
+    return this.isLocationActiveSubject.asObservable();
   }
 
   getHandicapTypes(): Handicap[] {

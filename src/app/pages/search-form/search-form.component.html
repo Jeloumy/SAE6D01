@@ -27,13 +27,13 @@
       <label class="flex items-center gap-2 rounded-tl-none rounded-tr-none input input-bordered">
         <input
           type="text"
-          [(ngModel)]="communeQuery"
-          name="communeQuery"
-          placeholder="Commune"
-          class="grow"
+          [(ngModel)]="displayCommuneQuery"
+          name="displayCommuneQuery"
           (input)="onCommuneQueryChange($event)"
           (focus)="isCommuneInputFocused = true"
           (focusout)="isCommuneInputFocused = false"
+          placeholder="Commune"
+          class="grow"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
