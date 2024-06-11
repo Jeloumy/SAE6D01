@@ -1,0 +1,29 @@
+<div class="flex items-center justify-center">
+  <div *ngIf="erp" class="container py-4">
+    <h1 class="text-2xl font-bold">{{ erp.nom }}</h1>
+    <p class="mt-4">{{ erp.adresse }}</p>
+    <a
+      class="btn-link"
+      [href]="erp.site_internet"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Se rendre sur le site web</a
+    >
+    <div class="flex items-center justify-center my-8">
+      <div class="flex items-center justify-center flex-grow rounded h-96 bg-base-300">
+        Map Leaflet
+      </div>
+    </div>
+    <h1
+      class="mb-4 text-2xl font-bold leading-none tracking-tight text-base-content"
+    >
+      Informations sur l'accessibilité
+    </h1>
+    <h1 class="text-xl font-semibold leading-none tracking-tight text-base-content">
+      Dernière mise à jour :
+      <mark class="px-2 text-white rounded bg-primary">{{
+        erp.updated_at | date : "dd/MM/yyyy"
+      }}</mark>
+    </h1>
+  </div>
+</div>

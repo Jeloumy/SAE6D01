@@ -4,7 +4,6 @@ import { ProfileService } from '../../services/profile/profile.service';
 import {
   UserProfile,
   Handicap,
-  DispositifLieu,
   SystemPreferences,
 } from '../../models/definitions';
 import { HttpClient } from '@angular/common/http'; // Import HttpClient

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +8,13 @@ import { Observable } from 'rxjs';
 export class AccesLibreService {
   private apiUrl = 'https://acceslibre.beta.gouv.fr/api/erps';
   private apiKey = 'oU6JwJ1T.himZfVvhB5F0JqY6YeU2A2cDbgbr0tzN';
+  private lastSearchResults: any;
 
   constructor(private http: HttpClient) {}
+
+  getLastSearchResults(): any {
+    return this.lastSearchResults;
+  }
 
   getErp(filters: any): Observable<any> {
     let params = new HttpParams();
@@ -34,7 +39,20 @@ export class AccesLibreService {
 
     console.log('Params:', params.toString());
 
-    return this.http.get<any>(this.apiUrl, { params, headers });
+    return this.http.get<any>(this.apiUrl, { params, headers })
+      .pipe(
+        tap((results: any) => this.lastSearchResults = results) // Stocker les résultats de la recherche
+      );
+  }
+
+  getErpBySlug(slug: string): Observable<any> {
+    const url = `${this.apiUrl}/${slug}`;
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      Authorization: `Api-Key ${this.apiKey}`, 
+    });
+
+    return this.http.get<any>(url, { headers });
   }
 
   getResultsByUrl(url: string): Observable<any> {
