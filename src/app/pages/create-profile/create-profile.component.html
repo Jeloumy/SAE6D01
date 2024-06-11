@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
   <form (ngSubmit)="createProfile()" #profileForm="ngForm"
-    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-white flex justify-center items-center"
+    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info flex justify-center items-center border-8 border-success-content"
     aria-label="Formulaire de création de profil">
 
 
@@ -39,7 +39,7 @@
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
       <input type="text" [(ngModel)]="profile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-        required class="w-full input input-bordered text-success" #username="ngModel" aria-required="true">
+        required class="w-full input input-bordered text-success border-success-content" #username="ngModel" aria-required="true">
       <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
         Le nom d'utilisateur est requis.
       </div>
@@ -66,7 +66,7 @@
     <app-system-preferences [(preferences)]="systemPreferences"
       (preferencesChange)="updateSystemPreferences($event)" class="w-full"></app-system-preferences>
 
-    <button class="w-full mt-4 btn bg-accent border-none text-lg" type="submit" [disabled]="profileForm.invalid">Créer</button>
+    <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit" [disabled]="profileForm.invalid">Créer</button>
   </form>
 
   <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-slate-100 dark:bg-slate-700"
