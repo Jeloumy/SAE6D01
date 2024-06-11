@@ -25,7 +25,7 @@ module.exports = {
       {
         light:{
           'success': '#134E4A',
-          'success-content': '#134E4A',
+          'success-content': '#ffffff',
           'accent': '#2DD4BF',
           'info':'#fff',
           'info-content':'#000',

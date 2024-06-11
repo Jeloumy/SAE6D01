@@ -1,10 +1,8 @@
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
   <form (ngSubmit)="createProfile()" #profileForm="ngForm"
-    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info flex justify-center items-center border-8 border-success-content"
+    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info flex justify-center items-center border-8 border-success-content light:border-none"
     aria-label="Formulaire de création de profil">
-
-
-
+    <h1>Profile</h1>
     <!-- Photo de Profil -->
     <label class="label">
       <span class="label-text">Sélectionner une photo de profil</span>
@@ -18,7 +16,7 @@
           </div>
         </div>
         <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
-          <div class="w-24 rounded-full bg-neutral text-neutral-content">
+          <div class="w-24 rounded-full bg-accent text-neutral-content">
             <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
           </div>
         </div>
@@ -39,7 +37,7 @@
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
       <input type="text" [(ngModel)]="profile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-        required class="w-full input input-bordered text-success border-success-content" #username="ngModel" aria-required="true">
+        required class="w-full input input-bordered text-black border-success-content" #username="ngModel" aria-required="true">
       <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
         Le nom d'utilisateur est requis.
       </div>
@@ -69,7 +67,7 @@
     </button>
   </form>
 
-  <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-slate-100 dark:bg-slate-700"
+  <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-success text-info border-4 border-info"
     aria-label="Liste des profils">
     <div *ngIf="profiles.length > 0; else noProfiles">
       <table class="table w-full">
@@ -83,7 +81,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let profile of profiles; let i = index"
-            [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}"
+            [ngClass]="{'text-info-content bg-info': profile.username === currentProfile?.username}"
             (click)="selectProfile(profile, true)">
             <td class="flex flex-col items-center justify-center">
               <div *ngIf="profile.photo" class="avatar">
@@ -111,7 +109,7 @@
             <td class="" [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
               <div *ngIf="profile.username === currentProfile?.username" class="flex flex-col items-center gap-2 sm:gap-4">
                 <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
-                  <i class="fas fa-edit"></i>
+                  <i class="fas fa-edit"></i>modifier
                 </button>
                 <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();"
                   aria-label="Supprimer le profil">

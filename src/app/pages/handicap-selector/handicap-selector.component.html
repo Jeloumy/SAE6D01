@@ -7,7 +7,7 @@
       <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" id={{handicap.handicap}} class="hidden peer" />
       <label
         for={{handicap.handicap}}
-        class="px-2 py-1 font-bold text-center transition-colors duration-200 ease-in-out border-2 rounded-lg cursor-pointer select-none text-base-content peer-checked:bg-secondary peer-checked:text-gray-900 peer-checked:border-secondary"
+        class="px-2 py-1 font-bold text-center transition-colors duration-200 ease-in-out border rounded-lg cursor-pointer select-none text-base-content peer-checked:border-4 peer-checked:bg-secondary peer-checked:text-accent peer-checked:border-accent m-1 peer-checked:m-0"
       >
         {{ handicap.handicap }}</label
       >
@@ -26,15 +26,15 @@
       </div> 
       <div class="justify-center drawer-side">
         <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul tabindex="0" class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-base-200 text-base-content"> 
-          <label class="font-bold cursor-pointer label">DISPOSITIFS</label>
-          <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+        <ul tabindex="0" class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-info text-info-content"> 
+          <!-- <label class="font-bold cursor-pointer label">DISPOSITIFS</label> -->
+          <li *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
             <label class="cursor-pointer label">
               <span class="label-text">{{ dispositiflieu.name }}</span>
-              <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)" (change)="onDispositifLieuChange(dispositiflieu, $event)" class="checkbox checkbox-primary" />
+              <input type="checkbox" class="checkbox checkbox-success" [checked]="isDispositifLieuChecked(dispositiflieu)" (change)="onDispositifLieuChange(dispositiflieu, $event)"/>
             </label>
-          </div>
-          <div class="mb-16"></div>
+          </li>
+          <!-- <div class="mb-16"></div> -->
         </ul>
       </div>
     </div>
@@ -48,8 +48,8 @@
         tabindex="0"
         class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-base-200"
       >
-        <label class="font-bold cursor-pointer label">Dispositifs</label>
-        <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+        <!-- <label class="font-bold cursor-pointer label">Dispositifs</label> -->
+        <li *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
           <label class="cursor-pointer label">
             <span class="label-text">{{ dispositiflieu.name }}</span>
             <input
@@ -58,8 +58,8 @@
               class="checkbox checkbox-primary"
             />
           </label>
-        </div>
-        <div class="mb-16"></div>
+        </li>
+        <!-- <div class="mb-16"></div> -->
       </ul>
     </div>
   </div>
