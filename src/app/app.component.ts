@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
-import { ThemeService } from './theme.service';
+import { Component, OnInit } from '@angular/core';
+import { ProfileService } from './services/profile/profile.service';
+import { ThemeService } from './services/theme/theme.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'SAE6D01';
+  constructor(
+    private profileService: ProfileService,
+    private themeService: ThemeService
+  ) {}
 
-  constructor(private themeService: ThemeService){}
-
-  toggleTheme(){
-    const currentTheme = this.themeService.getTheme();
-    const newTheme = currentTheme === 'light'?'hightContrast' : 'light';
-    this.themeService.setTheme(newTheme);
+  ngOnInit(): void {
+    const profile = this.profileService.getCurrentProfile();
+    this.themeService.initializeTheme(profile);
   }
 }

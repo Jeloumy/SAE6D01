@@ -1,4 +1,14 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
@@ -6,21 +16,28 @@ import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 @Component({
   selector: 'app-map',
   template: '<div #map class="w-screen flex flex-1"></div>',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  @ViewChild('map', { static: false }) private mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('map', { static: false })
+  private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
   private layerControl: L.Control.Layers = L.control.layers();
   private layers: { [name: string]: L.TileLayer } = {
-    'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }),
-    'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-    })
+    OpenStreetMap: L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        maxZoom: 19,
+      }
+    ),
+    'CartoDB Dark': L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      {
+        maxZoom: 19,
+      }
+    ),
     // Ajoutez d'autres couches de carte ici
   };
 
@@ -43,15 +60,32 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private initMap(): void {
-    const coordinates: L.LatLngTuple = [48.8566, 2.3522];
-    this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
+    const franceCenter: L.LatLngExpression = [46.603354, 1.888334];
+    const franceBounds: L.LatLngBoundsLiteral = [
+      [41.33, -5.14], // Sud-Ouest (point bas)
+      [51.124, 9.662], // Nord-Est (point haut)
+    ];
+
+    this.map = L.map(this.mapContainer.nativeElement, {
+      maxBounds: franceBounds,
+      maxBoundsViscosity: 1.0,
+      minZoom: 5,
+    }).setView(franceCenter, 5);
+
     for (const layerName in this.layers) {
       this.layerControl.addBaseLayer(this.layers[layerName], layerName);
     }
 
-    // Vérifier si l'utilisateur a le mode sombre activé
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const defaultLayer = prefersDark ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
+    // Accède à l'attribut data-theme de la balise <html>
+    const theme = document.documentElement.getAttribute('data-theme');
+    const defaultLayer =
+      theme === 'dark'
+        ? this.layers['CartoDB Dark']
+        : this.layers['OpenStreetMap'];
+
+    // Sélectionne la balise contenant la carte Leaflet
+    const leafletContainer = document.querySelector('.leaflet-container');
+    leafletContainer?.classList.add('bg-base-100');
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
@@ -64,6 +98,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     // Clear existing markers
     this.markersLayer.clearLayers();
 
+    // Initialize LatLngBounds to hold all marker coordinates
+    let newMarkers = new L.LatLngBounds([]);
+
     // Add new markers
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
@@ -71,22 +108,44 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
           const customMarker = L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: '1',
-            markerColor: 'green',
+            icon: 'fa-home',
+            markerColor: 'blue',
             shape: 'square',
-            prefix: 'fa'
+            prefix: 'fa',
           });
 
-          const marker = L.marker([latitude, longitude], { icon: customMarker })
-            .bindPopup(`<b>${nom}</b><br>${adresse}`);
+          const marker = L.marker([latitude, longitude], {
+            icon: customMarker,
+          }).bindPopup(`<b>${nom}</b><br>${adresse}`);
 
           // Add marker to the markers layer
           this.markersLayer.addLayer(marker);
+
+          // Add marker coordinates to the LatLngBounds
+          newMarkers.extend([latitude, longitude]);
         } else {
           console.error(`Invalid coordinates for result: ${nom}`, result);
         }
       });
     }
+
+    // Fit map bounds to markers
+    if (newMarkers.isValid()) {
+      this.map.fitBounds(newMarkers);
+    }
+  }
+
+  flyToLocation(lat: number, lon: number): void {
+    const zoomLevel = 13;
+    const options: L.ZoomPanOptions = {
+      animate: true,
+      duration: 5, // Durée de l'animation en secondes
+      easeLinearity: 0.25, // Modifie la linéarité de l'animation
+    };
+    this.map.flyTo([lat, lon], zoomLevel, options);
+  }
+
+  public getMap(): L.Map {
+    return this.map;
   }
 }
