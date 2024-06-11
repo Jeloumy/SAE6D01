@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { SystemPreferences } from '../models/user-profile';
-import { ProfileService } from '../services/profile/profile.service';
-import { ThemeService } from '../services/theme/theme.service';
+import { SystemPreferences } from '../../models/user-profile';
+import { ProfileService } from '../../services/profile/profile.service';
+import { ThemeService } from '../../services/theme/theme.service';
 
 @Component({
   selector: 'app-system-preferences',
