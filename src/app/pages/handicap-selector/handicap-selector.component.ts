@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Handicap, DispositifLieu } from '../../models/user-profile';
+import { Handicap, DispositifLieu, UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 
 @Component({
@@ -22,8 +22,9 @@ export class HandicapSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.handicapTypes = this.profileService.getHandicapTypes();
     this.dispositifLieu = this.profileService.getDispositifLieu();
+    this.profileService.getCurrentProfile();
+    this.profileService.getCurrentProfileSettings();
   }
-
   
   getCurrentProfile() {
     const currentProf = this.profileService.getCurrentProfile();

@@ -48,11 +48,14 @@ export class SearchFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfilePreferences();
+    this.profileService.getCurrentProfile();
+    console.log(this.profileService.getCurrentProfile()?.username);
+    console.log(this.profileService.getCurrentProfile()?.dispositifLieu);
+    this.profileService.getCurrentProfileSettings();
   }
 
   loadProfilePreferences(): void {
     const currentProfile = this.profileService.getCurrentProfile();
-    console.log("current profile : ", currentProfile?.dispositifLieu);
     if (currentProfile) {
       this.selectedHandicaps = currentProfile.handicapList;
       this.selectedDispositifLieu = currentProfile.dispositifLieu;

@@ -18,11 +18,11 @@
       <div class="justify-center drawer-side">
         <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul tabindex="0" class="z-10 flex flex-col w-2/3 gap-2 p-4 rounded-tl-none rounded-bl-none dropdown-content rounded-box menu bg-base-200 text-base-content"> 
-          <label class="font-bold cursor-pointer label">Dispositifs</label>
+          <label class="font-bold cursor-pointer label">DISPOSITIFS</label>
           <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
             <label class="cursor-pointer label">
               <span class="label-text">{{ dispositiflieu.name }}</span>
-              <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)" class="checkbox checkbox-primary" />
+              <input type="checkbox" [checked]="isDispositifLieuChecked(dispositiflieu)" (change)="onDispositifLieuChange(dispositiflieu, $event)" class="checkbox checkbox-primary" />
             </label>
           </div>
           <div class="mb-16"></div>
