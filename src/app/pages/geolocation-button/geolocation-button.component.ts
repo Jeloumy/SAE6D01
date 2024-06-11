@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Geolocation } from '@capacitor/geolocation';
 import { ProfileService } from '../../services/profile/profile.service';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-geolocation-button',
@@ -9,7 +9,7 @@ import { ProfileService } from '../../services/profile/profile.service';
 })
 export class GeolocationButtonComponent {
   @Output() locationDetected = new EventEmitter<void>();
-  @Output() locationToggled = new EventEmitter<boolean>(); // Ajout d'un nouvel Output
+  @Output() locationToggled = new EventEmitter<boolean>();
   isLocationActive: boolean = false;
 
   constructor(private profileService: ProfileService) {}
@@ -20,7 +20,7 @@ export class GeolocationButtonComponent {
     } else {
       this.isLocationActive = false;
       this.profileService.setGeolocationData(null, null); // Réinitialiser les données de géolocalisation
-      this.locationToggled.emit(this.isLocationActive); // Émettre l'état actuel
+      this.locationToggled.emit(this.isLocationActive);
     }
   }
 
@@ -30,7 +30,7 @@ export class GeolocationButtonComponent {
       this.isLocationActive = true;
       this.profileService.setGeolocationData(position.coords.latitude, position.coords.longitude);
       this.locationDetected.emit();
-      this.locationToggled.emit(this.isLocationActive); // Émettre l'état actuel
+      this.locationToggled.emit(this.isLocationActive);
     } catch (error) {
       console.error('Geolocation error:', error);
     }

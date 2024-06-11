@@ -80,6 +80,16 @@ export class SearchFormComponent implements OnInit {
           console.error('Error fetching communes:', error);
         }
       );
+
+    // Écouter les mises à jour de la géolocalisation
+    this.profileService.getGeolocationUpdates().subscribe((geolocationData) => {
+      if (geolocationData.latitude !== null && geolocationData.longitude !== null) {
+        this.isLocationActive = true;
+        this.onSearch(); // Effectuer une recherche avec les nouvelles coordonnées
+      } else {
+        this.isLocationActive = false;
+      }
+    });
   }
 
   loadProfilePreferences(): void {
@@ -142,9 +152,15 @@ export class SearchFormComponent implements OnInit {
     });
   }
 
+  onLocationDetected(): void {
+    console.log('Location detected event received'); // Ajout de console.log
+    this.isLocationActive = true;
+    this.onSearch(); // Effectuez une nouvelle recherche avec les nouveaux filtres
+  }
+
   onLocationToggled(isLocationActive: boolean): void {
+    console.log('Location toggled:', isLocationActive); // Ajout de console.log
     this.isLocationActive = isLocationActive;
-    console.log('isLocationActive updated in onLocationToggled:', this.isLocationActive); // Ajout de console.log
     if (isLocationActive) {
       this.getUserLocation();
     } else {
@@ -158,7 +174,7 @@ export class SearchFormComponent implements OnInit {
       const position = await Geolocation.getCurrentPosition();
       this.profileService.setGeolocationData(position.coords.latitude, position.coords.longitude);
       console.log('User location detected:', position.coords); // Ajout de console.log
-      this.onSearch(); // Effectuez une nouvelle recherche avec la géolocalisation activée
+      this.onLocationDetected();
     } catch (error) {
       console.error('Geolocation error:', error);
     }

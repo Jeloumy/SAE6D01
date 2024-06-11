@@ -71,10 +71,8 @@
       ></app-handicap-selector>
       <div class="flex items-center justify-center space-x-4">
         <button class="flex-grow mt-4 font-bold btn btn-primary" type="submit">Rechercher</button>
-        <app-geolocation-button
-          (locationToggled)="onLocationToggled($event)"
-        ></app-geolocation-button>
       </div>
     </div>
   </form>
+  <app-map [results]="results"></app-map>
 </div>

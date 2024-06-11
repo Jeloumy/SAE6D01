@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,9 @@ export class ProfileService {
   private profilesList: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
   private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
+
+  // Subject pour émettre les événements de géolocalisation
+  private geolocationSubject = new Subject<{ latitude: number | null, longitude: number | null }>();
 
   constructor() { 
     this.loadProfileFromStorage();
@@ -18,6 +22,7 @@ export class ProfileService {
   setGeolocationData(latitude: number | null, longitude: number | null): void {
     this.geolocationData = { latitude, longitude };
     localStorage.setItem('geolocationData', JSON.stringify(this.geolocationData));
+    this.geolocationSubject.next(this.geolocationData); // Émettre les nouvelles coordonnées
   }
 
   getGeolocationData(): { latitude: number | null, longitude: number | null } | null {
@@ -28,6 +33,10 @@ export class ProfileService {
       }
     }
     return this.geolocationData;
+  }
+
+  getGeolocationUpdates() {
+    return this.geolocationSubject.asObservable();
   }
 
   getHandicapTypes(): Handicap[] {
