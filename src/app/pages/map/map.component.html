@@ -1,4 +1,7 @@
-<div class="map-container" role="region" aria-label="Carte interactive affichant des points d'intérêt">
-    <div #map class="h-screen" role="application" aria-label="Carte"></div>
-  </div>
-  
+<div #map class="w-screen flex flex-1 relative">
+  <app-geolocation-button
+    (locationDetected)="locationDetected.emit()"
+    (locationToggled)="onLocationToggled($event)"
+    class="absolute bottom-4 right-4 z-10"
+  ></app-geolocation-button>
+</div>
