@@ -27,19 +27,10 @@
       </div>
     </div>
 
-    <div class="mt-2" aria-label="Sélecteur de handicap">
-      <app-handicap-selector
-        [(selectedHandicaps)]="profile.handicapList"
-        [(selectedDispositifLieu)]="profile.dispositifLieu"
-        (selectedDispositifLieuChange)="profile.dispositifLieu = $event"
-      ></app-handicap-selector>
-      <div
-        *ngIf="
-          profile.handicapList.length === 0 &&
-          (username.dirty || username.touched)
-        "
-        class="text-red-500"
-      >
+    <!-- Handicap Selector Component -->
+    <div class="mt-2">
+      <app-handicap-selector [(selectedHandicaps)]="profile.handicapList" [(selectedDispositifLieu)]="profile.dispositifLieu" (selectedHandicapsChange)="profile.handicapList = $event" (selectedDispositifLieuChange)="profile.dispositifLieu = $event"></app-handicap-selector>
+      <div *ngIf="profile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-red-500">
         Au moins un type d'handicap est requis.
       </div>
     </div>
@@ -89,12 +80,8 @@
     ></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button
-      class="w-full mt-4 btn btn-primary sm:w-auto"
-      type="submit"
-      [disabled]="profileForm.invalid"
-    >
-      {{ editingProfile ? "Modifier" : "Créer" }}
+    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid" (click)="reloadCurrentPage()">
+      {{ editingProfile ? 'Modifier' : 'Créer' }}
     </button>
   </form>
 
@@ -145,12 +132,9 @@
                 </li>
               </ul>
             </td>
-            <td class="">
-              <div class="flex flex-col items-center gap-2 sm:gap-4">
-                <button
-                  class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg"
-                  (click)="editProfile(profile); $event.stopPropagation()"
-                >
+            <td class="" [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
+              <div *ngIf="profile.username === currentProfile?.username" class="flex flex-col items-center gap-2 sm:gap-4">
+                <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button

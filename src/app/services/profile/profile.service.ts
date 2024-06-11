@@ -120,6 +120,10 @@ export class ProfileService {
     return this.currentProfile;
   }
 
+  getCurrentProfileSettings(): SystemPreferences | null {
+    return this.currentProfile?.systemPreferences || null;
+  }
+
   private getNextId(): number {
     const maxId = this.profilesList.reduce((max, profile) => profile.id > max ? profile.id : max, 0);
     return maxId + 1;
