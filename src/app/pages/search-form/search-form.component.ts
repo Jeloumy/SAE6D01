@@ -182,7 +182,7 @@ export class SearchFormComponent implements OnInit {
 
   onCommuneQueryChange(event: any): void {
     const query = event.target.value;
-    if (query.length > 3) {
+    if (query.length >= 3) {
       this.searchTerms.next(query);
     } else {
       this.communes = [];
