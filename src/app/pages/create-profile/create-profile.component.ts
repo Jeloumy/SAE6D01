@@ -55,10 +55,13 @@ export class CreateProfileComponent implements OnInit {
     }
   }
 
+  reloadCurrentPage(): void {
+    location.reload();
+  }
+
   loadProfiles(): void {
     this.profiles = this.profileService.getProfilesList();
   }
-
 
   loadCurrentProfile(): void {
     const storedProfile = this.profileService.getCurrentProfile();
@@ -208,6 +211,9 @@ export class CreateProfileComponent implements OnInit {
               profile.systemPreferences || ({} as SystemPreferences),
           };
           this.profileService.setCurrentProfile(this.currentProfile);
+          this.profileService.getCurrentProfile();
+          this.profileService.getCurrentProfileSettings();
+          location.reload();
         }
       });
     } else {
@@ -263,5 +269,6 @@ export class CreateProfileComponent implements OnInit {
 
   updateSystemPreferences(preferences: SystemPreferences): void {
     this.systemPreferences = preferences;
+    
   }
 }

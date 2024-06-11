@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserProfile, Handicap, DispositifLieu } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -118,6 +118,10 @@ export class ProfileService {
 
   getCurrentProfile(): UserProfile | null {
     return this.currentProfile;
+  }
+
+  getCurrentProfileSettings(): SystemPreferences | null {
+    return this.currentProfile?.systemPreferences || null;
   }
 
   private getNextId(): number {
