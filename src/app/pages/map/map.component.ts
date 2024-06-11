@@ -98,7 +98,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     this.markersLayer = L.layerGroup().addTo(this.map);
   }
 
-  private updateMarkers(): void {
+  public updateMarkers(): void {
     this.markersLayer.clearLayers();
 
     let newMarkers = new L.LatLngBounds([]);
@@ -129,7 +129,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
 
     if (newMarkers.isValid()) {
-      this.map.fitBounds(newMarkers);
+      this.map.flyToBounds(newMarkers, {
+        animate: true,
+        duration: 2,
+        easeLinearity: 0.25,
+      });
     }
   }
 

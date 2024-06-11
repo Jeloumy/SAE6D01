@@ -6,3 +6,9 @@
     z-index: 1000; /* S'assurer que le bouton est au-dessus de la carte */
   }
   
+  .app-geolocation-button {
+    position: absolute;
+    bottom: 4rem;
+    right: 1rem;
+    z-index: 400;
+  }

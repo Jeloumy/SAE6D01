@@ -85,9 +85,7 @@ export class SearchFormComponent implements OnInit {
     this.profileService.getGeolocationUpdates().subscribe((geolocationData) => {
       if (geolocationData.latitude !== null && geolocationData.longitude !== null) {
         this.isLocationActive = true;
-        this.onSearch(); // Effectuer une recherche avec les nouvelles coordonnées
-      } else {
-        this.isLocationActive = false;
+        this.onLocationDetected();
       }
     });
   }
@@ -149,6 +147,9 @@ export class SearchFormComponent implements OnInit {
       this.results = data;
       console.log('API Response:', data);
       this.searchEvent.emit(data);
+      
+      // Mettre à jour les marqueurs sur la carte après la recherche
+      this.mapComponent.updateMarkers();
     });
   }
 
