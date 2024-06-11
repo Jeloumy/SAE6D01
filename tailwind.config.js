@@ -15,9 +15,15 @@ module.exports = {
         hightContrast:{
           'primary': '#000000',
           'neutral': '#000000',
+          'success': '#ffffff',
         },
       },
-      "light",
+      {
+        light:{
+          'success': '#134E4A',
+          'accent': '#2DD4BF',
+        },
+      },
     ],
   }
 }
