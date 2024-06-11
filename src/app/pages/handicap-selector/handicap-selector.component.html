@@ -14,10 +14,10 @@
     </div>
     <!-- <label class="cursor-pointer label">
         <span class="label-text">{{ handicap.handicap }}</span>
-        <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)"
-          class="checkbox checkbox-primary">
+        <input type="checkbox" [id]="'handicap-' + handicap.id" [checked]="isChecked(handicap)"
+          (change)="onHandicapChange(handicap, $event)" class="checkbox checkbox-primary">
       </label> -->
-  </div>
+    </div>
 
   <div class="drawer">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
@@ -66,6 +66,13 @@
           class="checkbox checkbox-primary"
         />
       </label>
-    </div>
+      <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
+        <label class="cursor-pointer label" for="dispositif-{{dispositiflieu.id}}">
+          <span class="label-text">{{ dispositiflieu.name }}</span>
+          <input type="checkbox" [id]="'dispositif-' + dispositiflieu.id"
+            [checked]="isDispositifLieuChecked(dispositiflieu)"
+            (change)="onDispositifLieuChange(dispositiflieu, $event)" class="checkbox checkbox-primary">
+        </label>
+      </div>
   </div>
 </div>

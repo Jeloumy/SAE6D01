@@ -1,0 +1,5 @@
+{
+	"appId": "dev.iut.beziers.handiplace",
+	"appName": "SAE6D01",
+	"webDir": "dist/sae6-d01/browser"
+}

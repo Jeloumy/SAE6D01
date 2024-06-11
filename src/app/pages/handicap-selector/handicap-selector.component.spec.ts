@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HandicapSelectorComponent } from './handicap-selector.component';
 
 describe('HandicapSelectorComponent', () => {

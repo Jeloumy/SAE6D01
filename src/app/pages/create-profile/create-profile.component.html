@@ -1,27 +1,72 @@
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
-  <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 form-control sm:w-2/3">
+  <form
+    (ngSubmit)="createProfile()"
+    #profileForm="ngForm"
+    class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 form-control sm:w-2/3"
+  >
     <div class="mt-2">
-      <label class="label">
+      <label class="label" for="username">
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
-      <input type="text" [(ngModel)]="profile.username" name="username" placeholder="Nom d'utilisateur" required class="w-full input input-bordered" #username="ngModel">
-      <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-error">
+      <input
+        type="text"
+        [(ngModel)]="profile.username"
+        name="username"
+        id="username"
+        placeholder="Nom d'utilisateur"
+        required
+        class="w-full input input-bordered"
+        #username="ngModel"
+        aria-required="true"
+      />
+      <div
+        *ngIf="username.invalid && (username.dirty || username.touched)"
+        class="text-red-500"
+      >
         Le nom d'utilisateur est requis.
       </div>
     </div>
 
-    <!-- Handicap Selector Component -->
-    <div class="mt-2">
-      <app-handicap-selector [(selectedHandicaps)]="profile.handicapList" [(selectedDispositifLieu)]="profile.dispositifLieu" (selectedDispositifLieuChange)="profile.dispositifLieu = $event"></app-handicap-selector>
-      <div *ngIf="profile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-error">
+    <div class="mt-2" aria-label="Sélecteur de handicap">
+      <app-handicap-selector
+        [(selectedHandicaps)]="profile.handicapList"
+        [(selectedDispositifLieu)]="profile.dispositifLieu"
+        (selectedDispositifLieuChange)="profile.dispositifLieu = $event"
+      ></app-handicap-selector>
+      <div
+        *ngIf="
+          profile.handicapList.length === 0 &&
+          (username.dirty || username.touched)
+        "
+        class="text-red-500"
+      >
         Au moins un type d'handicap est requis.
       </div>
     </div>
 
     <!-- Photo de Profil -->
-    <div class="mt-2">
-      <label class="label">
-        <span class="font-bold label-text">Photo de profil</span>
+    <label class="label">
+      <span class="label-text text-base-content"
+        >Sélectionner une photo de profil</span
+      >
+    </label>
+    <div class="relative flex items-center">
+      <label for="fileInput" class="relative cursor-pointer">
+        <input
+          type="file"
+          id="fileInput"
+          (change)="onFileChange($event)"
+          class="hidden"
+        />
+        <div class="ml-4 avatar" *ngIf="photoPreview">
+          <div class="w-24 rounded-full">
+            <img
+              [src]="photoPreview"
+              alt="Aperçu de la photo de profil"
+              title="Cliquez pour afficher la photo"
+            />
+          </div>
+        </div>
       </label>
     </div>
     <div class="flex flex-col items-center sm:flex-row">
@@ -33,22 +78,29 @@
       </div>
     </div>
 
-    <!-- System Preferences Component -->
-    <div class="mt-2">
+    <div class="mt-2" aria-label="Préférences système">
       <label class="mt-4 label">
         <span class="font-bold label-text">Préférences système</span>
       </label>
     </div>
-    <app-system-preferences [(preferences)]="systemPreferences" (preferencesChange)="updateSystemPreferences($event)"></app-system-preferences>
+    <app-system-preferences
+      [(preferences)]="systemPreferences"
+      (preferencesChange)="updateSystemPreferences($event)"
+    ></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="w-full mt-4 btn btn-primary sm:w-auto" type="submit" [disabled]="profileForm.invalid">
-      {{ editingProfile ? 'Modifier' : 'Créer' }}
+    <button
+      class="w-full mt-4 btn btn-primary sm:w-auto"
+      type="submit"
+      [disabled]="profileForm.invalid"
+    >
+      {{ editingProfile ? "Modifier" : "Créer" }}
     </button>
-    
   </form>
 
-  <div class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 sm:w-2/3 form-control">
+  <div
+    class="w-full max-w-screen-md p-4 border rounded-md border-slate-500 sm:w-2/3 form-control"
+  >
     <div *ngIf="profiles.length > 0; else noProfiles">
       <table class="table w-full sm:table-sm md:table-md lg:table-lg">
         <thead>
@@ -65,27 +117,46 @@
             <td class="flex flex-col items-center justify-center">
               <div *ngIf="profile.photo" class="avatar">
                 <div class="w-12">
-                  <img class="rounded-full" [src]="profile.photo" alt="Photo de profil">
+                  <img
+                    class="rounded-full"
+                    [src]="profile.photo"
+                    alt="Photo de profil"
+                  />
                 </div>
               </div>
-              <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>
+              <p class="mt-2 text-center">
+                <b>{{ profile.username }}</b>
+              </p>
             </td>
             <td class="">
               <ul>
-                <li *ngFor="let handicap of profile.handicapList" class="mb-2">{{ handicap.handicap }}</li>
+                <li *ngFor="let handicap of profile.handicapList" class="mb-2">
+                  {{ handicap.handicap }}
+                </li>
               </ul>
             </td>
             <td class="">
               <ul>
-                <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
+                <li
+                  *ngFor="let dispositif of profile.dispositifLieu"
+                  class="mb-2"
+                >
+                  {{ dispositif.name }}
+                </li>
               </ul>
             </td>
             <td class="">
               <div class="flex flex-col items-center gap-2 sm:gap-4">
-                <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
+                <button
+                  class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg"
+                  (click)="editProfile(profile); $event.stopPropagation()"
+                >
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-error btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="deleteProfile(profile.id); $event.stopPropagation();">
+                <button
+                  class="btn btn-error btn-square sm:btn-sm md:btn-md lg:btn-lg"
+                  (click)="deleteProfile(profile.id); $event.stopPropagation()"
+                >
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -97,7 +168,8 @@
     <ng-template #noProfiles>
       <div *ngIf="currentProfile === null" class="alert alert-warning">
         <span *ngIf="profiles.length === 0">
-          <b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.
+          <b>Aucun profil disponible.</b> <br />
+          Veuillez créer un nouveau profil.
         </span>
         <span *ngIf="profiles.length > 0">
           Veuillez sélectionner un profil parmi les profils existants.
@@ -106,8 +178,11 @@
     </ng-template>
   </div>
 
-  <div *ngIf="showModal">
-    <app-profile-selector-dialog [profilesList]="profiles" (selectionConfirmed)="onProfileSelected($event)">
+  <div *ngIf="showModal" aria-label="Sélectionneur de profil">
+    <app-profile-selector-dialog
+      [profilesList]="profiles"
+      (selectionConfirmed)="onProfileSelected($event)"
+    >
     </app-profile-selector-dialog>
   </div>
 </div>

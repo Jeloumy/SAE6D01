@@ -24,6 +24,17 @@ export class HandicapSelectorComponent implements OnInit {
     this.dispositifLieu = this.profileService.getDispositifLieu();
   }
 
+  
+  getCurrentProfile() {
+    const currentProf = this.profileService.getCurrentProfile();
+    return currentProf;
+  }
+
+  getHandicap() {
+    const currentHandicaps = this.profileService.getCurrentProfile()?.handicapList;
+    return currentHandicaps;
+  }
+
   onHandicapChange(handicap: Handicap, event: any): void {
     if (event.target.checked) {
       this.selectedHandicaps.push(handicap);
@@ -36,7 +47,12 @@ export class HandicapSelectorComponent implements OnInit {
   }
 
   isChecked(handicap: Handicap): boolean {
-    return this.selectedHandicaps.some(h => h.id === handicap.id);
+    const currentHandicap = this.getHandicap();
+    if (currentHandicap) {
+      const isIn = currentHandicap?.some(p => p.id === handicap.id);
+      return isIn
+    }
+    return false;
   }
 
   toggleDispositifLieu(event: Event): void {
@@ -55,7 +71,12 @@ export class HandicapSelectorComponent implements OnInit {
   }
 
   isDispositifLieuChecked(dispositiflieu: DispositifLieu): boolean {
-    return this.selectedDispositifLieu.some(p => p.id === dispositiflieu.id);
+    const currentProfile = this.getCurrentProfile();
+    if (currentProfile?.dispositifLieu) {
+      const isIn = currentProfile.dispositifLieu.some(p => p.id === dispositiflieu.id);
+      return isIn
+    }
+    return false;
   }
 
   updateDispositifLieu(): void {
