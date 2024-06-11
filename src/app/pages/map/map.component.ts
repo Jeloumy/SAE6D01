@@ -18,9 +18,7 @@ import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
   template: '<div #map class="w-screen flex flex-1"></div>',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent
-  implements OnInit, OnDestroy, AfterViewInit, OnChanges
-{
+export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @ViewChild('map', { static: false })
   private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
@@ -62,8 +60,18 @@ export class MapComponent
   }
 
   private initMap(): void {
-    const coordinates: L.LatLngTuple = [48.8566, 2.3522];
-    this.map = L.map(this.mapContainer.nativeElement).setView(coordinates, 13);
+    const franceCenter: L.LatLngExpression = [46.603354, 1.888334];
+    const franceBounds: L.LatLngBoundsLiteral = [
+      [41.33, -5.14], // Sud-Ouest (point bas)
+      [51.124, 9.662], // Nord-Est (point haut)
+    ];
+
+    this.map = L.map(this.mapContainer.nativeElement, {
+      maxBounds: franceBounds,
+      maxBoundsViscosity: 1.0,
+      minZoom: 5,
+    }).setView(franceCenter, 5);
+
     for (const layerName in this.layers) {
       this.layerControl.addBaseLayer(this.layers[layerName], layerName);
     }
@@ -77,7 +85,7 @@ export class MapComponent
 
     // Sélectionne la balise contenant la carte Leaflet
     const leafletContainer = document.querySelector('.leaflet-container');
-    leafletContainer?.classList.add('bg-base-700');
+    leafletContainer?.classList.add('bg-base-100');
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
@@ -125,5 +133,19 @@ export class MapComponent
     if (newMarkers.isValid()) {
       this.map.fitBounds(newMarkers);
     }
+  }
+
+  flyToLocation(lat: number, lon: number): void {
+    const zoomLevel = 13;
+    const options: L.ZoomPanOptions = {
+      animate: true,
+      duration: 5, // Durée de l'animation en secondes
+      easeLinearity: 0.25, // Modifie la linéarité de l'animation
+    };
+    this.map.flyTo([lat, lon], zoomLevel, options);
+  }
+
+  public getMap(): L.Map {
+    return this.map;
   }
 }
