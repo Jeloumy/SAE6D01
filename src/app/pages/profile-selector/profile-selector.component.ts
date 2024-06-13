@@ -88,7 +88,7 @@ export class ProfileSelectorComponent implements OnInit {
               icon: 'info',
               confirmButtonText: 'OK'
             }).then(() => {
-              this.openProfileSelector();
+              // Ne rien faire ici pour éviter la fermeture automatique
             });
           } else {
             Swal.fire({
@@ -108,7 +108,16 @@ export class ProfileSelectorComponent implements OnInit {
   }
 
   closeSelector(): void {
-    this.close.emit();
+    if (!this.currentProfile) {
+      Swal.fire({
+        title: 'Aucun profil sélectionné',
+        text: 'Veuillez sélectionner un profil avant de fermer le sélecteur.',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      });
+    } else {
+      this.close.emit();
+    }
   }
 
   openProfileSelector(): void {
