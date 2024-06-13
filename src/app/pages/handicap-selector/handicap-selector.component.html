@@ -21,7 +21,7 @@
 
     <div class="drawer">
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content">
+      <div class="drawer-content flex justify-center mt-4">
         <label for="my-drawer" class="btn btn-secondary drawer-button">Préférences</label>
       </div> 
       <div class="justify-center drawer-side">
@@ -64,8 +64,8 @@
     </div>
   </div>
 
-  <div *ngIf="showDispositifLieu" class="mt-4 form-control">
-    <label class="label">
+  <div *ngIf="showDispositifLieu" class="mt-4 form-control flex justify-center">
+    <label class="label flex justify-center">
       <span class="font-bold label-text">Préférences</span>
     </label>
     <div *ngFor="let dispositiflieu of dispositifLieu" class="form-control">
