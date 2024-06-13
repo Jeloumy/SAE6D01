@@ -1,24 +1,30 @@
-// import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class ThemeService {
-//   private readonly THEME_KEY = 'selected-theme';
+@Injectable({
+  providedIn: 'root'
+})
+export class ThemeService {
+  private readonly THEME_KEY = 'selected-theme';
 
-//   constructor() {
-//     const savedTheme = localStorage.getItem(this.THEME_KEY);
-//     if (savedTheme) {
-//       this.setTheme(savedTheme);
-//     }
-//   }
+  constructor() {
+    const savedTheme = localStorage.getItem(this.THEME_KEY);
+    if (savedTheme) {
+      this.setTheme(savedTheme);
+    }
+  }
 
-//   setTheme(theme: string) {
-//     document.documentElement.setAttribute('data-theme', theme);
-//     localStorage.setItem(this.THEME_KEY, theme);
-//   }
+  setTheme(theme: string) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(this.THEME_KEY, theme);
+  }
 
-//   getTheme(): string {
-//     return localStorage.getItem(this.THEME_KEY) || 'light';
-//   }
-// }
+  getTheme(): string {
+    return localStorage.getItem(this.THEME_KEY) || 'light';
+  }
+
+  toggleTheme(){
+    const currentTheme = this.getTheme();
+    const newTheme = currentTheme === 'light'?'hightContrast':'light';
+    this.setTheme(newTheme);
+  }
+}
