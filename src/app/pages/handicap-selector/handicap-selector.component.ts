@@ -16,6 +16,7 @@ export class HandicapSelectorComponent implements OnInit {
   dispositifLieu: DispositifLieu[] = [];
   showDispositifLieu: boolean = false;
   autoSelectedDispositifLieu: DispositifLieu[] = [];
+  manuallySelectedDispositifLieu: DispositifLieu[] = [];
 
   constructor(private profileService: ProfileService) { }
 
@@ -24,12 +25,14 @@ export class HandicapSelectorComponent implements OnInit {
     this.dispositifLieu = this.profileService.getDispositifLieu();
     this.loadCurrentProfileData();
   }
-  
+
   loadCurrentProfileData(): void {
     const currentProfile = this.profileService.getCurrentProfile();
     if (currentProfile) {
       this.selectedHandicaps = currentProfile.handicapList;
       this.selectedDispositifLieu = currentProfile.dispositifLieu;
+      this.autoSelectedDispositifLieu = []; // Reset auto-selected list
+      this.manuallySelectedDispositifLieu = currentProfile.dispositifLieu.filter(d => !this.isAutoSelected(d.id));
     }
   }
 
@@ -56,9 +59,10 @@ export class HandicapSelectorComponent implements OnInit {
   onDispositifLieuChange(dispositiflieu: DispositifLieu, event: any): void {
     if (event.target.checked) {
       this.selectedDispositifLieu.push(dispositiflieu);
-      this.autoSelectedDispositifLieu = this.autoSelectedDispositifLieu.filter(d => d.id !== dispositiflieu.id);
+      this.manuallySelectedDispositifLieu.push(dispositiflieu);
     } else {
       this.selectedDispositifLieu = this.selectedDispositifLieu.filter(p => p.id !== dispositiflieu.id);
+      this.manuallySelectedDispositifLieu = this.manuallySelectedDispositifLieu.filter(p => p.id !== dispositiflieu.id);
     }
     this.selectedDispositifLieuChange.emit(this.selectedDispositifLieu);
   }
@@ -107,7 +111,11 @@ export class HandicapSelectorComponent implements OnInit {
     }
 
     this.autoSelectedDispositifLieu = this.autoSelectedDispositifLieu.filter(d => !toRemove.includes(d.id));
-    this.selectedDispositifLieu = this.selectedDispositifLieu.filter(p => !toRemove.includes(p.id) || this.autoSelectedDispositifLieu.includes(p));
+    this.selectedDispositifLieu = this.selectedDispositifLieu.filter(p => !toRemove.includes(p.id) || this.manuallySelectedDispositifLieu.includes(p));
     this.selectedDispositifLieuChange.emit(this.selectedDispositifLieu);
+  }
+
+  private isAutoSelected(dispositiflieuId: number): boolean {
+    return this.autoSelectedDispositifLieu.some(d => d.id === dispositiflieuId);
   }
 }
