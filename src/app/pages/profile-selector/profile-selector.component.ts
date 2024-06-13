@@ -46,7 +46,6 @@ export class ProfileSelectorComponent implements OnInit {
           this.currentProfile = profile;
           this.profileService.setCurrentProfile(profile);
           this.profileSelected.emit(profile);
-          // Ne rien faire ici pour éviter la fermeture automatique
         }
       });
     }
@@ -89,8 +88,6 @@ export class ProfileSelectorComponent implements OnInit {
               text: 'Le profil sélectionné a été supprimé. Veuillez choisir un autre profil.',
               icon: 'info',
               confirmButtonText: 'OK'
-            }).then(() => {
-              // Ne rien faire ici pour éviter la fermeture automatique
             });
           } else {
             Swal.fire({

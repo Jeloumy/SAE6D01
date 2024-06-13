@@ -3,3 +3,19 @@
     overflow-y: auto; // Permettre le défilement vertical
   }
   
+  .profile-list-container ul li {
+    border-radius: 0.5rem; /* Arrondir les bords des profils */
+  }
+  
+  .profile-list-container ul li .btn-square {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-list-container ul li .btn-circle {
+    border-radius: 50%;
+  }
+  
