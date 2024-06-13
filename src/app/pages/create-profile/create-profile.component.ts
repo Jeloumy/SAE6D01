@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import {
-  UserProfile,
-  Handicap,
-  DispositifLieu,
-  SystemPreferences,
-} from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
 import { HttpClient } from '@angular/common/http'; // Import HttpClient
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router'; // Import Router
 
 @Component({
   selector: 'app-create-profile',
@@ -36,8 +32,9 @@ export class CreateProfileComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private http: HttpClient
-  ) {} // Inject HttpClient
+    private http: HttpClient,
+    private router: Router // Inject Router
+  ) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -67,17 +64,13 @@ export class CreateProfileComponent implements OnInit {
     const storedProfile = this.profileService.getCurrentProfile();
     if (storedProfile) {
       const matchedProfile = this.profiles.find(
-        (profile) => {
-          //console.log('Logging profile:', profile.username, profile);
-          return profile.username === storedProfile.username;
-        }
+        (profile) => profile.username === storedProfile.username
       );
       if (matchedProfile) {
         this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
       }
     }
   }
-  
 
   private generateRandomColor(): string {
     const letters = '0123456789ABCDEF';
@@ -100,46 +93,49 @@ export class CreateProfileComponent implements OnInit {
 
     if (!this.profile.photo) {
       const bgColor = this.generateRandomColor().slice(1);
-      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(
-        this.profile.username
-      )}`;
+      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(this.profile.username)}`;
       this.profile.photo = avatarUrl;
     }
 
-    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
+    const isInitialProfile = this.profiles.length === 0;
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
       this.editingProfile = null;
     } else {
       this.profileService.createProfile(this.profile);
       if (isInitialProfile) {
-        this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
+        this.selectProfile(this.profile, false);
       }
     }
     this.resetForm();
     this.loadProfiles();
+
+    // Redirige vers la page d'accueil après la création du profil
+    this.router.navigate(['/']);
   }
 
   completeProfileCreation(): void {
-    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
+    const isInitialProfile = this.profiles.length === 0;
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
       this.editingProfile = null;
     } else {
       this.profileService.createProfile(this.profile);
       if (isInitialProfile) {
-        this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
+        this.selectProfile(this.profile, false);
       }
     }
     this.resetForm();
     this.loadProfiles();
+
+    // Redirige vers la page d'accueil après la création du profil
+    this.router.navigate(['/']);
   }
 
   deleteProfile(profileId: number): void {
     const wasCurrentProfile = this.currentProfile?.id === profileId;
     const currentProfilePseudo = this.currentProfile?.username;
 
-    // Utilisation de SweetAlert2 pour la confirmation de suppression
     Swal.fire({
       title: 'Êtes-vous sûr(e) de vouloir supprimer ce profil ?',
       text: 'Cette action est irréversible !',
@@ -149,7 +145,6 @@ export class CreateProfileComponent implements OnInit {
       cancelButtonText: 'Annuler',
     }).then((result) => {
       if (result.isConfirmed) {
-        // L'utilisateur a confirmé la suppression
         this.profileService.deleteProfile(profileId);
         this.loadProfiles();
 
@@ -204,7 +199,6 @@ export class CreateProfileComponent implements OnInit {
         cancelButtonText: 'Annuler',
       }).then((result) => {
         if (result.isConfirmed) {
-          // L'utilisateur a confirmé le changement de profil
           this.currentProfile = {
             ...profile,
             systemPreferences:
@@ -269,6 +263,5 @@ export class CreateProfileComponent implements OnInit {
 
   updateSystemPreferences(preferences: SystemPreferences): void {
     this.systemPreferences = preferences;
-    
   }
 }

@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateProfileComponent } from '../app/pages/create-profile/create-profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { HomeComponent } from './home/home.component';
+import { ProfileGuard } from './guards/auth/profile.guard'; // Importez votre guard
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [ProfileGuard] },
   { path: 'profile', component: CreateProfileComponent },
-  { path: 'search', component: SearchComponent },
+  { path: 'search', component: SearchComponent, canActivate: [ProfileGuard] },
   // autres routes...
 ];
 
