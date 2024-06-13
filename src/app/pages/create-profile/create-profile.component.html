@@ -60,17 +60,7 @@
 
     <!-- Submit button with DaisyUI class -->
     <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit" [disabled]="profileForm.invalid">
-      {{ editingProfile ? 'Modifier' : 'Créer' }}
+      Créer
     </button>
   </form>
-
-  <button class="mt-4 btn bg-primary text-info-content" (click)="openProfileSelector()">Ouvrir Sélecteur de Profil</button>
-
-  <!-- Modal -->
-  <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded shadow-lg w-full max-w-2xl">
-      <button class="absolute top-0 right-0 m-4 text-xl" (click)="toggleModal()">×</button>
-      <app-profile-selector [profiles]="profiles" [currentProfile]="currentProfile" (profileSelected)="onProfileSelected($event)" (profileEdited)="onProfileEdited($event)" (profileDeleted)="onProfileDeleted($event)"></app-profile-selector>
-    </div>
-  </div>
 </div>

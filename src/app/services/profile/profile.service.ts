@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
   private profilesList: UserProfile[] = [];
-  currentProfile: UserProfile | null = null;
+  private currentProfileSubject: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
+  currentProfile$: Observable<UserProfile | null> = this.currentProfileSubject.asObservable();
+  
   private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
   private geolocationSubject = new BehaviorSubject<{ latitude: number | null, longitude: number | null }>({ latitude: null, longitude: null });
 
@@ -110,9 +112,8 @@ export class ProfileService {
     this.profilesList = this.profilesList.filter(profile => profile.id !== profileId);
     this.reassignIds(); // Réassigne les IDs pour maintenir une séquence continue
     this.saveProfilesListToStorage();
-    if (this.currentProfile?.id === profileId) {
-      this.currentProfile = null;
-      localStorage.removeItem('currentProfile');
+    if (this.currentProfileSubject.value?.id === profileId) {
+      this.setCurrentProfile(null);
     }
   }
 
@@ -138,12 +139,13 @@ export class ProfileService {
   loadProfileFromStorage(): void {
     const profileData = localStorage.getItem('currentProfile');
     if (profileData) {
-      this.currentProfile = JSON.parse(profileData);
+      const profile = JSON.parse(profileData);
+      this.currentProfileSubject.next(profile);
     }
   }
   
   setCurrentProfile(profile: UserProfile | null): void {
-    this.currentProfile = profile;
+    this.currentProfileSubject.next(profile);
     if (profile) {
       localStorage.setItem('currentProfile', JSON.stringify(profile));
     } else {
@@ -152,11 +154,11 @@ export class ProfileService {
   }
 
   getCurrentProfile(): UserProfile | null {
-    return this.currentProfile;
+    return this.currentProfileSubject.value;
   }
 
   getCurrentProfileSettings(): SystemPreferences | null {
-    return this.currentProfile?.systemPreferences || null;
+    return this.currentProfileSubject.value?.systemPreferences || null;
   }
 
   private getNextId(): number {

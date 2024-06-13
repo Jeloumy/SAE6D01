@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
-import { Router } from '@angular/router'; // Import Router
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,7 +17,7 @@ export class ProfileSelectorComponent implements OnInit {
   @Output() profileDeleted = new EventEmitter<number>();
   @Output() close = new EventEmitter<void>();
 
-  constructor(private profileService: ProfileService, private router: Router) {} // Inject Router
+  constructor(private profileService: ProfileService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -46,6 +46,7 @@ export class ProfileSelectorComponent implements OnInit {
           this.currentProfile = profile;
           this.profileService.setCurrentProfile(profile);
           this.profileSelected.emit(profile);
+          // Ne rien faire ici pour éviter la fermeture automatique
         }
       });
     }
@@ -62,6 +63,7 @@ export class ProfileSelectorComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/edit-profile', profile.id]); // Rediriger vers la route de modification avec l'ID du profil
+        this.profileEdited.emit(profile); // Émettre l'événement pour signaler que le profil a été édité
       }
     });
   }
@@ -120,8 +122,25 @@ export class ProfileSelectorComponent implements OnInit {
     }
   }
 
-  openProfileSelector(): void {
-    this.close.emit(); // Close the current modal
-    // Open a new modal or perform some action to select a profile
+  createNewProfile(): void {
+    this.router.navigate(['/create-profile']);
+  }
+
+  showProfileDetails(profile: UserProfile): void {
+    Swal.fire({
+      title: `Détails du profil ${profile.username}`,
+      html: `
+        <strong>Handicaps:</strong>
+        <ul>
+          ${profile.handicapList.map(handicap => `<li>${handicap.handicap}</li>`).join('')}
+        </ul>
+        <strong>Dispositifs:</strong>
+        <ul>
+          ${profile.dispositifLieu.map(dispositif => `<li>${dispositif.name}</li>`).join('')}
+        </ul>
+      `,
+      icon: 'info',
+      confirmButtonText: 'OK'
+    });
   }
 }

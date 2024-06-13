@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-photo',
@@ -8,16 +9,32 @@ import { ProfileService } from '../../services/profile/profile.service';
   styleUrls: ['./profile-photo.component.scss']
 })
 export class ProfilePhotoComponent implements OnInit {
-  @Input() profile: UserProfile | null = null;
-  @Output() profileClicked = new EventEmitter<void>();
+  profiles: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
   showModal = false;
   photoPreview: string | null = null;
 
+  private profileSubscription: Subscription | undefined;
+
   constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
+    this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
+      this.currentProfile = profile;
+      this.photoPreview = profile?.photo || null;
+    });
+    this.loadProfiles();
     this.loadCurrentProfile();
+  }
+
+  ngOnDestroy(): void {
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
+  }
+
+  loadProfiles(): void {
+    this.profiles = this.profileService.getProfilesList();
   }
 
   loadCurrentProfile(): void {
@@ -25,12 +42,7 @@ export class ProfilePhotoComponent implements OnInit {
     this.photoPreview = this.currentProfile?.photo || null;
   }
 
-  getProfilesList(): UserProfile[] {
-    return this.profileService.getProfilesList();
-  }
-
   onClick(): void {
-    this.profileClicked.emit();
     this.openProfileSelector();
   }
 
@@ -46,6 +58,19 @@ export class ProfilePhotoComponent implements OnInit {
     this.currentProfile = profile;
     this.photoPreview = profile.photo || null;
     this.profileService.setCurrentProfile(profile);
-    this.closeProfileSelector();
+    // Ne pas fermer le sélecteur ici pour rester sur la même page
+  }
+
+  onProfileEdited(profile: UserProfile): void {
+    // Logique après modification du profil
+    this.loadProfiles(); // Recharger la liste des profils
+  }
+
+  onProfileDeleted(profileId: number): void {
+    // Logique après suppression du profil
+    this.loadProfiles(); // Recharger la liste des profils
+    if (this.currentProfile?.id === profileId) {
+      this.currentProfile = null;
+    }
   }
 }

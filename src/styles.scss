@@ -18,3 +18,8 @@
 .leaflet-pane, .leaflet-top, .leaflet-bottom{
     z-index: 0 !important;
 }
+
+.disable-map-interaction {
+    pointer-events: none;
+  }
+  

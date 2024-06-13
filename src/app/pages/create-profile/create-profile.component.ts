@@ -24,9 +24,6 @@ export class CreateProfileComponent implements OnInit {
   };
 
   profiles: UserProfile[] = [];
-  editingProfile: UserProfile | null = null;
-  currentProfile: UserProfile | null = null;
-  showModal = false;
   handicapTypes: Handicap[] = [];
   photoPreview: string | ArrayBuffer | null = '';
 
@@ -37,8 +34,8 @@ export class CreateProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfiles();
-    this.loadCurrentProfile();
     this.handicapTypes = this.profileService.getHandicapTypes();
+    this.resetForm(); // Assurez-vous que le formulaire est vierge au chargement de la page
   }
 
   get systemPreferences(): SystemPreferences {
@@ -51,24 +48,8 @@ export class CreateProfileComponent implements OnInit {
     }
   }
 
-  reloadCurrentPage(): void {
-    location.reload();
-  }
-
   loadProfiles(): void {
     this.profiles = this.profileService.getProfilesList();
-  }
-
-  loadCurrentProfile(): void {
-    const storedProfile = this.profileService.getCurrentProfile();
-    if (storedProfile) {
-      const matchedProfile = this.profiles.find(
-        (profile) => profile.username === storedProfile.username
-      );
-      if (matchedProfile) {
-        this.selectProfile(matchedProfile, false);
-      }
-    }
   }
 
   private generateRandomColor(): string {
@@ -81,11 +62,31 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
+    // Vérification de la limite de 5 profils
+    if (this.profiles.length >= 5) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Limite atteinte',
+        text: 'Vous ne pouvez pas créer plus de 5 profils.',
+      });
+      return;
+    }
+
     if (!this.profile.username || this.profile.handicapList.length === 0) {
       Swal.fire({
         icon: 'error',
         title: 'Oups...',
         text: "Le nom d'utilisateur et au moins un type d'handicap sont requis.",
+      });
+      return;
+    }
+
+    const existingProfile = this.profiles.find(p => p.username.toLowerCase() === this.profile.username.toLowerCase());
+    if (existingProfile) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Profil existant',
+        text: "Un profil avec ce nom d'utilisateur existe déjà. Veuillez choisir un autre nom.",
       });
       return;
     }
@@ -96,134 +97,12 @@ export class CreateProfileComponent implements OnInit {
       this.profile.photo = avatarUrl;
     }
 
-    const isInitialProfile = this.profiles.length === 0;
-    if (this.editingProfile) {
-      this.profileService.updateProfile(this.profile);
-      this.editingProfile = null;
-    } else {
-      this.profileService.createProfile(this.profile);
-      if (isInitialProfile) {
-        this.selectProfile(this.profile, false);
-      }
-    }
+    this.profileService.createProfile(this.profile);
+    this.profileService.setCurrentProfile(this.profile); // Sélectionne le nouveau profil comme profil courant
     this.resetForm();
     this.loadProfiles();
 
     this.router.navigate(['/']);
-  }
-
-  deleteProfile(profileId: number): void {
-    const wasCurrentProfile = this.currentProfile?.id === profileId;
-    const currentProfilePseudo = this.currentProfile?.username;
-
-    Swal.fire({
-      title: 'Êtes-vous sûr(e) de vouloir supprimer ce profil ?',
-      text: 'Cette action est irréversible !',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Oui, supprimer',
-      cancelButtonText: 'Annuler',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.profileService.deleteProfile(profileId);
-        this.loadProfiles();
-
-        if (wasCurrentProfile) {
-          if (this.profiles.length > 0) {
-            this.showModal = true;
-          } else {
-            Swal.fire({
-              title: 'Profil supprimé',
-              text: 'Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.',
-              icon: 'info',
-              confirmButtonText: 'OK',
-            });
-            this.currentProfile = null;
-            this.profileService.setCurrentProfile(null);
-          }
-        } else if (currentProfilePseudo) {
-          const matchedProfile = this.profiles.find(
-            (profile) => profile.username === currentProfilePseudo
-          );
-          if (matchedProfile) {
-            this.selectProfile(matchedProfile, false);
-          }
-        }
-      } else {
-        Swal.fire('Annulé', "Le profil n'a pas été supprimé.", 'info');
-      }
-    });
-  }
-
-  editProfile(profile: UserProfile): void {
-    this.profile = {
-      ...profile,
-      systemPreferences: profile.systemPreferences || ({} as SystemPreferences),
-    };
-    this.editingProfile = profile;
-    this.photoPreview = profile.photo || '';
-  }
-
-  selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (
-      confirmChange &&
-      this.currentProfile &&
-      this.currentProfile.username !== profile.username
-    ) {
-      Swal.fire({
-        title: 'Changer de profil',
-        text: 'Êtes-vous sûr(e) de vouloir changer de profil ?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Annuler',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.currentProfile = {
-            ...profile,
-            systemPreferences:
-              profile.systemPreferences || ({} as SystemPreferences),
-          };
-          this.profileService.setCurrentProfile(this.currentProfile);
-          this.profileService.getCurrentProfile();
-          this.profileService.getCurrentProfileSettings();
-          location.reload();
-        }
-      });
-    } else {
-      this.currentProfile = {
-        ...profile,
-        systemPreferences:
-          profile.systemPreferences || ({} as SystemPreferences),
-      };
-      this.profileService.setCurrentProfile(this.currentProfile);
-    }
-  }
-
-  onProfileSelected(profile: UserProfile | null): void {
-    this.showModal = false;
-    if (profile) {
-      this.selectProfile(profile, false);
-    } else {
-      this.currentProfile = null;
-      this.profileService.setCurrentProfile(null);
-    }
-  }
-
-  onProfileEdited(profile: UserProfile): void {
-    this.editProfile(profile);
-  }
-
-  onProfileDeleted(profileId: number): void {
-    this.deleteProfile(profileId);
-  }
-
-  toggleModal(): void {
-    this.showModal = !this.showModal;
-  }
-
-  openProfileSelector(): void {
-    this.showModal = true;
   }
 
   onFileChange(event: any): void {
@@ -248,7 +127,9 @@ export class CreateProfileComponent implements OnInit {
       systemPreferences: {} as SystemPreferences,
     };
     this.photoPreview = '';
-    this.profileForm.resetForm();
+    if (this.profileForm) {
+      this.profileForm.resetForm();
+    }
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
