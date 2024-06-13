@@ -1,80 +1,70 @@
-<div class="search-form">
+<form *ngIf="!showFilters" (ngSubmit)="onSearch()" class="absolute z-50 bottom-5 flex w-full justify-center">
+  <!-- Champs de recherche -->
+  <label class="flex items-center input input-bordered mr-2 w-3/5">
+    <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche" class="grow rounded-md" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70 ml-1">
+      <path fill-rule="evenodd"
+        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+        clip-rule="evenodd" />
+    </svg>
+  </label>
+  <!-- Bouton pour afficher plus de filtres -->
+  <button type="button" class="btn bg-gray-200 border border-gray-300 text-sm text-gray-700 ml-2"
+    (click)="moreFilters()">
+    Plus de filtres
+  </button>
+  <!-- Bouton pour lancer la recherche -->
+  <button class="btn bg-accent border-none text-lg text-info-content" type="submit">Rechercher</button>
+</form>
+
+
+<div *ngIf="showFilters" class="search-form bg-success text-info">
   <form (ngSubmit)="onSearch()">
-    <div class="md:flex md:space-x-4 mt-4">
-      <div class="form-group flex-grow">
-        <label class="flex items-center gap-2 input input-bordered">
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            name="searchQuery"
-            placeholder="Recherche"
-            class="grow"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            class="w-4 h-4 opacity-70"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </label>
-      </div>
-      <div class="form-group flex-grow relative mt-4 md:mt-0">
-        <label class="flex items-center gap-2 input input-bordered">
-          <input
-            type="text"
-            [(ngModel)]="displayCommuneQuery"
-            name="displayCommuneQuery"
-            placeholder="Commune"
-            class="grow"
-            (input)="onCommuneQueryChange($event)"
-            (focus)="isCommuneInputFocused = true"
-            (focusout)="isCommuneInputFocused = false"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"
-            />
-            <path
-              d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
-            />
-          </svg>
-        </label>
-        <ul
-          *ngIf="communes.length > 0 && isCommuneInputFocused"
-          class="absolute left-0 z-10 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-base-200 border-base-300 max-h-60"
-        >
-          <li
-            *ngFor="let commune of communes"
-            (mousedown)="selectCommune(commune)"
-            class="p-4 cursor-pointer hover:bg-base-100"
-          >
-            {{ commune.name }}
-          </li>
-        </ul>
-      </div>
+    <div class="bottom-5 flex w-full justify-center">
+      <!-- Champs de recherche -->
+      <label class="flex items-center input input-bordered mr-2 w-3/5">
+        <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche"
+          class="grow rounded-md text-black" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70 ml-1">
+          <path fill-rule="evenodd"
+            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+            clip-rule="evenodd" />
+        </svg>
+      </label>
+      <!-- Bouton pour afficher plus de filtres -->
+      <button type="button" class="btn bg-gray-200 border border-gray-300 text-sm text-gray-700 ml-2"
+        (click)="moreFilters()">
+        Plus de filtres
+      </button>
+      <!-- Bouton pour lancer la recherche -->
+      <button class="btn bg-accent border-none text-lg text-info-content" type="submit">Rechercher</button>
+    </div>
+    <div class="form-group flex-grow relative mt-4 md:mt-0">
+      <label class="flex items-center gap-2 input input-bordered">
+        <input type="text" [(ngModel)]="displayCommuneQuery" name="displayCommuneQuery" placeholder="Commune"
+          class="grow text-black" (input)="onCommuneQueryChange($event)" (focus)="isCommuneInputFocused = true"
+          (focusout)="isCommuneInputFocused = false" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt"
+          viewBox="0 0 16 16">
+          <path
+            d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+          <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+        </svg>
+      </label>
+      <ul *ngIf="communes.length > 0 && isCommuneInputFocused"
+        class="absolute left-0 z-10 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-base-200 border-base-300 max-h-60">
+        <li *ngFor="let commune of communes" (mousedown)="selectCommune(commune)"
+          class="p-4 cursor-pointer hover:bg-base-100">
+          {{ commune.name }}
+        </li>
+      </ul>
     </div>
 
-    
+
     <div class="mx-8 my-4">
-      <app-handicap-selector
-        [(selectedHandicaps)]="selectedHandicaps"
-        [(selectedDispositifLieu)]="selectedDispositifLieu"
-      ></app-handicap-selector>
+      <app-handicap-selector [(selectedHandicaps)]="selectedHandicaps"
+        [(selectedDispositifLieu)]="selectedDispositifLieu"></app-handicap-selector>
       <div class="flex items-center justify-center space-x-4">
-        <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit">Rechercher</button>
       </div>
     </div>
   </form>
