@@ -80,6 +80,7 @@ export class CreateProfileComponent implements OnInit {
     }
     return color;
   }
+
   createProfile(): void {
     if (!this.profile.username || this.profile.handicapList.length === 0) {
       Swal.fire({
@@ -221,6 +222,10 @@ export class CreateProfileComponent implements OnInit {
 
   toggleModal(): void {
     this.showModal = !this.showModal;
+  }
+
+  openProfileSelector(): void {
+    this.showModal = true;
   }
 
   onFileChange(event: any): void {

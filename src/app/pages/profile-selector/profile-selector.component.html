@@ -1,62 +1,59 @@
-<div *ngIf="profiles.length > 0; else noProfiles">
-    <table class="table w-full">
-      <thead>
-        <tr>
-          <th>Profil</th>
-          <th>Handicaps</th>
-          <th>Dispositifs</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let profile of profiles; let i = index"
-            [ngClass]="{'text-info-content bg-info': profile.username === currentProfile?.username}"
-            (click)="selectProfile(profile)">
-          <td class="flex flex-col items-center justify-center">
-            <div *ngIf="profile.photo" class="avatar">
-              <div class="w-16">
-                <img class="rounded-full" [src]="profile.photo" alt="Photo de profil">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded shadow-lg w-full max-w-2xl relative">
+      <!-- Bouton de fermeture -->
+      <button class="absolute top-2 right-2 text-2xl" (click)="closeSelector()">×</button>
+  
+      <!-- Contenu du sélecteur de profil -->
+      <h2 class="text-xl mb-4">Sélectionner un profil</h2>
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Profil</th>
+            <th>Handicaps</th>
+            <th>Dispositifs</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let profile of profiles; let i = index"
+              [ngClass]="{'text-info-content bg-info': profile.username === currentProfile?.username}"
+              (click)="selectProfile(profile)">
+            <td class="flex flex-col items-center justify-center">
+              <div *ngIf="profile.photo" class="avatar">
+                <div class="w-16">
+                  <img class="rounded-full" [src]="profile.photo" alt="Photo de profil">
+                </div>
               </div>
-            </div>
-            <div *ngIf="!profile.photo" class="avatar placeholder">
-              <div class="w-16 rounded-full bg-neutral text-neutral-content">
-                <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+              <div *ngIf="!profile.photo" class="avatar placeholder">
+                <div class="w-16 rounded-full bg-neutral text-neutral-content">
+                  <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
+                </div>
               </div>
-            </div>
-            <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>
-          </td>
-          <td>
-            <ul>
-              <li *ngFor="let handicap of profile.handicapList" class="mb-2">{{ handicap.handicap }}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
-            </ul>
-          </td>
-          <td class="" [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
-            <div *ngIf="profile.username === currentProfile?.username" class="flex flex-col items-center gap-2 sm:gap-4">
-              <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
-                <i class="fas fa-edit"></i>modifier
-              </button>
-              <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();" aria-label="Supprimer le profil">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <ng-template #noProfiles>
-    <div *ngIf="currentProfile === null" class="alert alert-warning">
-      <span *ngIf="profiles.length === 0">
-        <b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.
-      </span>
-      <span *ngIf="profiles.length > 0">
-        Veuillez sélectionner un profil parmi les profils existants.
-      </span>
+              <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let handicap of profile.handicapList" class="mb-2">{{ handicap.handicap }}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
+              </ul>
+            </td>
+            <td class="" [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
+              <div *ngIf="profile.username === currentProfile?.username" class="flex flex-col items-center gap-2 sm:gap-4">
+                <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();" aria-label="Supprimer le profil">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </ng-template>
+  </div>
   

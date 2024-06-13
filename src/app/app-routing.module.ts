@@ -6,9 +6,8 @@ import { HomeComponent } from './home/home.component';
 import { ProfileGuard } from './guards/auth/profile.guard'; // Importez votre guard
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [ProfileGuard] },
   { path: 'profile', component: CreateProfileComponent },
-  { path: 'search', component: SearchComponent, canActivate: [ProfileGuard] },
+  { path: '', component: SearchComponent, canActivate: [ProfileGuard] },
   // autres routes...
 ];
 

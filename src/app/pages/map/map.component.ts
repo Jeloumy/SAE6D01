@@ -1,28 +1,14 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
-import { ProfileService } from '../../services/profile/profile.service';
 import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  @ViewChild('map', { static: false })
-  private mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('map', { static: false }) private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
   @Output() locationDetected = new EventEmitter<void>();
 
@@ -30,22 +16,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   private markersLayer!: L.LayerGroup;
   private layerControl: L.Control.Layers = L.control.layers();
   private layers: { [name: string]: L.TileLayer } = {
-    OpenStreetMap: L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 19,
-      }
-    ),
-    'CartoDB Dark': L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      {
-        maxZoom: 19,
-      }
-    ),
+    OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }),
+    'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+    }),
   };
-
-  constructor(private profileService: ProfileService) {}
-
+  
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
@@ -82,10 +60,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
 
     const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer =
-      theme === 'dark'
-        ? this.layers['CartoDB Dark']
-        : this.layers['OpenStreetMap'];
+    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
 
     const leafletContainer = document.querySelector('.leaflet-container');
     leafletContainer?.classList.add('bg-base-100');
@@ -107,7 +82,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
 
-          // Sélectionner l'icône appropriée
           const iconHtml = this.getIconHtml(activite.nom);
           const icon = L.divIcon({
             html: iconHtml,
@@ -117,9 +91,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
             popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], { icon }).bindPopup(
-            `<b>${nom}</b><br>${adresse}`
-          );
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`<b>${nom}</b><br>${adresse}`);
 
           this.markersLayer.addLayer(marker);
 
@@ -162,12 +134,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       case 'école':
         return '<i class="fas fa-school fa-2x" style="color: yellow;"></i>';
       case 'magasin':
-        return '<i class="fas fa-store fa-2x" style="color: black;"></i>';
+        return '<i class="fas fa-store fa-2x" style="color: black;"></<i>';
       case 'bar':
         return '<i class="fas fa-beer fa-2x" style="color: brown;"></i>';
       case 'boulangerie':
         return '<i class="fas fa-bread-slice fa-2x" style="color: wheat;"></i>';
-      // Ajoutez plus de cas pour d'autres types d'activités
       default:
         return '<i class="fas fa-map-marker-alt fa-2x" style="color: black;"></i>';
     }
