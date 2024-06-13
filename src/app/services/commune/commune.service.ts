@@ -9,19 +9,18 @@ export class CommuneService {
   constructor(private http: HttpClient) {}
 
   fetchCommunes(query: string): Observable<any> {
-    const countryCode = 'FR';
-    const geoNamesApiUrl = `http://api.geonames.org/searchJSON?q=${query}&maxRows=10&country=${countryCode}&username=felschrr`;
+    const dataGouvApiUrl = `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,code&format=json&geometry=centre`;
 
     return this.http
-      .get(geoNamesApiUrl)
+      .get(dataGouvApiUrl)
       .pipe(map((response: any) => this.formatCommuneData(response)));
   }
 
   private formatCommuneData(response: any): { id: string; name: string }[] {
-    if (response && response.geonames) {
-      return response.geonames.map((city: any) => ({
-        id: city.geonameId,
-        name: city.name,
+    if (response && response.length > 0) {
+      return response.map((city: any) => ({
+        id: city.code,
+        name: city.nom,
       }));
     } else {
       return [];

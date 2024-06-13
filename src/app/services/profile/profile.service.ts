@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +8,44 @@ import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../
 export class ProfileService {
   private profilesList: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
+  private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
+  private geolocationSubject = new BehaviorSubject<{ latitude: number | null, longitude: number | null }>({ latitude: null, longitude: null });
+
+  // Ajout d'un BehaviorSubject pour isLocationActive
+  private isLocationActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor() { 
     this.loadProfileFromStorage();
     this.loadProfilesListFromStorage();
+  }
+
+  setGeolocationData(latitude: number | null, longitude: number | null): void {
+    this.geolocationData = { latitude, longitude };
+    localStorage.setItem('geolocationData', JSON.stringify(this.geolocationData));
+    this.geolocationSubject.next(this.geolocationData); // Émettre les nouvelles coordonnées
+  }
+
+  getGeolocationData(): { latitude: number | null, longitude: number | null } | null {
+    if (!this.geolocationData) {
+      const storedData = localStorage.getItem('geolocationData');
+      if (storedData) {
+        this.geolocationData = JSON.parse(storedData);
+      }
+    }
+    return this.geolocationData;
+  }
+
+  getGeolocationUpdates() {
+    return this.geolocationSubject.asObservable(); // Retourner l'observable pour les mises à jour de la géolocalisation
+  }
+
+  // Méthodes pour isLocationActive
+  setIsLocationActive(isActive: boolean): void {
+    this.isLocationActiveSubject.next(isActive);
+  }
+
+  getIsLocationActive() {
+    return this.isLocationActiveSubject.asObservable();
   }
 
   getHandicapTypes(): Handicap[] {

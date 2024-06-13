@@ -3,21 +3,16 @@
     <span class="font-bold label-text">Types d'handicap</span>
   </label>
   <div class="flex flex-row flex-wrap items-center justify-center gap-4">
-  <div *ngFor="let handicap of handicapTypes" class="form-control">
-      <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" id={{handicap.handicap}} class="hidden peer" />
+    <div *ngFor="let handicap of handicapTypes" class="form-control">
+      <input type="checkbox" [checked]="isChecked(handicap)" (change)="onHandicapChange(handicap, $event)" id="{{handicap.handicap}}" class="hidden peer" />
       <label
-        for={{handicap.handicap}}
+        for="{{handicap.handicap}}"
         class="px-2 py-1 font-bold text-center transition-colors duration-200 ease-in-out border rounded-lg cursor-pointer select-none text-base-content peer-checked:border-4 peer-checked:bg-secondary peer-checked:text-accent peer-checked:border-accent m-1 peer-checked:m-0"
       >
-        {{ handicap.handicap }}</label
-      >
+        {{ handicap.handicap }}
+      </label>
     </div>
-    <!-- <label class="cursor-pointer label">
-        <span class="label-text">{{ handicap.handicap }}</span>
-        <input type="checkbox" [id]="'handicap-' + handicap.id" [checked]="isChecked(handicap)"
-          (change)="onHandicapChange(handicap, $event)" class="checkbox checkbox-primary">
-      </label> -->
-    </div>
+  </div>
 
     <div class="drawer">
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
@@ -55,6 +50,7 @@
             <input
               type="checkbox"
               [checked]="isDispositifLieuChecked(dispositiflieu)"
+              (change)="onDispositifLieuChange(dispositiflieu, $event)"
               class="checkbox checkbox-primary"
             />
           </label>

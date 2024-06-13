@@ -6,22 +6,26 @@ import {
   ViewChild,
   ElementRef,
   Input,
+  Output,
+  EventEmitter,
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
 import * as L from 'leaflet';
-import 'leaflet-extra-markers';
-import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
+import { ProfileService } from '../../services/profile/profile.service';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-map',
-  template: '<div #map class="w-screen flex flex-1"></div>',
+  templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @ViewChild('map', { static: false })
   private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
+  @Output() locationDetected = new EventEmitter<void>();
+
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
   private layerControl: L.Control.Layers = L.control.layers();
@@ -38,8 +42,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         maxZoom: 19,
       }
     ),
-    // Ajoutez d'autres couches de carte ici
   };
+
+  constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {}
 
@@ -62,8 +67,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   private initMap(): void {
     const franceCenter: L.LatLngExpression = [46.603354, 1.888334];
     const franceBounds: L.LatLngBoundsLiteral = [
-      [41.33, -5.14], // Sud-Ouest (point bas)
-      [51.124, 9.662], // Nord-Est (point haut)
+      [41.33, -5.14],
+      [51.124, 9.662],
     ];
 
     this.map = L.map(this.mapContainer.nativeElement, {
@@ -76,52 +81,48 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       this.layerControl.addBaseLayer(this.layers[layerName], layerName);
     }
 
-    // Accède à l'attribut data-theme de la balise <html>
     const theme = document.documentElement.getAttribute('data-theme');
     const defaultLayer =
       theme === 'dark'
         ? this.layers['CartoDB Dark']
         : this.layers['OpenStreetMap'];
 
-    // Sélectionne la balise contenant la carte Leaflet
     const leafletContainer = document.querySelector('.leaflet-container');
     leafletContainer?.classList.add('bg-base-100');
 
     this.layerControl.addTo(this.map);
     defaultLayer.addTo(this.map);
 
-    // Initialize the LayerGroup to hold markers
     this.markersLayer = L.layerGroup().addTo(this.map);
   }
 
-  private updateMarkers(): void {
-    // Clear existing markers
+  public updateMarkers(): void {
     this.markersLayer.clearLayers();
 
-    // Initialize LatLngBounds to hold all marker coordinates
     let newMarkers = new L.LatLngBounds([]);
 
-    // Add new markers
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
-        const { geom, nom, adresse } = result;
+        const { geom, nom, adresse, activite } = result;
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
-          const customMarker = L.ExtraMarkers.icon({
-            icon: 'fa-home',
-            markerColor: 'blue',
-            shape: 'square',
-            prefix: 'fa',
+
+          // Sélectionner l'icône appropriée
+          const iconHtml = this.getIconHtml(activite.nom);
+          const icon = L.divIcon({
+            html: iconHtml,
+            className: 'custom-div-icon',
+            iconSize: [30, 42],
+            iconAnchor: [15, 42],
+            popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], {
-            icon: customMarker,
-          }).bindPopup(`<b>${nom}</b><br>${adresse}`);
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(
+            `<b>${nom}</b><br>${adresse}`
+          );
 
-          // Add marker to the markers layer
           this.markersLayer.addLayer(marker);
 
-          // Add marker coordinates to the LatLngBounds
           newMarkers.extend([latitude, longitude]);
         } else {
           console.error(`Invalid coordinates for result: ${nom}`, result);
@@ -129,9 +130,46 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       });
     }
 
-    // Fit map bounds to markers
     if (newMarkers.isValid()) {
-      this.map.fitBounds(newMarkers);
+      this.map.flyToBounds(newMarkers, {
+        animate: true,
+        duration: 2,
+        easeLinearity: 0.25,
+      });
+    }
+  }
+
+  private getIconHtml(activity: string): string {
+    switch (activity.toLowerCase()) {
+      case 'musée':
+        return '<i class="fas fa-landmark fa-2x" style="color: green;"></i>';
+      case 'restaurant':
+        return '<i class="fas fa-utensils fa-2x" style="color: blue;"></i>';
+      case 'hôtel':
+        return '<i class="fas fa-bed fa-2x" style="color: red;"></i>';
+      case 'cinéma':
+        return '<i class="fas fa-film fa-2x" style="color: purple;"></i>';
+      case 'théâtre':
+        return '<i class="fas fa-theater-masks fa-2x" style="color: orange;"></i>';
+      case 'bibliothèque':
+        return '<i class="fas fa-book fa-2x" style="color: brown;"></i>';
+      case 'parc':
+        return '<i class="fas fa-tree fa-2x" style="color: green;"></i>';
+      case 'hôpital':
+        return '<i class="fas fa-hospital fa-2x" style="color: pink;"></i>';
+      case 'pharmacie':
+        return '<i class="fas fa-prescription-bottle-alt fa-2x" style="color: green;"></i>';
+      case 'école':
+        return '<i class="fas fa-school fa-2x" style="color: yellow;"></i>';
+      case 'magasin':
+        return '<i class="fas fa-store fa-2x" style="color: black;"></i>';
+      case 'bar':
+        return '<i class="fas fa-beer fa-2x" style="color: brown;"></i>';
+      case 'boulangerie':
+        return '<i class="fas fa-bread-slice fa-2x" style="color: wheat;"></i>';
+      // Ajoutez plus de cas pour d'autres types d'activités
+      default:
+        return '<i class="fas fa-map-marker-alt fa-2x" style="color: black;"></i>';
     }
   }
 
@@ -139,13 +177,31 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     const zoomLevel = 13;
     const options: L.ZoomPanOptions = {
       animate: true,
-      duration: 5, // Durée de l'animation en secondes
-      easeLinearity: 0.25, // Modifie la linéarité de l'animation
+      duration: 5,
+      easeLinearity: 0.25,
     };
     this.map.flyTo([lat, lon], zoomLevel, options);
   }
 
   public getMap(): L.Map {
     return this.map;
+  }
+
+  onLocationToggled(isLocationActive: boolean): void {
+    console.log('Location toggled:', isLocationActive);
+    if (isLocationActive) {
+      this.getUserLocation();
+    }
+  }
+
+  async getUserLocation(): Promise<void> {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      console.log('User location detected:', position.coords);
+      this.flyToLocation(position.coords.latitude, position.coords.longitude);
+      this.locationDetected.emit();
+    } catch (error) {
+      console.error('Geolocation error:', error);
+    }
   }
 }
