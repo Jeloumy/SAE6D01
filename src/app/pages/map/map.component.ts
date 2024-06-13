@@ -12,8 +12,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import * as L from 'leaflet';
-import 'leaflet-extra-markers';
-import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Geolocation } from '@capacitor/geolocation';
 
@@ -26,7 +24,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   @ViewChild('map', { static: false })
   private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
-  @Output() locationDetected = new EventEmitter<void>(); // Ajout de l'événement
+  @Output() locationDetected = new EventEmitter<void>();
 
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
@@ -105,19 +103,23 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
 
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
-        const { geom, nom, adresse } = result;
+        const { geom, nom, adresse, activite } = result;
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
-          const customMarker = L.ExtraMarkers.icon({
-            icon: 'fa-home',
-            markerColor: 'blue',
-            shape: 'square',
-            prefix: 'fa',
+
+          // Sélectionner l'icône appropriée
+          const iconHtml = this.getIconHtml(activite.nom);
+          const icon = L.divIcon({
+            html: iconHtml,
+            className: 'custom-div-icon',
+            iconSize: [30, 42],
+            iconAnchor: [15, 42],
+            popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], {
-            icon: customMarker,
-          }).bindPopup(`<b>${nom}</b><br>${adresse}`);
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(
+            `<b>${nom}</b><br>${adresse}`
+          );
 
           this.markersLayer.addLayer(marker);
 
@@ -134,6 +136,40 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         duration: 2,
         easeLinearity: 0.25,
       });
+    }
+  }
+
+  private getIconHtml(activity: string): string {
+    switch (activity.toLowerCase()) {
+      case 'musée':
+        return '<i class="fas fa-landmark fa-2x" style="color: green;"></i>';
+      case 'restaurant':
+        return '<i class="fas fa-utensils fa-2x" style="color: blue;"></i>';
+      case 'hôtel':
+        return '<i class="fas fa-bed fa-2x" style="color: red;"></i>';
+      case 'cinéma':
+        return '<i class="fas fa-film fa-2x" style="color: purple;"></i>';
+      case 'théâtre':
+        return '<i class="fas fa-theater-masks fa-2x" style="color: orange;"></i>';
+      case 'bibliothèque':
+        return '<i class="fas fa-book fa-2x" style="color: brown;"></i>';
+      case 'parc':
+        return '<i class="fas fa-tree fa-2x" style="color: green;"></i>';
+      case 'hôpital':
+        return '<i class="fas fa-hospital fa-2x" style="color: pink;"></i>';
+      case 'pharmacie':
+        return '<i class="fas fa-prescription-bottle-alt fa-2x" style="color: green;"></i>';
+      case 'école':
+        return '<i class="fas fa-school fa-2x" style="color: yellow;"></i>';
+      case 'magasin':
+        return '<i class="fas fa-store fa-2x" style="color: black;"></i>';
+      case 'bar':
+        return '<i class="fas fa-beer fa-2x" style="color: brown;"></i>';
+      case 'boulangerie':
+        return '<i class="fas fa-bread-slice fa-2x" style="color: wheat;"></i>';
+      // Ajoutez plus de cas pour d'autres types d'activités
+      default:
+        return '<i class="fas fa-map-marker-alt fa-2x" style="color: black;"></i>';
     }
   }
 
