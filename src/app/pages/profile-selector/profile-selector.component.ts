@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
+import { Router } from '@angular/router'; // Import Router
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,7 +17,7 @@ export class ProfileSelectorComponent implements OnInit {
   @Output() profileDeleted = new EventEmitter<number>();
   @Output() close = new EventEmitter<void>();
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService, private router: Router) {} // Inject Router
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -60,7 +61,7 @@ export class ProfileSelectorComponent implements OnInit {
       cancelButtonText: 'Non'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.profileEdited.emit(profile);
+        this.router.navigate(['/edit-profile', profile.id]); // Rediriger vers la route de modification avec l'ID du profil
       }
     });
   }
@@ -77,12 +78,41 @@ export class ProfileSelectorComponent implements OnInit {
       if (result.isConfirmed) {
         this.profileService.deleteProfile(profileId);
         this.loadProfiles();
-        this.profileDeleted.emit(profileId);
+
+        if (this.currentProfile?.id === profileId) {
+          this.currentProfile = null;
+          if (this.profiles.length > 0) {
+            Swal.fire({
+              title: 'Profil supprimé',
+              text: 'Le profil sélectionné a été supprimé. Veuillez choisir un autre profil.',
+              icon: 'info',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              this.openProfileSelector();
+            });
+          } else {
+            Swal.fire({
+              title: 'Profil supprimé',
+              text: 'Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.',
+              icon: 'info',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              this.router.navigate(['/create-profile']);
+            });
+          }
+        } else {
+          this.profileDeleted.emit(profileId);
+        }
       }
     });
   }
 
   closeSelector(): void {
     this.close.emit();
+  }
+
+  openProfileSelector(): void {
+    this.close.emit(); // Close the current modal
+    // Open a new modal or perform some action to select a profile
   }
 }

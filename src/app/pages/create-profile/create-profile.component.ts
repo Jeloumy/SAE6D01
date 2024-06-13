@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
+import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router'; // Import Router
 
 @Component({
   selector: 'app-create-profile',
   templateUrl: './create-profile.component.html',
-  styleUrls: ['./create-profile.component.scss'],
+  styleUrls: ['./create-profile.component.scss']
 })
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
@@ -23,17 +22,17 @@ export class CreateProfileComponent implements OnInit {
     photo: '',
     systemPreferences: {} as SystemPreferences,
   };
+
   profiles: UserProfile[] = [];
   editingProfile: UserProfile | null = null;
   currentProfile: UserProfile | null = null;
-  showModal: boolean = false;
+  showModal = false;
   handicapTypes: Handicap[] = [];
   photoPreview: string | ArrayBuffer | null = '';
 
   constructor(
     private profileService: ProfileService,
-    private http: HttpClient,
-    private router: Router // Inject Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +66,7 @@ export class CreateProfileComponent implements OnInit {
         (profile) => profile.username === storedProfile.username
       );
       if (matchedProfile) {
-        this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
+        this.selectProfile(matchedProfile, false);
       }
     }
   }
@@ -110,7 +109,6 @@ export class CreateProfileComponent implements OnInit {
     this.resetForm();
     this.loadProfiles();
 
-    // Redirige vers la page d'accueil après la création du profil
     this.router.navigate(['/']);
   }
 
@@ -251,7 +249,9 @@ export class CreateProfileComponent implements OnInit {
     };
     this.photoPreview = '';
     this.profileForm.resetForm();
-    this.fileInput.nativeElement.value = '';
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   updateSystemPreferences(preferences: SystemPreferences): void {

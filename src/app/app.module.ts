@@ -22,6 +22,7 @@ import { GeolocationButtonComponent } from './pages/geolocation-button/geolocati
 import { ProfileSelectorComponent } from './pages/profile-selector/profile-selector.component';
 import { ProfilePhotoComponent } from './pages/profile-photo/profile-photo.component';
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/
     GeolocationButtonComponent,
     ProfileSelectorComponent,
     ProfilePhotoComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,

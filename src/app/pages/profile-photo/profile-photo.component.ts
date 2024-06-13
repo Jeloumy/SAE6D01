@@ -12,6 +12,7 @@ export class ProfilePhotoComponent implements OnInit {
   @Output() profileClicked = new EventEmitter<void>();
   currentProfile: UserProfile | null = null;
   showModal = false;
+  photoPreview: string | null = null;
 
   constructor(private profileService: ProfileService) {}
 
@@ -21,6 +22,11 @@ export class ProfilePhotoComponent implements OnInit {
 
   loadCurrentProfile(): void {
     this.currentProfile = this.profileService.getCurrentProfile();
+    this.photoPreview = this.currentProfile?.photo || null;
+  }
+
+  getProfilesList(): UserProfile[] {
+    return this.profileService.getProfilesList();
   }
 
   onClick(): void {
@@ -34,5 +40,12 @@ export class ProfilePhotoComponent implements OnInit {
 
   closeProfileSelector(): void {
     this.showModal = false;
+  }
+
+  onProfileSelected(profile: UserProfile): void {
+    this.currentProfile = profile;
+    this.photoPreview = profile.photo || null;
+    this.profileService.setCurrentProfile(profile);
+    this.closeProfileSelector();
   }
 }

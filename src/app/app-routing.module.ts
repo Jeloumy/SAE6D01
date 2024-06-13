@@ -4,10 +4,12 @@ import { CreateProfileComponent } from '../app/pages/create-profile/create-profi
 import { SearchComponent } from './pages/search/search.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileGuard } from './guards/auth/profile.guard'; // Importez votre guard
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 
 const routes: Routes = [
-  { path: 'profile', component: CreateProfileComponent },
+  { path: 'create-profile', component: CreateProfileComponent },
   { path: '', component: SearchComponent, canActivate: [ProfileGuard] },
+  { path: 'edit-profile/:id', component: EditProfileComponent, canActivate: [ProfileGuard] }
   // autres routes...
 ];
 
