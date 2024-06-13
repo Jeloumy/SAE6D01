@@ -80,7 +80,6 @@ export class CreateProfileComponent implements OnInit {
     }
     return color;
   }
-
   createProfile(): void {
     if (!this.profile.username || this.profile.handicapList.length === 0) {
       Swal.fire({
@@ -97,24 +96,6 @@ export class CreateProfileComponent implements OnInit {
       this.profile.photo = avatarUrl;
     }
 
-    const isInitialProfile = this.profiles.length === 0;
-    if (this.editingProfile) {
-      this.profileService.updateProfile(this.profile);
-      this.editingProfile = null;
-    } else {
-      this.profileService.createProfile(this.profile);
-      if (isInitialProfile) {
-        this.selectProfile(this.profile, false);
-      }
-    }
-    this.resetForm();
-    this.loadProfiles();
-
-    // Redirige vers la page d'accueil après la création du profil
-    this.router.navigate(['/']);
-  }
-
-  completeProfileCreation(): void {
     const isInitialProfile = this.profiles.length === 0;
     if (this.editingProfile) {
       this.profileService.updateProfile(this.profile);
@@ -221,7 +202,6 @@ export class CreateProfileComponent implements OnInit {
   }
 
   onProfileSelected(profile: UserProfile | null): void {
-    console.log('Profil sélectionné:', profile);
     this.showModal = false;
     if (profile) {
       this.selectProfile(profile, false);
@@ -229,6 +209,14 @@ export class CreateProfileComponent implements OnInit {
       this.currentProfile = null;
       this.profileService.setCurrentProfile(null);
     }
+  }
+
+  onProfileEdited(profile: UserProfile): void {
+    this.editProfile(profile);
+  }
+
+  onProfileDeleted(profileId: number): void {
+    this.deleteProfile(profileId);
   }
 
   toggleModal(): void {

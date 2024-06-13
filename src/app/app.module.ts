@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileService } from './services/profile/profile.service';
 import { GeolocationButtonComponent } from './pages/geolocation-button/geolocation-button.component';
+import { ProfileSelectorComponent } from './pages/profile-selector/profile-selector.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { GeolocationButtonComponent } from './pages/geolocation-button/geolocati
     SearchFormComponent,
     GeolocationDialogComponent,
     GeolocationButtonComponent,
+    ProfileSelectorComponent,
   ],
   imports: [
     BrowserModule,
