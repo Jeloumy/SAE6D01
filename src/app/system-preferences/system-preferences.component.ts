@@ -57,16 +57,7 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
       this.preferencesChange.emit(newPreferences);
       this.applyPreferences(newPreferences);
     }
-  }
-
-  
-
-  onRadioChange(size: string) {
-    this.preferences!.textSize = size; // Update textSize based on selected radio button
-    // Additional logic if needed
-  }
-
-  
+  }  
 
   toggleHighContrast(event: any): void {
     this.highContrastEnabled = event.target.checked;
@@ -74,13 +65,25 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
     this.applyHighContrast(this.highContrastEnabled);
   }
 
-  onThemeChange(event: any, key: string): void {
-    const isDarkMode = event.target.checked;
-    this.updatePreferences(key, isDarkMode);
-    this.darkModeEnabled = isDarkMode; // Mise à jour de darkModeEnabled
-    this.themeService.setTheme(isDarkMode ? 'dark' : 'light');
+  onThemeChange(event: any): void {
+    const selectedTheme = event.target.value;
+    if (selectedTheme === 'dark') {
+      this.darkModeEnabled = true;
+      this.highContrastEnabled = false;
+    } else if (selectedTheme === 'contrast') {
+      this.darkModeEnabled = false;
+      this.highContrastEnabled = true;
+    } else {
+      this.darkModeEnabled = false;
+      this.highContrastEnabled = false;
+    }
+  
+    this.updatePreferences('darkMode', this.darkModeEnabled);
+    this.updatePreferences('highContrast', this.highContrastEnabled);
+    this.themeService.setTheme(selectedTheme);
     this.applyMapTheme();
   }
+  
 
   onSelectChange(event: any, key: string): void {
     const value = event.target.value;
@@ -138,6 +141,7 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
       }
     }
   }
+  
 
   private getTextSize(size: string): string {
     switch (size) {

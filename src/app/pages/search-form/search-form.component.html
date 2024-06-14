@@ -20,9 +20,10 @@
     <button class="btn bg-accent border-none text-lg text-info-content" type="submit">Rechercher</button>
   </div>
 </form>
+
 <!-- Div plus de filtres -->
-<div *ngIf="showFilters" class="">
-  <div class="search-form bg-success text-info filter-slide">
+<div *ngIf="showFilters">
+  <div class="search-form bg-success text-info">
     <form (ngSubmit)="onSearch()">
       <div class="bottom-5 flex flex-col items-center w-full sm:flex-row sm:justify-center">
         <!-- Champs de recherche -->

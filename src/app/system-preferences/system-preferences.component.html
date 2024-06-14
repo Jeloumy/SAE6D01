@@ -1,46 +1,34 @@
 <div class="form-control">
-  <!-- Thème Sombre -->
+  <!-- Choix du Theme -->
   <label class="label">
-    <span class="label-text">Thème Sombre</span>
-    <input type="checkbox" [checked]="darkModeEnabled" (change)="onThemeChange($event, 'darkMode')" class="toggle theme-controller"/>
+    <span class="label-text">Choisir le Thème</span>
+    <select (change)="onThemeChange($event)" class="select select-bordered text-success">
+      <option value="light" [selected]="!darkModeEnabled && !highContrastEnabled">Thème Clair</option>
+      <option value="dark" [selected]="darkModeEnabled">Thème Sombre</option>
+      <option value="contrast" [selected]="highContrastEnabled">Thème Contrasté</option>
+    </select>
   </label>
+  
 
-  <!-- Thème Contrasté -->
-  <label class="label">
-    <span class="label-text">Thème Contrasté</span>
-    <input type="checkbox" [checked]="highContrastEnabled" (change)="toggleHighContrast($event)" class="toggle"/>
-  </label>
 
   <!-- Taille du Texte -->
   <label class="label">
     <span class="label-text">Taille du texte</span>
-    <div class="radio-group">
-        <label class="radio">
-            <input type="radio" [value]="'small'" [checked]="preferences?.textSize === 'small'" (change)="onRadioChange('small')"> Petit
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'medium'" [checked]="preferences?.textSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'large'" [checked]="preferences?.textSize === 'large'" (change)="onRadioChange('large')"> Grand
-        </label>
-    </div>
+    <select [value]="preferences?.textSize ?? 'medium'" (change)="onSelectChange($event, 'textSize')" class="select select-bordered text-success">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
 </label>
 
   <!-- Taille des Boutons -->
   <label class="label">
     <span class="label-text">Taille des boutons</span>
-    <div class="radio-group">
-        <label class="radio">
-            <input type="radio" [value]="'small'" [checked]="preferences?.buttonSize === 'small'" (change)="onRadioChange('small')"> Petit
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'medium'" [checked]="preferences?.buttonSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'large'" [checked]="preferences?.buttonSize === 'large'" (change)="onRadioChange('large')"> Grand
-        </label>
-    </div>
+    <select [value]="preferences?.buttonSize ?? 'medium'" (change)="onSelectChange($event, 'buttonSize')" class="select select-bordered text-success">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
 </label>
 
 
@@ -50,19 +38,19 @@
   <!-- Lecture d'Écran -->
   <label class="label">
     <span class="label-text">Lecture d'écran</span>
-    <input type="checkbox" [checked]="preferences?.screenReader ?? false" (change)="onCheckboxChange($event, 'screenReader')" class="toggle"/>
+    <input type="checkbox" [checked]="preferences?.screenReader ?? false" (change)="onCheckboxChange($event, 'screenReader')" class="toggle text-success"/>
   </label>
 
   <!-- Commandes Vocales -->
   <label class="label">
     <span class="label-text">Commandes vocales</span>
-    <input type="checkbox" [checked]="preferences?.voiceCommands ?? false" (change)="onCheckboxChange($event, 'voiceCommands')" class="toggle"/>
+    <input type="checkbox" [checked]="preferences?.voiceCommands ?? false" (change)="onCheckboxChange($event, 'voiceCommands')" class="toggle text-success"/>
   </label>
 
   <!-- Filtres de Daltonisme -->
   <label class="label">
     <span class="label-text">Filtres de Daltonisme</span>
-    <select [value]="preferences?.colorBlindMode ?? 'none'" (change)="onSelectChange($event, 'colorBlindMode')" class="select select-bordered">
+    <select [value]="preferences?.colorBlindMode ?? 'none'" (change)="onSelectChange($event, 'colorBlindMode')" class="select select-bordered text-success">
       <option value="none">Aucun</option>
       <option value="protanopia">Protanopie</option>
       <option value="deuteranopia">Deutéranopie</option>
@@ -83,12 +71,12 @@
   <!-- Aide Contextuelle -->
   <label class="label">
     <span class="label-text">Aide contextuelle</span>
-    <input type="checkbox" [checked]="preferences?.contextualHelp ?? false" (change)="onCheckboxChange($event, 'contextualHelp')" class="toggle"/>
+    <input type="checkbox" [checked]="preferences?.contextualHelp ?? false" (change)="onCheckboxChange($event, 'contextualHelp')" class="toggle text-success"/>
   </label>
 
   <!-- Tutoriels Interactifs -->
   <label class="label">
     <span class="label-text">Tutoriels interactifs</span>
-    <input type="checkbox" [checked]="preferences?.interactiveTutorials ?? false" (change)="onCheckboxChange($event, 'interactiveTutorials')" class="toggle"/>
+    <input type="checkbox" [checked]="preferences?.interactiveTutorials ?? false" (change)="onCheckboxChange($event, 'interactiveTutorials')" class="toggle text-success"/>
   </label>
 </div>
