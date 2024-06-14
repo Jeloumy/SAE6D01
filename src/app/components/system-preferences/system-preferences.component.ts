@@ -23,19 +23,15 @@ export class SystemPreferencesComponent implements OnInit {
     let profile = this.profileService.getCurrentProfile();
 
     if (profile) {
-      // Vérifier si l'utilisateur a défini une préférence de thème dans son profil
       if (profile.systemPreferences?.darkMode !== undefined) {
         this.darkModeEnabled = profile.systemPreferences.darkMode;
       } else {
-        // Si aucune préférence définie, utiliser le thème en fonction du thème système de l'appareil
         this.darkModeEnabled = window.matchMedia(
           '(prefers-color-scheme: dark)'
         ).matches;
       }
 
-      // Mettre à jour les préférences dans le profil
       this.updatePreferences('darkMode', this.darkModeEnabled);
-      // Appliquer le thème
       this.themeService.setTheme(this.darkModeEnabled);
     }
   }
@@ -45,6 +41,7 @@ export class SystemPreferencesComponent implements OnInit {
       const newPreferences = { ...this.preferences, [key]: value };
       this.preferences = newPreferences;
       this.preferencesChange.emit(newPreferences);
+      this.applyPreferences(newPreferences);
     }
   }
 
@@ -52,7 +49,11 @@ export class SystemPreferencesComponent implements OnInit {
     this.updatePreferences(key, event.target.checked);
   }
 
-  onRangeChange(event: any, key: string): void {
+  onSelectChange(event: any, key: string): void {
+    this.updatePreferences(key, event.target.value);
+  }
+
+  onColorChange(event: any, key: string): void {
     this.updatePreferences(key, event.target.value);
   }
 
@@ -63,5 +64,76 @@ export class SystemPreferencesComponent implements OnInit {
       this.themeService.setTheme(isDarkMode);
       this.updatePreferences(key, isDarkMode);
     }
+  }
+
+  applyPreferences(preferences: SystemPreferences): void {
+    if (preferences.colorBlindMode) {
+      document.body.classList.remove('protanopia', 'deuteranopia', 'tritanopia');
+      if (preferences.colorBlindMode) {
+        document.body.classList.add(preferences.colorBlindMode);
+      }
+    }
+
+    if (preferences.textSize) {
+      document.body.style.fontSize = this.getTextSize(preferences.textSize);
+    }
+
+    if (preferences.buttonSize) {
+      this.applyElementSize(preferences.buttonSize);
+    }
+
+    if (preferences.customColors) {
+      this.applyCustomColors(preferences.customColors);
+    }
+  }
+
+  private getTextSize(size: string): string {
+    switch (size) {
+      case 'small':
+        return '12px';
+      case 'medium':
+        return '16px';
+      case 'large':
+        return '20px';
+      default:
+        return '16px';
+    }
+  }
+
+  private applyElementSize(size: string): void {
+    const elements = document.querySelectorAll('button, input, select, textarea, .icon');
+    elements.forEach(element => {
+      const htmlElement = element as HTMLElement;
+      switch (size) {
+        case 'small':
+          htmlElement.style.fontSize = '12px';
+          htmlElement.style.padding = '4px 8px';
+          break;
+        case 'medium':
+          htmlElement.style.fontSize = '16px';
+          htmlElement.style.padding = '8px 16px';
+          break;
+        case 'large':
+          htmlElement.style.fontSize = '20px';
+          htmlElement.style.padding = '12px 24px';
+          break;
+        default:
+          htmlElement.style.fontSize = '16px';
+          htmlElement.style.padding = '8px 16px';
+          break;
+      }
+    });
+  }
+
+  private applyCustomColors(colors: { background: string; text: string }): void {
+    document.body.style.backgroundColor = colors.background || '#ffffff';
+    document.body.style.color = colors.text || '#000000';
+
+    const elements = document.querySelectorAll('button, input, select, textarea, .icon');
+    elements.forEach(element => {
+      const htmlElement = element as HTMLElement;
+      htmlElement.style.backgroundColor = colors.background || '#ffffff';
+      htmlElement.style.color = colors.text || '#000000';
+    });
   }
 }

@@ -8,17 +8,19 @@ import { CreateProfileComponent } from './pages/profile/create-profile.component
 import { SearchComponent } from './pages/search/search.component';
 import { MapComponent } from './components/map/map.component';
 import { HandicapFormComponent } from './components/handicap-form/handicap-form.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { ProfileSelectorDialogComponent } from './components/profile-selector-dialog/profile-selector-dialog.component';
 import { HandicapSelectorComponent } from './components/handicap-selector/handicap-selector.component';
 import { SystemPreferencesComponent } from './components/system-preferences/system-preferences.component';
-import { HomeComponent } from './pages/home/home.component';
 import { SearchFormComponent } from './components/search-form/search-form.component';
 import { GeolocationDialogComponent } from './components/geolocation-dialog/geolocation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileService } from './services/profile/profile.service';
+import { GeolocationButtonComponent } from './components/geolocation-button/geolocation-button.component';
+import { ProfileSelectorComponent } from './components/profile-selector/profile-selector.component';
+import { ProfilePhotoComponent } from './components/profile-photo/profile-photo.component';
+import { ProfileSelectorDialogComponent } from './components/profile-selector-dialog/profile-selector-dialog.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { ListComponent } from './pages/list/list.component';
 import { ErpListComponent } from './components/erp-list/erp-list.component';
 import { ErpDetailComponent } from './components/erp-detail/erp-detail.component';
@@ -30,13 +32,15 @@ import { ErpDetailComponent } from './components/erp-detail/erp-detail.component
     SearchComponent,
     HandicapFormComponent,
     MapComponent,
-    FooterComponent,
     ProfileSelectorDialogComponent,
     HandicapSelectorComponent,
     SystemPreferencesComponent,
-    HomeComponent,
     SearchFormComponent,
     GeolocationDialogComponent,
+    GeolocationButtonComponent,
+    ProfileSelectorComponent,
+    ProfilePhotoComponent,
+    EditProfileComponent,
     ListComponent,
     ErpListComponent,
     ErpDetailComponent,

@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateProfileComponent } from './pages/profile/create-profile.component';
 import { SearchComponent } from './pages/search/search.component';
-import { HomeComponent } from './pages/home/home.component';
+import { ProfileGuard } from './guards/auth/profile.guard';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { ErpDetailComponent } from './components/erp-detail/erp-detail.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'profile', component: CreateProfileComponent },
-  { path: 'search', component: SearchComponent },
+  { path: 'create-profile', component: CreateProfileComponent },
+  { path: '', component: SearchComponent, canActivate: [ProfileGuard] },
+  { path: 'edit-profile/:id', component: EditProfileComponent, canActivate: [ProfileGuard] }
   { path: 'erp/:slug', component: ErpDetailComponent },
   { path: '**', redirectTo: '' }
 ];

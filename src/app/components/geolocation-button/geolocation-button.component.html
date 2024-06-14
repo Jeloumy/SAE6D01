@@ -1,0 +1,5 @@
+<div class="w-12 h-12 flex items-center justify-center rounded-full cursor-pointer bg-white"
+     [ngClass]="{'text-blue-500': isLocationActive, 'text-black': !isLocationActive}"
+     (click)="toggleLocation()">
+  <i class="fas fa-location-arrow"></i>
+</div>

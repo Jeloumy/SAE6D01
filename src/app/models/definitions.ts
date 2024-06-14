@@ -9,13 +9,24 @@ export interface DispositifLieu {
 }
 
 export interface SystemPreferences {
-  colorBlindMode?: boolean;
+  colorBlindMode?: string;
   highContrast?: boolean;
   brightness?: number;
   blackAndWhite?: boolean;
-  darkMode?: boolean,
-  [key: string]: any;
+  darkMode?: boolean;
+  textSize?: string;
+  buttonSize?: string;
+  screenReader?: boolean;
+  voiceCommands?: boolean;
+  customColors?: {
+    background: string;
+    text: string;
+  };
+  contextualHelp?: boolean;
+  interactiveTutorials?: boolean;
+  [key: string]: any; // Ajoutez cette ligne
 }
+
 
 export interface UserProfile {
   id: number;

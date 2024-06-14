@@ -2,9 +2,7 @@
   <form (ngSubmit)="createProfile()" #profileForm="ngForm"
     class="flex items-center justify-center w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info border-success-content"
     aria-label="Formulaire de création de profil">
-
-
-
+    <h1>Profile</h1>
     <!-- Photo de Profil -->
     <label class="label">
       <span class="label-text">Sélectionner une photo de profil</span>
@@ -18,7 +16,7 @@
           </div>
         </div>
         <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
-          <div class="w-24 rounded-full bg-neutral text-neutral-content">
+          <div class="w-24 rounded-full bg-accent text-neutral-content">
             <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
           </div>
         </div>
@@ -31,17 +29,15 @@
       </label>
     </div>
 
-
-
     <!-- Nom d'utilisateur -->
     <div class="w-full mt-2">
       <label class="label" for="username">
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
       <input type="text" [(ngModel)]="profile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-        required class="w-full input input-bordered text-success border-success-content" #username="ngModel" aria-required="true">
+        required maxlength="25" class="w-full text-black input input-bordered border-success-content" #username="ngModel" aria-required="true">
       <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
-        Le nom d'utilisateur est requis.
+        Le nom d'utilisateur est requis et ne doit pas dépasser 25 caractères.
       </div>
     </div>
 
@@ -53,8 +49,7 @@
       </div>
     </div>
 
-
-    <!-- Préférences systeme -->
+    <!-- Préférences système -->
     <div class="mt-2" aria-label="Préférences système">
       <label class="mt-4 label">
         <span class="font-bold label-text">Préférences système</span>
@@ -64,79 +59,8 @@
       (preferencesChange)="updateSystemPreferences($event)" class="w-full"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="w-full mt-4 text-lg border-none btn bg-accent text-info-content" type="submit" [disabled]="profileForm.invalid" (click)="reloadCurrentPage()">
-      {{ editingProfile ? 'Modifier' : 'Créer' }}
+    <button class="w-full mt-4 text-lg border-none btn bg-accent text-info-content" type="submit" [disabled]="profileForm.invalid">
+      Créer
     </button>
   </form>
-
-  <div class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 bg-base-300"
-    aria-label="Liste des profils">
-    <div *ngIf="profiles.length > 0; else noProfiles">
-      <table class="static table w-full">
-        <thead>
-          <tr>
-            <th>Profil</th>
-            <th>Handicaps</th>
-            <th>Dispositifs</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let profile of profiles; let i = index"
-            [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}"
-            (click)="selectProfile(profile, true)">
-            <td class="flex flex-col items-center justify-center">
-              <div *ngIf="profile.photo" class="avatar">
-                <div class="w-16">
-                  <img class="rounded-full" [src]="profile.photo" alt="Photo de profil">
-                </div>
-              </div>
-              <div *ngIf="!profile.photo" class="avatar placeholder">
-                <div class="w-16 rounded-full bg-neutral text-neutral-content">
-                  <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
-                </div>
-              </div>
-              <p class="mt-2 text-center"><b>{{ profile.username }}</b></p>
-            </td>
-            <td>
-              <ul>
-                <li *ngFor="let handicap of profile.handicapList" class="mb-2">{{ handicap.handicap }}</li>
-              </ul>
-            </td>
-            <td>
-              <ul>
-                <li *ngFor="let dispositif of profile.dispositifLieu" class="mb-2">{{ dispositif.name }}</li>
-              </ul>
-            </td>
-            <td class="" [ngClass]="{'text-blue-500': profile.username === currentProfile?.username}">
-              <div *ngIf="profile.username === currentProfile?.username" class="flex flex-col items-center gap-2 sm:gap-4">
-                <button class="btn btn-primary btn-square sm:btn-sm md:btn-md lg:btn-lg" (click)="editProfile(profile); $event.stopPropagation();">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();"
-                  aria-label="Supprimer le profil">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <ng-template #noProfiles>
-      <div *ngIf="currentProfile === null" class="alert alert-warning">
-        <span *ngIf="profiles.length === 0">
-          <b>Aucun profil disponible.</b> <br> Veuillez créer un nouveau profil.
-        </span>
-        <span *ngIf="profiles.length > 0">
-          Veuillez sélectionner un profil parmi les profils existants.
-        </span>
-      </div>
-    </ng-template>
-  </div>
-
-  <div *ngIf="showModal" aria-label="Sélectionneur de profil">
-    <app-profile-selector-dialog [profilesList]="profiles" (selectionConfirmed)="onProfileSelected($event)">
-    </app-profile-selector-dialog>
-  </div>
 </div>
