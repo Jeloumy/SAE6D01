@@ -35,9 +35,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   constructor(private themeService: ThemeService) {} // Inject ThemeService
 
   ngOnInit(): void {
-    this.themeService.themeChange.subscribe(theme => {
+    this.themeSubscription = this.themeService.themeChange.subscribe(theme => {
       this.setMapLayer(theme);
     });
+    this.applyCurrentTheme(); // Appliquer le thème actuel lors de l'initialisation
   }
 
   ngAfterViewInit(): void {

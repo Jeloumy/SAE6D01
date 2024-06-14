@@ -39,6 +39,10 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
 
       this.updatePreferences('darkMode', this.darkModeEnabled);
       this.themeService.setTheme(this.highContrastEnabled ? 'contrast' : (this.darkModeEnabled ? 'dark' : 'light'));
+    } else {
+      // Charger le thème par défaut si aucun profil n'est sélectionné
+      const defaultTheme = this.themeService.getTheme();
+      this.themeService.setTheme(defaultTheme);
     }
   }
 
@@ -68,7 +72,6 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
     this.themeService.setTheme(isDarkMode ? 'dark' : 'light');
     this.applyMapTheme();
   }
-  
 
   onSelectChange(event: any, key: string): void {
     const value = event.target.value;
@@ -132,7 +135,6 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
       case 'small':
         return '12px';
       case 'medium':
-        return '16px';
         return '16px';
       case 'large':
         return '20px';
