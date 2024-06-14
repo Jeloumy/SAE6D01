@@ -1,51 +1,30 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
-import { ProfileService } from '../../services/profile/profile.service';
 import { Geolocation } from '@capacitor/geolocation';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  @ViewChild('map', { static: false })
-  private mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('map', { static: false }) private mapContainer!: ElementRef<HTMLDivElement>;
   @Input() results: any;
   @Output() locationDetected = new EventEmitter<void>();
 
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
-  private layerControl: L.Control.Layers = L.control.layers();
+  private layerControl!: L.Control.Layers;
   private layers: { [name: string]: L.TileLayer } = {
-    OpenStreetMap: L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 19,
-      }
-    ),
-    'CartoDB Dark': L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      {
-        maxZoom: 19,
-      }
-    ),
+    OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }),
+    'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+    }),
   };
-
-  constructor(private profileService: ProfileService) {}
-
+  
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
@@ -78,22 +57,28 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }).setView(franceCenter, 5);
 
     for (const layerName in this.layers) {
-      this.layerControl.addBaseLayer(this.layers[layerName], layerName);
+      this.layers[layerName].addTo(this.map);
     }
 
     const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer =
-      theme === 'dark'
-        ? this.layers['CartoDB Dark']
-        : this.layers['OpenStreetMap'];
+    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
 
     const leafletContainer = document.querySelector('.leaflet-container');
     leafletContainer?.classList.add('bg-base-100');
 
-    this.layerControl.addTo(this.map);
-    defaultLayer.addTo(this.map);
-
     this.markersLayer = L.layerGroup().addTo(this.map);
+    this.layerControl = L.control.layers(this.layers).addTo(this.map);
+
+    // Move the control to a custom position
+    const controlContainer = this.layerControl.getContainer();
+    if (controlContainer) {
+      controlContainer.style.position = 'absolute';
+      controlContainer.style.top = '100px'; // Adjust this value to position it lower
+      controlContainer.style.right = '10px'; // Adjust this value to position it to the right
+
+      const mapContainer = this.mapContainer.nativeElement;
+      mapContainer.appendChild(controlContainer);
+    }
   }
 
   public updateMarkers(): void {
@@ -107,7 +92,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
 
-          // Sélectionner l'icône appropriée
           const iconHtml = this.getIconHtml(activite.nom);
           const icon = L.divIcon({
             html: iconHtml,
@@ -117,9 +101,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
             popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], { icon }).bindPopup(
-            `<b>${nom}</b><br>${adresse}`
-          );
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`<b>${nom}</b><br>${adresse}`);
 
           this.markersLayer.addLayer(marker);
 
@@ -216,5 +198,22 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     } catch (error) {
       console.error('Geolocation error:', error);
     }
+  }
+
+  showTutorial(): void {
+    Swal.fire({
+      title: 'Bienvenue dans notre application!',
+      html: `
+        <h3>Comment utiliser l'application:</h3>
+        <ul style="text-align: left;">
+          <li>1. Utilisez le bouton de géolocalisation pour détecter votre position.</li>
+          <li>2. Sélectionnez votre profil en cliquant sur la photo de profil.</li>
+          <li>3. Pour modifier ou supprimer un profil, cliquez sur les boutons correspondants dans la sélection de profil.</li>
+          <li>4. Pour créer un nouveau profil, cliquez sur le bouton "+ ajouter" en bas du sélecteur de profil.</li>
+        </ul>
+      `,
+      icon: 'info',
+      confirmButtonText: 'OK'
+    });
   }
 }
