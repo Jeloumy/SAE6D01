@@ -18,6 +18,9 @@ module.exports = {
           'info': '#000', //Black to White
           'info-content':'#fff', //White to Black
           'accent':'#000', //Button
+          'neutral': '#fff',
+          'warning-content': '#fff',
+          'base-content': '#fff',
         },
       },
       {
@@ -26,17 +29,20 @@ module.exports = {
           'accent': '#2DD4BF', //Button
           'info':'#fff', //Black to White
           'info-content':'#000', //White to Black
+          'neutral': '#fff',
+          'warning-content': '#fff',
+          'base-content': '#fff',
         },
       },
       {
         dark:{
-          'primary': '#1e293b',
-          'neutral': '#1e293b',
-          'success': '#134E4A',
-          'success-content':'#ffffff',
-          'info': '#1e293b',
-          'info-content':'#ffffff',
-          'accent':'#1e293b',
+          'success': '#1e2124', //Background
+          'accent': '#aaa', //Button
+          'info':'#fff', //Black to White
+          'info-content':'#000', //White to Black
+          'neutral': '#eee',
+          'warning-content': '#555',
+          'base-content': '#888',
         },
       }
     ],
