@@ -106,9 +106,20 @@ export class CreateProfileComponent implements OnInit {
   }
 
   onFileChange(event: any): void {
+    const maxSize = 5 * 1024 * 1024; // 5MB en bytes
     const reader = new FileReader();
+  
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
+      if (file.size > maxSize) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Taille du fichier trop grande',
+          text: 'La taille du fichier ne doit pas dépasser 5 MB.',
+        });
+        return;
+      }
+  
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.profile.photo = reader.result as string;
@@ -116,6 +127,7 @@ export class CreateProfileComponent implements OnInit {
       };
     }
   }
+  
 
   resetForm(): void {
     this.profile = {
