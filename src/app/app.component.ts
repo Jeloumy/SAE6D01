@@ -1,18 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProfileService } from './services/profile/profile.service';
 import { ThemeService } from './services/theme/theme.service';
-<<<<<<< HEAD
 import { SpeechService } from './services/speech/speech.service';
-=======
 import { SystemPreferences } from './models/user-profile';
 import { Subscription } from 'rxjs';
->>>>>>> Emma
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit, OnDestroy {
   title = 'SAE6D01';
   private preferencesSubscription: Subscription | undefined;
@@ -26,11 +24,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
-    this.speechService.checkPermission();
-    const profile = this.profileService.getCurrentProfile();
-    this.themeService.initializeTheme(profile);
-=======
     this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
       if (profile && profile.systemPreferences) {
         this.themeService.initializeTheme(profile.systemPreferences);
@@ -49,7 +42,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.themeService.initializeTheme(initialProfile.systemPreferences);
       this.applyPreferences(initialProfile.systemPreferences);
     }
->>>>>>> Emma
   }
 
   ngOnDestroy(): void {
@@ -67,7 +59,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.themeService.setTheme(newTheme);
   }
 
-<<<<<<< HEAD
   startListening(): void {
     console.log('Start listening button clicked');
     this.speechService.startListening();
@@ -77,8 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('Stop listening button clicked');
     this.speechService.stopListening();
   }
-}
-=======
+
   applyPreferences(preferences: SystemPreferences): void {
     if (!preferences) return;
 
@@ -170,4 +160,4 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 }
->>>>>>> Emma
+  
