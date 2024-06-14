@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common'; // Importez le service Location
 import { AccesLibreService } from '../../services/acces-libre/acces-libre.service';
 import { ERP, Accessibilite } from '../../models/definitions'; // Assurez-vous d'importer les bonnes interfaces
 import accessibiliteHelp from '../../../assets/accessibiliteHelp.json'; // Assurez-vous que l'importation du fichier JSON est correcte
@@ -20,7 +21,8 @@ export class ErpDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private accesLibreService: AccesLibreService
+    private accesLibreService: AccesLibreService,
+    private location: Location // Injection du service Location
   ) {}
 
   ngOnInit(): void {
@@ -76,5 +78,9 @@ export class ErpDetailComponent implements OnInit {
     } else {
       return key;
     }
+  }
+
+  goBack(): void {
+    this.location.back(); // Utilisation du service Location pour revenir en arrière
   }
 }

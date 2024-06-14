@@ -1,5 +1,11 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 import { Handicap, DispositifLieu } from '../../models/definitions';
 import { ProfileService } from '../../services/profile/profile.service';
@@ -7,8 +13,6 @@ import { AccesLibreService } from '../../services/acces-libre/acces-libre.servic
 import { CommuneService } from '../../services/commune/commune.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { GeolocationDialogComponent } from '../geolocation-dialog/geolocation-dialog.component';
-import { dispositifMapping } from '../../models/dispositifs-mapping';
 import { MapComponent } from '../map/map.component';
 import { GeolocationButtonComponent } from '../geolocation-button/geolocation-button.component';
 
@@ -31,51 +35,39 @@ export class SearchFormComponent implements OnInit {
   private searchTerms = new Subject<string>();
   isCommuneInputFocused: boolean = false;
   initialCommuneQuery: string = '';
-  showFilters: boolean =false;
+  showFilters: boolean = false;
 
   @Output() searchEvent = new EventEmitter<any>();
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  @ViewChild(GeolocationButtonComponent) geolocationButton!: GeolocationButtonComponent;
-
-  private dispositifMapping: { [key: string]: string } = {
-    "Chemin vers l'accueil accessible": 'having_accessible_exterior_path',
-    "Dispositif d'appel à l'entrée": 'having_entry_call_device',
-    "Proximité de l'accueil": 'having_visible_reception',
-    'Présence de personnel': 'having_staff',
-    'Personnel sensibilisé ou formé': 'having_trained_staff',
-    Audiodescription: 'having_audiodescription',
-    'Equipements spécifiques pour personne malentendante': 'having_hearing_equipments',
-    "Chemin sans rétrécissement jusqu'à l'accueil ou information inconnue": 'having_entry_no_shrink',
-    'Chambre accessible': 'having_accessible_rooms',
-    'Toilettes PMR': 'having_adapted_wc',
-    'Établissement labellisé': 'having_label',
-    'Stationnement à proximité': 'having_parking',
-    'Transport en commun à proximité': 'having_public_transportation',
-    "Stationnement PMR (dans l'établissement ou à proximité)": 'having_adapted_parking',
-    "Maximum une marche à l'entrée": 'having_path_low_stairs',
-    "Maximum une marche à l'accueil": 'having_entry_low_stairs',
-    'Entrée accessible': 'having_accessible_entry',
-    'Largeur de porte supérieure à 80cm ou information inconnue': 'having_entry_min_width',
-    'Entrée spécifique PMR': 'having_adapted_entry',
-    'Balise sonore': 'having_sound_beacon',
-    'Pas de chemin extérieur ou information inconnue': 'having_no_path',
-    'Chemin adapté aux personnes mal marchantes': 'having_adapted_path',
-    'Extérieur - plain-pied ou accessible via rampe ou ascenseur': 'having_reception_low_stairs',
-    'Chemin extérieur accessible': 'having_accessible_path_to_reception',
-    'Extérieur - bande de guidage': 'having_guide_band',
-  };
+  @ViewChild(GeolocationButtonComponent)
+  geolocationButton!: GeolocationButtonComponent;
 
   constructor(
+    private route: ActivatedRoute, // Ajouté
+    private router: Router, // Ajouté
     private profileService: ProfileService,
     private accesLibreService: AccesLibreService,
     private communeService: CommuneService
   ) {}
 
-  moreFilters(): void{
+  moreFilters(): void {
     this.showFilters = !this.showFilters;
   }
+
   ngOnInit(): void {
     this.loadProfilePreferences();
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['search']) {
+        this.searchQuery = params['search'];
+      }
+      if (params['commune']) {
+        this.communeQuery = params['commune'];
+        this.displayCommuneQuery = params['commune'];
+      }
+      // Ajoutez des lignes similaires pour d'autres paramètres de l'URL
+    });
+
     this.searchTerms
       .pipe(
         debounceTime(300),
@@ -94,10 +86,16 @@ export class SearchFormComponent implements OnInit {
 
     // Écouter les mises à jour de la géolocalisation
     this.profileService.getGeolocationUpdates().subscribe((geolocationData) => {
-      if (geolocationData.latitude !== null && geolocationData.longitude !== null) {
+      if (
+        geolocationData.latitude !== null &&
+        geolocationData.longitude !== null
+      ) {
         this.isLocationActive = true;
         this.onLocationDetected();
-        this.setCommuneNameFromGeolocation(geolocationData.latitude, geolocationData.longitude);
+        this.setCommuneNameFromGeolocation(
+          geolocationData.latitude,
+          geolocationData.longitude
+        );
       }
     });
 
@@ -133,8 +131,8 @@ export class SearchFormComponent implements OnInit {
     }
 
     const dispositifsFiltered = this.selectedDispositifLieu
-      .map(d => this.dispositifMapping[d.name])
-      .filter(d => d); // Filtre les valeurs vides
+      .map((d) => this.dispositifMapping[d.name])
+      .filter((d) => d); // Filtre les valeurs vides
 
     const filters: any = {
       query: this.searchQuery,
@@ -148,7 +146,11 @@ export class SearchFormComponent implements OnInit {
     console.log('isLocationActive in onSearch:', this.isLocationActive); // Ajout de console.log
     if (this.isLocationActive) {
       const geolocationData = this.profileService.getGeolocationData();
-      if (geolocationData && geolocationData.latitude !== null && geolocationData.longitude !== null) {
+      if (
+        geolocationData &&
+        geolocationData.latitude !== null &&
+        geolocationData.longitude !== null
+      ) {
         filters.latitude = geolocationData.latitude;
         filters.longitude = geolocationData.longitude;
         filters.radius = SEARCH_RADIUS_KM;
@@ -170,17 +172,28 @@ export class SearchFormComponent implements OnInit {
 
     console.log('Filters:', filters); // Ajout de console.log
 
-    this.accesLibreService.getErp(filters).subscribe(data => {
+    this.accesLibreService.getErp(filters).subscribe((data) => {
       this.results = data;
       console.log('API Response:', data);
       this.searchEvent.emit(data);
-      
+
       // Mettre à jour les marqueurs sur la carte après la recherche
       this.mapComponent.updateMarkers();
     });
 
     // Mettre à jour initialCommuneQuery après la recherche
     this.initialCommuneQuery = this.communeQuery;
+
+    // Mise à jour des paramètres de l'URL
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: this.searchQuery,
+        commune: this.communeQuery,
+        // Ajoutez d'autres paramètres si nécessaire
+      },
+      queryParamsHandling: 'merge', // Conserve les autres paramètres d'URL
+    });
   }
 
   onLocationDetected(): void {
@@ -205,10 +218,16 @@ export class SearchFormComponent implements OnInit {
   async getUserLocation(): Promise<void> {
     try {
       const position = await Geolocation.getCurrentPosition();
-      this.profileService.setGeolocationData(position.coords.latitude, position.coords.longitude);
+      this.profileService.setGeolocationData(
+        position.coords.latitude,
+        position.coords.longitude
+      );
       console.log('User location detected:', position.coords); // Ajout de console.log
       this.onLocationDetected();
-      await this.setCommuneNameFromGeolocation(position.coords.latitude, position.coords.longitude); // Ajout d'attente
+      await this.setCommuneNameFromGeolocation(
+        position.coords.latitude,
+        position.coords.longitude
+      ); // Ajout d'attente
       this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position (${this.communeQuery})`; // Mettre à jour displayCommuneQuery
     } catch (error) {
       console.error('Geolocation error:', error);
@@ -264,4 +283,44 @@ export class SearchFormComponent implements OnInit {
       }
     );
   }
+
+  setSearchParams(searchQuery: string, communeQuery: string): void {
+    this.searchQuery = searchQuery;
+    this.communeQuery = communeQuery;
+    this.displayCommuneQuery = communeQuery;
+    this.onSearch();
+  }
+
+  private dispositifMapping: { [key: string]: string } = {
+    "Chemin vers l'accueil accessible": 'having_accessible_exterior_path',
+    "Dispositif d'appel à l'entrée": 'having_entry_call_device',
+    "Proximité de l'accueil": 'having_visible_reception',
+    'Présence de personnel': 'having_staff',
+    'Personnel sensibilisé ou formé': 'having_trained_staff',
+    Audiodescription: 'having_audiodescription',
+    'Equipements spécifiques pour personne malentendante':
+      'having_hearing_equipments',
+    "Chemin sans rétrécissement jusqu'à l'accueil ou information inconnue":
+      'having_entry_no_shrink',
+    'Chambre accessible': 'having_accessible_rooms',
+    'Toilettes PMR': 'having_adapted_wc',
+    'Établissement labellisé': 'having_label',
+    'Stationnement à proximité': 'having_parking',
+    'Transport en commun à proximité': 'having_public_transportation',
+    "Stationnement PMR (dans l'établissement ou à proximité)":
+      'having_adapted_parking',
+    "Maximum une marche à l'entrée": 'having_path_low_stairs',
+    "Maximum une marche à l'accueil": 'having_entry_low_stairs',
+    'Entrée accessible': 'having_accessible_entry',
+    'Largeur de porte supérieure à 80cm ou information inconnue':
+      'having_entry_min_width',
+    'Entrée spécifique PMR': 'having_adapted_entry',
+    'Balise sonore': 'having_sound_beacon',
+    'Pas de chemin extérieur ou information inconnue': 'having_no_path',
+    'Chemin adapté aux personnes mal marchantes': 'having_adapted_path',
+    'Extérieur - plain-pied ou accessible via rampe ou ascenseur':
+      'having_reception_low_stairs',
+    'Chemin extérieur accessible': 'having_accessible_path_to_reception',
+    'Extérieur - bande de guidage': 'having_guide_band',
+  };
 }

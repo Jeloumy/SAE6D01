@@ -29,6 +29,7 @@
 </div>
 
 <app-search-form
-  class="flex items-center justify-center bg-success text-info items-centerbg-success"
+  #searchForm
+  class="flex items-center justify-center transition-all bg-success text-info"
   (searchEvent)="onSearchResults($event)"
 ></app-search-form>
