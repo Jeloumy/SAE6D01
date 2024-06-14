@@ -31,15 +31,6 @@ export class ErpListComponent implements OnInit {
     }
   }
 
-  logLastSearchResults(): void {
-    const lastSearchResults = this.accesLibreService.getLastSearchResults();
-    if (lastSearchResults) {
-      console.log('Derniers résultats de recherche:', lastSearchResults);
-    } else {
-      console.log('Aucun résultat de recherche disponible.');
-    }
-  }
-
   getRandomColorImageUrl(nom: string): string {
     const colorHex = this.getRandomColorHex();
     return `https://placehold.co/300x300/${colorHex}/white?text=${nom}`;

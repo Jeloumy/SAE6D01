@@ -43,8 +43,8 @@ export class SearchFormComponent implements OnInit {
   geolocationButton!: GeolocationButtonComponent;
 
   constructor(
-    private route: ActivatedRoute, // Ajouté
-    private router: Router, // Ajouté
+    private route: ActivatedRoute,
+    private router: Router,
     private profileService: ProfileService,
     private accesLibreService: AccesLibreService,
     private communeService: CommuneService
@@ -65,7 +65,9 @@ export class SearchFormComponent implements OnInit {
         this.communeQuery = params['commune'];
         this.displayCommuneQuery = params['commune'];
       }
-      // Ajoutez des lignes similaires pour d'autres paramètres de l'URL
+      if (params['search'] || params['commune']) {
+        this.onSearch();
+      }
     });
 
     this.searchTerms
@@ -77,7 +79,6 @@ export class SearchFormComponent implements OnInit {
       .subscribe(
         (communes: { id: string; name: string }[]) => {
           this.communes = communes;
-          console.log(this.communes);
         },
         (error: any) => {
           console.error('Error fetching communes:', error);
@@ -143,7 +144,6 @@ export class SearchFormComponent implements OnInit {
       filters.communeQuery = this.communeQuery;
     }
 
-    console.log('isLocationActive in onSearch:', this.isLocationActive); // Ajout de console.log
     if (this.isLocationActive) {
       const geolocationData = this.profileService.getGeolocationData();
       if (
@@ -157,7 +157,6 @@ export class SearchFormComponent implements OnInit {
       }
     }
 
-    console.log('Filters before removing inactive:', filters); // Ajout de console.log
 
     // Si les dispositifs ou la géolocalisation sont désactivés, on les retire des filtres
     if (dispositifsFiltered.length === 0) {
@@ -170,11 +169,9 @@ export class SearchFormComponent implements OnInit {
       delete filters.radius;
     }
 
-    console.log('Filters:', filters); // Ajout de console.log
 
     this.accesLibreService.getErp(filters).subscribe((data) => {
       this.results = data;
-      console.log('API Response:', data);
       this.searchEvent.emit(data);
 
       // Mettre à jour les marqueurs sur la carte après la recherche
@@ -197,14 +194,12 @@ export class SearchFormComponent implements OnInit {
   }
 
   onLocationDetected(): void {
-    console.log('Location detected event received'); // Ajout de console.log
     this.isLocationActive = true;
     this.profileService.setIsLocationActive(this.isLocationActive);
     this.onSearch(); // Effectuez une nouvelle recherche avec les nouveaux filtres
   }
 
   onLocationToggled(isLocationActive: boolean): void {
-    console.log('Location toggled:', isLocationActive); // Ajout de console.log
     this.isLocationActive = isLocationActive;
     this.profileService.setIsLocationActive(this.isLocationActive);
     if (isLocationActive) {
@@ -222,7 +217,6 @@ export class SearchFormComponent implements OnInit {
         position.coords.latitude,
         position.coords.longitude
       );
-      console.log('User location detected:', position.coords); // Ajout de console.log
       this.onLocationDetected();
       await this.setCommuneNameFromGeolocation(
         position.coords.latitude,
@@ -276,7 +270,6 @@ export class SearchFormComponent implements OnInit {
     this.communeService.fetchCommunes(query).subscribe(
       (communes: { id: string; name: string }[]) => {
         this.communes = communes;
-        console.log(this.communes);
       },
       (error: any) => {
         console.error('Error fetching communes:', error);

@@ -102,7 +102,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
         const { geom, nom, adresse, activite, slug } = result;
-        console.log("nom:  ",nom)
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
 
@@ -216,25 +215,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
   }
 
-  showTutorial(): void {
-    Swal.fire({
-      title: 'Bienvenue dans notre application!',
-      html: `
-        <h3>Comment utiliser l'application:</h3>
-        <ul style="text-align: left;">
-          <li>1. Utilisez le bouton de géolocalisation pour détecter votre position.</li>
-          <li>2. Sélectionnez votre profil en cliquant sur la photo de profil.</li>
-          <li>3. Pour modifier ou supprimer un profil, cliquez sur les boutons correspondants dans la sélection de profil.</li>
-          <li>4. Pour créer un nouveau profil, cliquez sur le bouton "+ ajouter" en bas du sélecteur de profil.</li>
-        </ul>
-      `,
-      icon: 'info',
-      confirmButtonText: 'OK'
-    });
-  }
-
   setMapLayer(theme: string): void {
-    console.log('Changement de thème détecté:', theme); // Log pour le debug
     if (theme === 'dark') {
       this.changeLayer(this.layers['CartoDB Dark']);
     } else if (theme === 'contrast') {
@@ -245,12 +226,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private changeLayer(layer: L.TileLayer): void {
-    console.log("Changement de la couche pour:", layer);
     if (!this.map) {
       return;
     }
     Object.values(this.layers).forEach(l => {
-      console.log("Vérification de la couche:", l);
       if (this.map.hasLayer(l)) {
         this.map.removeLayer(l);
       }

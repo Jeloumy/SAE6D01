@@ -37,7 +37,6 @@ export class AccesLibreService {
       Authorization: `Api-Key ${this.apiKey}`, 
     });
 
-    console.log('Params:', params.toString());
 
     return this.http.get<any>(this.apiUrl, { params, headers })
       .pipe(

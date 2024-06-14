@@ -25,6 +25,7 @@ import { ListComponent } from './pages/list/list.component';
 import { ErpListComponent } from './components/erp-list/erp-list.component';
 import { ErpDetailComponent } from './components/erp-detail/erp-detail.component';
 import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { ErpMapComponent } from './components/erp-map/erp-map.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { TutorialComponent } from './components/tutorial/tutorial.component';
     ErpListComponent,
     ErpDetailComponent,
     TutorialComponent,
+    ErpMapComponent,
   ],
   imports: [
     BrowserModule,

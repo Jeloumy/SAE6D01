@@ -32,6 +32,10 @@
   color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity))) !important;
 }
 
+.leaflet-popup-content{
+  width: fit-content !important;
+}
+
 .leaflet-container a {
     color: var(--fallback-pc, oklch(var(--pc) / var(--tw-text-opacity))) !important;
 }

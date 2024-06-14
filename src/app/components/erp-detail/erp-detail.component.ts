@@ -36,7 +36,6 @@ export class ErpDetailComponent implements OnInit {
         (response: ERP) => {
           this.erp = response;
           this.accessibility = this.erp.accessibilite;
-          console.log(this.accessibility);
           this.backgroundClass = this.getBackgroundClass(new Date(response.updated_at));
         },
         (error: any) => {
@@ -81,6 +80,15 @@ export class ErpDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.location.back(); // Utilisation du service Location pour revenir en arrière
+    // Check if the last visited page is on the same site
+    const lastVisitedUrl = document.referrer; // Get the referrer URL
+
+    // Check if the lastVisitedUrl contains your site's domain
+    if (lastVisitedUrl.includes(window.location.origin)) {
+      this.location.back(); // Navigate back within the Angular app
+    } else {
+      // Redirect to the home page of your site
+      window.location.href = '/'; // Replace with your home page URL
+    }
   }
 }
