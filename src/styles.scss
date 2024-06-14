@@ -12,12 +12,32 @@
   text-decoration: none;
 }
 
+.leaflet-container {
+  background: none;
+}
+
 .leaflet-control-attribution {
   display: none;
 }
 
 .leaflet-pane, .leaflet-top, .leaflet-bottom {
   z-index: 0 !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  --tw-bg-opacity: 1 !important;
+  background-color: var(--fallback-b1, oklch(var(--b1) / var(--tw-bg-opacity))) !important;
+  --tw-text-opacity: 1 !important;
+  color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity))) !important;
+}
+
+.leaflet-popup-content{
+  width: fit-content !important;
+}
+
+.leaflet-container a {
+    color: var(--fallback-pc, oklch(var(--pc) / var(--tw-text-opacity))) !important;
 }
 
 .disable-map-interaction {

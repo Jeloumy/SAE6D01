@@ -1,0 +1,7 @@
+<div #map class="relative flex flex-1 w-screen">
+    <app-geolocation-button
+    (locationDetected)="locationDetected.emit()"
+    (locationToggled)="onLocationToggled($event)"
+    class="absolute z-10 bottom-4 right-4"
+  ></app-geolocation-button>
+</div>
