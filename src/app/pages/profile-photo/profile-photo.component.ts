@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile-photo',
   templateUrl: './profile-photo.component.html',
   styleUrls: ['./profile-photo.component.scss']
 })
-export class ProfilePhotoComponent implements OnInit {
+export class ProfilePhotoComponent implements OnInit, OnDestroy {
   profiles: UserProfile[] = [];
   currentProfile: UserProfile | null = null;
   showModal = false;
@@ -58,19 +59,40 @@ export class ProfilePhotoComponent implements OnInit {
     this.currentProfile = profile;
     this.photoPreview = profile.photo || null;
     this.profileService.setCurrentProfile(profile);
-    // Ne pas fermer le sélecteur ici pour rester sur la même page
   }
 
   onProfileEdited(profile: UserProfile): void {
-    // Logique après modification du profil
-    this.loadProfiles(); // Recharger la liste des profils
+    this.loadProfiles();
   }
 
   onProfileDeleted(profileId: number): void {
-    // Logique après suppression du profil
-    this.loadProfiles(); // Recharger la liste des profils
+    this.loadProfiles();
     if (this.currentProfile?.id === profileId) {
       this.currentProfile = null;
     }
   }
+
+  onFileChange(event: any): void {
+    const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+    const reader = new FileReader();
+  
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      if (file.size > maxSize) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Taille du fichier trop grande',
+          text: 'La taille du fichier ne doit pas dépasser 5 MB.',
+        });
+        return;
+      }
+  
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.currentProfile!.photo = reader.result as string;
+        this.photoPreview = reader.result as string;
+      };
+    }
+  }
+  
 }
