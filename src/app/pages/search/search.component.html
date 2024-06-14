@@ -1,5 +1,28 @@
-<app-map class="flex flex-grow" [results]="searchResults"></app-map>
+<div
+  class="fixed z-50 flex items-center justify-center w-full top-5"
+  *ngIf="searchResults"
+>
+  <button
+    class="btn sm:btn-sm md:btn-md lg:btn-lg btn-neutral btn-wide"
+    (click)="toggleView()"
+  >
+    {{ showMap ? "Afficher la liste" : "Afficher la carte" }}
+  </button>
+</div>
+
+<div class="flex flex-1">
+  <app-map
+    *ngIf="showMap"
+    class="flex flex-grow h-full"
+    [results]="searchResults"
+  ></app-map>
+
+  <div class="flex flex-grow h-full" *ngIf="searchResults && !showMap">
+    <app-erp-list class="overflow-y-auto max-h-[45vh]"></app-erp-list>
+  </div>
+</div>
+
 <app-search-form
-  class="bg-base-200"
+  class="flex flex-1 bg-base-200"
   (searchEvent)="onSearchResults($event)"
 ></app-search-form>

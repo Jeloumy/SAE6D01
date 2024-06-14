@@ -1,20 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-.active{
-    @apply text-primary;
+.active {
+  @apply text-primary;
 }
 
-.link-hover:hover{
-    text-decoration: none;
+.link-hover:hover {
+  text-decoration: none;
+}
+
+.leaflet-container {
+  background: none;
 }
 
 .leaflet-control-attribution {
-    display: none;
+  display: none;
 }
 
-.leaflet-pane, .leaflet-top, .leaflet-bottom{
-    z-index: 0 !important;
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  --tw-bg-opacity: 1 !important;
+  background-color: var(--fallback-b1, oklch(var(--b1) / var(--tw-bg-opacity))) !important;
+  --tw-text-opacity: 1 !important;
+  color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity))) !important;
+}
+
+.leaflet-container a {
+    color: var(--fallback-pc, oklch(var(--pc) / var(--tw-text-opacity))) !important;
 }

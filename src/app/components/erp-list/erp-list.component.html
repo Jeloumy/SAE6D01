@@ -1,4 +1,4 @@
-<ul class="flex flex-col gap-4 m-8">
+<ul class="flex flex-col gap-4 m-4">
   <div *ngFor="let erp of erpList" class="shadow-xl card card-side bg-base-300">
     <div class="w-2/3 gap card-body">
       <h2 class="card-title">{{ erp.nom }}</h2>
@@ -9,6 +9,7 @@
     </div>
   </div>
 </ul>
-<button class="btn btn-primary" (click)="logLastSearchResults()">
+
+<!-- <button class="btn btn-primary" (click)="logLastSearchResults()">
   Afficher les derniers résultats de recherche
-</button>
+</button> -->

@@ -1,0 +1,290 @@
+{
+  "transport_station_presence": {
+    "label": "Proximité d'un arrêt de transport en commun",
+    "help": "Existe-t-il un arrêt de transport en commun à moins de 200 mètres de l'établissement&nbsp;?"
+  },
+  "transport_information": {
+    "label": "Informations complémentaires",
+    "help": "Préciser ici les informations supplémentaires sur ces transports (type de transport, ligne, nom de l'arrêt, etc) et éventuellement des informations jugées importantes sur le chemin qui relie le point d'arrêt à l'établissement."
+  },
+  "stationnement_presence": {
+    "label": "Stationnement dans l'établissement",
+    "help": "Existe-t-il une ou plusieurs places de stationnement dans l'établissement ou au sein de la parcelle de l'établissement&nbsp;?"
+  },
+  "stationnement_pmr": {
+    "label": "Stationnements adaptés dans l'établissement",
+    "help": "Existe-t-il une ou plusieurs places de stationnement adaptées dans l'établissement ou au sein de la parcelle de l'établissement&nbsp;?"
+  },
+  "stationnement_ext_presence": {
+    "label": "Stationnement à proximité de l'établissement",
+    "help": "Existe-t-il une ou plusieurs places de stationnement en voirie ou en parking à moins de 200 mètres de l'établissement&nbsp;?"
+  },
+  "stationnement_ext_pmr": {
+    "label": "Stationnements adaptés à proximité de l'établissement",
+    "help": "Existe-t-il une ou plusieurs places de stationnement adaptées en voirie ou en parking à moins de 200 mètres de l'établissement&nbsp;?"
+  },
+  "cheminement_ext_presence": {
+    "label": "Chemin extérieur",
+    "help": "Y-a-t-il un chemin extérieur entre le trottoir et l'entrée principale du bâtiment (exemple&nbsp;: une cour)&nbsp;?"
+  },
+  "cheminement_ext_terrain_stable": {
+    "label": "Revêtement extérieur",
+    "help": "Le revêtement du chemin extérieur (entre le trottoir et l'entrée de l'établissement) est-il stable (sol roulable, absence de pavés ou de gravillons, pas de terre ni d'herbe, etc.)&nbsp;?"
+  },
+  "cheminement_ext_plain_pied": {
+    "label": "Chemin extérieur de plain-pied",
+    "help": "Le chemin est-il de plain-pied, c'est-à-dire sans marche ni ressaut supérieur à 2 centimètres&nbsp;? Attention plain-pied ne signifie pas plat mais sans rupture brutale de niveau."
+  },
+  "cheminement_ext_ascenseur": {
+    "label": "Ascenseur/élévateur",
+    "help": "Existe-t-il un ascenseur ou un élévateur&nbsp;?"
+  },
+  "cheminement_ext_nombre_marches": {
+    "label": "Nombre de marches",
+    "help": "Indiquer 0 s'il n'y a ni marche ni escalier"
+  },
+  "cheminement_ext_sens_marches": {
+    "label": "Sens de circulation de l'escalier",
+    "help": "Quel est le sens de circulation des marches ou de l'escalier&nbsp;?"
+  },
+  "cheminement_ext_reperage_marches": {
+    "label": "Marches ou escalier sécurisé(es)",
+    "help": "L'escalier est-il sécurisé&nbsp;: nez de marche contrastés, bande d'éveil à la vigilance en haut de l'escalier, première et dernière contremarches contrastées&nbsp;?"
+  },
+  "cheminement_ext_main_courante": {
+    "label": "Main courante",
+    "help": "L'escalier est-il équipé d'une ou plusieurs main-courantes&nbsp;?"
+  },
+  "cheminement_ext_rampe": {
+    "label": "Rampe",
+    "help": "S'il existe une rampe ayant une pente douce, est-elle fixe ou amovible&nbsp;?"
+  },
+  "cheminement_ext_pente_presence": {
+    "label": "Pente",
+    "help": "Le chemin est-il en pente&nbsp;?"
+  },
+  "cheminement_ext_pente_degre_difficulte": {
+    "label": "Degré de difficulté de la pente",
+    "help": "Quel est son degré de difficulté&nbsp;?"
+  },
+  "cheminement_ext_pente_longueur": {
+    "label": "Longueur de la pente",
+    "help": "Longueur de la pente"
+  },
+  "cheminement_ext_devers": {
+    "label": "Dévers",
+    "help": "Un dévers est une inclinaison transversale du chemin. S'il en existe un, quel est son degré de difficulté&nbsp;?"
+  },
+  "cheminement_ext_bande_guidage": {
+    "label": "Bande de guidage",
+    "help": "Présence d'une bande de guidage au sol facilitant le déplacement d'une personne aveugle ou malvoyante"
+  },
+  "cheminement_ext_retrecissement": {
+    "label": "Rétrécissement du chemin",
+    "help": "Existe-t-il un ou plusieurs rétrécissements (inférieur à 90 centimètres) du chemin emprunté par le public pour atteindre l'entrée&nbsp;?"
+  },
+  "entree_reperage": {
+    "label": "Entrée facilement repérable",
+    "help": "Y a-t-il des éléments facilitant le repérage de l'entrée de l'établissement (numéro de rue à proximité, enseigne, végétaux, éléments architecturaux contrastés, etc)&nbsp;?"
+  },
+  "entree_porte_presence": {
+    "label": "Porte d'entrée",
+    "help": "Y a-t-il une porte à l'entrée de l'établissement&nbsp;?"
+  },
+  "entree_porte_manoeuvre": {
+    "label": "Manoeuvre de la porte",
+    "help": "Comment s'ouvre la porte&nbsp;?"
+  },
+  "entree_porte_type": {
+    "label": "Type de porte",
+    "help": "Quel est le type de la porte&nbsp;?"
+  },
+  "entree_vitree": {
+    "label": "Entrée vitrée",
+    "help": "La porte d'entrée est-elle vitrée&nbsp;?"
+  },
+  "entree_vitree_vitrophanie": {
+    "label": "Repérage de la vitre",
+    "help": "Y a-t-il des éléments contrastés (autocollants, éléments de menuiserie ou autres) permettant de repérer la porte vitrée&nbsp;?"
+  },
+  "entree_plain_pied": {
+    "label": "Entrée de plain-pied",
+    "help": "L'entrée est-elle de plain-pied, c'est-à-dire sans marche ni ressaut supérieur à 2 centimètres&nbsp;?"
+  },
+  "entree_ascenseur": {
+    "label": "Ascenseur/élévateur",
+    "help": "Existe-t-il un ascenseur ou un élévateur&nbsp;?"
+  },
+  "entree_marches": {
+    "label": "Nombre de marches",
+    "help": "Indiquer 0 s'il n'y a ni marche ni escalier"
+  },
+  "entree_marches_sens": {
+    "label": "Sens de circulation de l'escalier",
+    "help": "Quel est le sens de circulation des marches ou de l'escalier&nbsp;?"
+  },
+  "entree_marches_reperage": {
+    "label": "Repérage des marches",
+    "help": "L'escalier est-il sécurisé&nbsp;: nez de marche contrastés, bande d'éveil à la vigilance en haut de l'escalier, première et dernière contremarches contrastées&nbsp;?"
+  },
+  "entree_marches_main_courante": {
+    "label": "Main courante",
+    "help": "L'escalier est-il équipé d'une ou plusieurs main-courantes&nbsp;?"
+  },
+  "entree_marches_rampe": {
+    "label": "Rampe",
+    "help": "S'il existe une rampe ayant une pente douce, est-elle fixe ou amovible&nbsp;?"
+  },
+  "entree_dispositif_appel": {
+    "label": "Dispositif d'appel à l'entrée",
+    "help": "Existe-t-il un dispositif pour permettre à quelqu'un signaler sa présence à l'entrée&nbsp;?"
+  },
+  "entree_dispositif_appel_type": {
+    "label": "Type de dispositif d'appel à l'entrée",
+    "help": "Quel(s) type(s) de dispositifs d'appel sont présents&nbsp;?"
+  },
+  "entree_balise_sonore": {
+    "label": "Balise sonore à l'entrée",
+    "help": "L'entrée est-elle équipée d'une balise sonore facilitant son repérage par une personne aveugle ou malvoyante&nbsp;?"
+  },
+  "entree_aide_humaine": {
+    "label": "Aide humaine",
+    "help": "Présence ou possibilité d'une aide humaine au déplacement"
+  },
+  "entree_largeur_mini": {
+    "label": "Largeur de la porte (en cm)",
+    "help": "Si la largeur n'est pas précisément connue, indiquer une valeur minimum. Exemple&nbsp;: la largeur se situe entre 90 et 100 centimètres&nbsp;; indiquer 90."
+  },
+  "entree_pmr": {
+    "label": "Entrée spécifique PMR",
+    "help": "Existe-t-il une entrée secondaire spécifique dédiée aux personnes à mobilité réduite&nbsp;?"
+  },
+  "entree_pmr_informations": {
+    "label": "Informations complémentaires concernant l'entrée PMR",
+    "help": "Précisions sur les modalités d'accès de l'entrée spécifique PMR"
+  },
+  "accueil_visibilite": {
+    "label": "Visibilité de la zone d'accueil",
+    "help": "La zone d'accueil (guichet d'accueil, caisse, secrétariat, etc) est-elle visible depuis l'entrée du bâtiment&nbsp;?"
+  },
+  "accueil_cheminement_plain_pied": {
+    "label": "Chemin entre l'entrée principale du bâtiment et l'accueil de l'établissement",
+    "help": "Une fois l'entrée du bâtiment passée, le chemin jusqu'à l'accueil de l'établissement est t-il de plain-pied, c'est-à-dire sans marche ni ressaut supérieur à 2 centimètres&nbsp;? (attention, plain-pied ne signifie pas plat mais sans rupture brutale de niveau)"
+  },
+  "accueil_cheminement_ascenseur": {
+    "label": "Ascenseur/élévateur",
+    "help": "Existe-t-il un ascenseur ou un élévateur&nbsp;?"
+  },
+  "accueil_cheminement_nombre_marches": {
+    "label": "Nombre de marches",
+    "help": "Indiquer 0 s'il n'y a ni marche ni escalier"
+  },
+  "accueil_cheminement_sens_marches": {
+    "label": "Sens de circulation de l'escalier",
+    "help": "Quel est le sens de circulation des marches ou de l'escalier&nbsp;?"
+  },
+  "accueil_cheminement_reperage_marches": {
+    "label": "Repérage des marches ou de l'escalier",
+    "help": "L'escalier est-il sécurisé&nbsp;: nez de marche contrastés, bande d'éveil à la vigilance en haut de l'escalier, première et dernière contremarches contrastées&nbsp;?"
+  },
+  "accueil_cheminement_main_courante": {
+    "label": "Main courante",
+    "help": "L'escalier est-il équipé d'une ou plusieurs main-courantes&nbsp;?"
+  },
+  "accueil_cheminement_rampe": {
+    "label": "Rampe",
+    "help": "S'il existe une rampe ayant une pente douce, est-elle fixe ou amovible&nbsp;?"
+  },
+  "accueil_retrecissement": {
+    "label": "Rétrécissement du chemin",
+    "help": "Existe-t-il un ou plusieurs rétrécissements (inférieur à 90 centimètres) du chemin emprunté par le public pour atteindre la zone d'accueil&nbsp;?"
+  },
+  "accueil_chambre_nombre_accessibles": {
+    "label": "Nombre de chambres accessibles à une personne en fauteuil roulant",
+    "help": "Nombre de chambres accessibles à une personne en fauteuil roulant : espace et aménagement suffisant pour permettre à une personne en fauteuil de circuler dans la chambre, atteindre le lit et tourner (espace de rotation d’au moins 150 cm de diamètre)"
+  },
+  "accueil_chambre_douche_plain_pied": {
+    "label": "Douche accessible",
+    "help": "La douche est-elle à l'italienne ou équipée d'un bac extra plat (hauteur inférieure à 2 cm)&nbsp;?"
+  },
+  "accueil_chambre_douche_siege": {
+    "label": "Siège de douche",
+    "help": "La douche est-elle équipée d'un siège de douche normé et d'une largeur minimum de 40 cm&nbsp;?"
+  },
+  "accueil_chambre_douche_barre_appui": {
+    "label": "Douche sécurisée",
+    "help": "La douche est-elle équipée d'une barre d'appui horizontale permettant le transfert depuis un fauteuil vers le siège de douche&nbsp;?"
+  },
+  "accueil_chambre_sanitaires_barre_appui": {
+    "label": "Toilette sécurisé",
+    "help": "Le toilette est-il équipé d'une barre d'appui horizontale&nbsp;?"
+  },
+  "accueil_chambre_sanitaires_espace_usage": {
+    "label": "Toilette accessible",
+    "help": "Le toilette dispose-t-il d'un espace d'usage (80 cm x 130 cm) à côté de la cuvette&nbsp;?"
+  },
+  "accueil_chambre_numero_visible": {
+    "label": "Visibilité des numéros de chambres",
+    "help": "Les numéros de chambres sont-ils bien repérables et en relief (très contrastés, positionnés à hauteur des yeux, soit 160 cm, au milieu de la porte ou au-dessus de la poignée, et relief d’au moins 2 cm d’épaisseur) ?"
+  },
+  "accueil_chambre_equipement_alerte": {
+    "label": "Equipement d'alerte adapté",
+    "help": "L'établissement dispose-t-il d'un ou plusieurs équipements d'alerte par flash lumineux ou vibration&nbsp;?"
+  },
+  "accueil_chambre_accompagnement": {
+    "label": "Accompagnement spécifique",
+    "help": "Est-il proposé un accompagnement personnalisé pour présenter la chambre à un client en situation de handicap, notamment aveugle ou malvoyant&nbsp;?"
+  },
+  "accueil_personnels": {
+    "label": "Personnel d'accueil",
+    "help": "En cas de présence du personnel, est-il formé ou sensibilisé à l'accueil des personnes handicapées&nbsp;?"
+  },
+  "accueil_audiodescription_presence": {
+    "label": "Audiodescription",
+    "help": "L'établissement propose-t-il de l’audiodescription&nbsp?"
+  },
+  "accueil_audiodescription": {
+    "label": "Type d'équipements pour l'audiodescription",
+    "help": ""
+  },
+  "accueil_equipements_malentendants_presence": {
+    "label": "Présence d'équipements d'aide à l'audition et à la communication",
+    "help": "L'accueil est-il équipé de produits ou prestations dédiés aux personnes sourdes ou malentendantes&nbsp?"
+  },
+  "accueil_equipements_malentendants": {
+    "label": "Liste des équipements d'aide à l'audition et à la communication",
+    "help": "Sélectionnez les équipements ou prestations disponibles à l'accueil de l'établissement&nbsp;:"
+  },
+  "sanitaires_presence": {
+    "label": "Sanitaires",
+    "help": "Y a-t-il des sanitaires mis à disposition du public&nbsp;?"
+  },
+  "sanitaires_adaptes": {
+    "label": "Sanitaires adaptés",
+    "help": "Y a-t-il des sanitaires adaptés mis à disposition du public&nbsp;?"
+  },
+  "registre_url": {
+    "label": "Registre",
+    "help": "Si l'établissement en dispose, adresse internet (URL) à laquelle le <a href=\"https://handicap.gouv.fr/actualites/article/registre-d-accessibilite-obligatoire-un-guide-pour-les-erp\" target=\"_blank\">registre d'accessibilité</a> de l'établissement est consultable."
+  },
+  "conformite": {
+    "label": "Conformité",
+    "help": "L'établissement est-il déclaré conforme ? (réservé à l'administration)"
+  },
+  "labels": {
+    "label": "Marques ou labels",
+    "help": "Si l'établissement est entré dans une démarche volontaire de labellisation liée au handicap, quelle marque ou quel label a-t-il obtenu(e)&nbsp;?"
+  },
+  "labels_familles_handicap": {
+    "label": "Famille(s) de handicap concernées(s)",
+    "help": "Quelle(s) famille(s) de handicap sont couvertes par ces marques et labels&nbsp;?"
+  },
+  "labels_autre": {
+    "label": "Autre label",
+    "help": "Si autre, préciser le nom du label"
+  },
+  "commentaire": {
+    "label": "Informations complémentaires et prestations spécifiques",
+    "help": "Ajoutez ici toute information supplémentaire concernant l'accessibilité du bâtiment ou des prestations spécifiques proposées."
+  }
+}

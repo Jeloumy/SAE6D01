@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'profile', component: CreateProfileComponent },
   { path: 'search', component: SearchComponent },
   { path: 'erp/:slug', component: ErpDetailComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

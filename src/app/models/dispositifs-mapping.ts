@@ -1,5 +1,3 @@
-// dispositif-mapping.ts
-
 export const dispositifMapping: { [key: string]: string } = {
   "Chemin vers l'accueil accessible": 'having_accessible_exterior_path',
   "Dispositif d'appel à l'entrée": 'having_entry_call_device',
