@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
+import { ProfileService } from '../profile/profile.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpeechService {
-  constructor() {}
+  constructor(private router: Router, private profileService: ProfileService) {}
 
   public async checkPermission(): Promise<any> {
-    console.log("j'entre dans checkPermission")
     const hasPermission = await SpeechRecognition.checkPermissions().then(
       state => {
-        console.log('////////////////////////////////////////////', state);
         return state;
       }
     );
@@ -32,10 +32,10 @@ export class SpeechService {
 
     const hasPermission = await this.checkPermission();
     console.log('hasPermission: ', JSON.stringify(hasPermission))
-    // if (!hasPermission) {
-    //   console.log('Permission not granted');
-    //   return;
-    // }
+    if (hasPermission.speechRecognition !== 'granted') {
+      console.log('Vous devez autoriser l\'utilisation du micro par l\'application pour utiliser la commande vocale');
+      return;
+    }
 
     console.log("je vais entrer dans start")
     SpeechRecognition.start({
@@ -46,6 +46,29 @@ export class SpeechService {
       partialResults: true,
     }).then((result: any) => {
       console.log('Recognition result:', JSON.stringify(result))
+
+      const navigation: { [key: string]: string }  = 
+      {
+        'recherche': '',
+        'nouveau profil' : 'create-profile',
+        'modifier profil' : 'edit-profile/' + this.profileService.getCurrentProfile()?.id
+      }
+      console.log('getProfil' + this.profileService.getCurrentProfile()?.id)
+      for (const match of result.matches) {
+        for (const page in navigation) {
+          const regex = new RegExp(page); // Convertir la chaîne de caractères en regex
+          if (regex.test(match.toLowerCase())) {
+            this.router.navigate([navigation[page]]);
+          }
+        }
+        
+    }
+      // switch (result.matches.toLowerCase()) {
+      //   case 'profil':
+      //     this.router.navigate(['edit-profile/'+ this.profileService.getCurrentProfile()]);
+      //   default:
+      //     return '<i class="fas fa-map-marker-alt fa-2x" style="color: black;"></i>';
+      // }
     }).catch((error: any) => {
       console.error('Recognition error:', error);
     });
