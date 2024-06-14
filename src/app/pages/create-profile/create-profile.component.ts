@@ -1,19 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import {
-  UserProfile,
-  Handicap,
-  DispositifLieu,
-  SystemPreferences,
-} from '../../models/user-profile';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
+import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-profile',
   templateUrl: './create-profile.component.html',
-  styleUrls: ['./create-profile.component.scss'],
+  styleUrls: ['./create-profile.component.scss']
 })
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
@@ -27,22 +22,20 @@ export class CreateProfileComponent implements OnInit {
     photo: '',
     systemPreferences: {} as SystemPreferences,
   };
+
   profiles: UserProfile[] = [];
-  editingProfile: UserProfile | null = null;
-  currentProfile: UserProfile | null = null;
-  showModal: boolean = false;
   handicapTypes: Handicap[] = [];
   photoPreview: string | ArrayBuffer | null = '';
 
   constructor(
     private profileService: ProfileService,
-    private http: HttpClient
-  ) {} // Inject HttpClient
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadProfiles();
-    this.loadCurrentProfile();
     this.handicapTypes = this.profileService.getHandicapTypes();
+    this.resetForm(); // Assurez-vous que le formulaire est vierge au chargement de la page
   }
 
   get systemPreferences(): SystemPreferences {
@@ -55,29 +48,9 @@ export class CreateProfileComponent implements OnInit {
     }
   }
 
-  reloadCurrentPage(): void {
-    location.reload();
-  }
-
   loadProfiles(): void {
     this.profiles = this.profileService.getProfilesList();
   }
-
-  loadCurrentProfile(): void {
-    const storedProfile = this.profileService.getCurrentProfile();
-    if (storedProfile) {
-      const matchedProfile = this.profiles.find(
-        (profile) => {
-          //console.log('Logging profile:', profile.username, profile);
-          return profile.username === storedProfile.username;
-        }
-      );
-      if (matchedProfile) {
-        this.selectProfile(matchedProfile, false); // Sélection automatique sans pop-up
-      }
-    }
-  }
-  
 
   private generateRandomColor(): string {
     const letters = '0123456789ABCDEF';
@@ -89,6 +62,16 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile(): void {
+    // Vérification de la limite de 5 profils
+    if (this.profiles.length >= 5) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Limite atteinte',
+        text: 'Vous ne pouvez pas créer plus de 5 profils.',
+      });
+      return;
+    }
+
     if (!this.profile.username || this.profile.handicapList.length === 0) {
       Swal.fire({
         icon: 'error',
@@ -98,153 +81,45 @@ export class CreateProfileComponent implements OnInit {
       return;
     }
 
+    const existingProfile = this.profiles.find(p => p.username.toLowerCase() === this.profile.username.toLowerCase());
+    if (existingProfile) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Profil existant',
+        text: "Un profil avec ce nom d'utilisateur existe déjà. Veuillez choisir un autre nom.",
+      });
+      return;
+    }
+
     if (!this.profile.photo) {
       const bgColor = this.generateRandomColor().slice(1);
-      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(
-        this.profile.username
-      )}`;
+      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(this.profile.username)}`;
       this.profile.photo = avatarUrl;
     }
 
-    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
-    if (this.editingProfile) {
-      this.profileService.updateProfile(this.profile);
-      this.editingProfile = null;
-    } else {
-      this.profileService.createProfile(this.profile);
-      if (isInitialProfile) {
-        this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
-      }
-    }
+    this.profileService.createProfile(this.profile);
+    this.profileService.setCurrentProfile(this.profile); // Sélectionne le nouveau profil comme profil courant
     this.resetForm();
     this.loadProfiles();
-  }
 
-  completeProfileCreation(): void {
-    const isInitialProfile = this.profiles.length === 0; // Vérifie s'il n'y a pas de profils existants
-    if (this.editingProfile) {
-      this.profileService.updateProfile(this.profile);
-      this.editingProfile = null;
-    } else {
-      this.profileService.createProfile(this.profile);
-      if (isInitialProfile) {
-        this.selectProfile(this.profile, false); // Sélectionne automatiquement le nouveau profil
-      }
-    }
-    this.resetForm();
-    this.loadProfiles();
-  }
-
-  deleteProfile(profileId: number): void {
-    const wasCurrentProfile = this.currentProfile?.id === profileId;
-    const currentProfilePseudo = this.currentProfile?.username;
-
-    // Utilisation de SweetAlert2 pour la confirmation de suppression
-    Swal.fire({
-      title: 'Êtes-vous sûr(e) de vouloir supprimer ce profil ?',
-      text: 'Cette action est irréversible !',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Oui, supprimer',
-      cancelButtonText: 'Annuler',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // L'utilisateur a confirmé la suppression
-        this.profileService.deleteProfile(profileId);
-        this.loadProfiles();
-
-        if (wasCurrentProfile) {
-          if (this.profiles.length > 0) {
-            this.showModal = true;
-          } else {
-            Swal.fire({
-              title: 'Profil supprimé',
-              text: 'Le profil sélectionné a été supprimé. Veuillez créer un nouveau profil.',
-              icon: 'info',
-              confirmButtonText: 'OK',
-            });
-            this.currentProfile = null;
-            this.profileService.setCurrentProfile(null);
-          }
-        } else if (currentProfilePseudo) {
-          const matchedProfile = this.profiles.find(
-            (profile) => profile.username === currentProfilePseudo
-          );
-          if (matchedProfile) {
-            this.selectProfile(matchedProfile, false);
-          }
-        }
-      } else {
-        Swal.fire('Annulé', "Le profil n'a pas été supprimé.", 'info');
-      }
-    });
-  }
-
-  editProfile(profile: UserProfile): void {
-    this.profile = {
-      ...profile,
-      systemPreferences: profile.systemPreferences || ({} as SystemPreferences),
-    };
-    this.editingProfile = profile;
-    this.photoPreview = profile.photo || '';
-  }
-
-  selectProfile(profile: UserProfile, confirmChange: boolean = true): void {
-    if (
-      confirmChange &&
-      this.currentProfile &&
-      this.currentProfile.username !== profile.username
-    ) {
-      Swal.fire({
-        title: 'Changer de profil',
-        text: 'Êtes-vous sûr(e) de vouloir changer de profil ?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Annuler',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // L'utilisateur a confirmé le changement de profil
-          this.currentProfile = {
-            ...profile,
-            systemPreferences:
-              profile.systemPreferences || ({} as SystemPreferences),
-          };
-          this.profileService.setCurrentProfile(this.currentProfile);
-          this.profileService.getCurrentProfile();
-          this.profileService.getCurrentProfileSettings();
-          location.reload();
-        }
-      });
-    } else {
-      this.currentProfile = {
-        ...profile,
-        systemPreferences:
-          profile.systemPreferences || ({} as SystemPreferences),
-      };
-      this.profileService.setCurrentProfile(this.currentProfile);
-    }
-  }
-
-  onProfileSelected(profile: UserProfile | null): void {
-    console.log('Profil sélectionné:', profile);
-    this.showModal = false;
-    if (profile) {
-      this.selectProfile(profile, false);
-    } else {
-      this.currentProfile = null;
-      this.profileService.setCurrentProfile(null);
-    }
-  }
-
-  toggleModal(): void {
-    this.showModal = !this.showModal;
+    this.router.navigate(['/']);
   }
 
   onFileChange(event: any): void {
+    const maxSize = 5 * 1024 * 1024; // 5MB en bytes
     const reader = new FileReader();
+  
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
+      if (file.size > maxSize) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Taille du fichier trop grande',
+          text: 'La taille du fichier ne doit pas dépasser 5 MB.',
+        });
+        return;
+      }
+  
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.profile.photo = reader.result as string;
@@ -252,6 +127,7 @@ export class CreateProfileComponent implements OnInit {
       };
     }
   }
+  
 
   resetForm(): void {
     this.profile = {
@@ -263,12 +139,15 @@ export class CreateProfileComponent implements OnInit {
       systemPreferences: {} as SystemPreferences,
     };
     this.photoPreview = '';
-    this.profileForm.resetForm();
-    this.fileInput.nativeElement.value = '';
+    if (this.profileForm) {
+      this.profileForm.resetForm();
+    }
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   updateSystemPreferences(preferences: SystemPreferences): void {
     this.systemPreferences = preferences;
-    
   }
 }

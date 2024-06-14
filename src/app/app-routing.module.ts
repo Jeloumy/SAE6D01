@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateProfileComponent } from '../app/pages/create-profile/create-profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { HomeComponent } from './home/home.component';
+import { ProfileGuard } from './guards/auth/profile.guard'; // Importez votre guard
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'profile', component: CreateProfileComponent },
-  { path: 'search', component: SearchComponent },
+  { path: 'create-profile', component: CreateProfileComponent },
+  { path: '', component: SearchComponent, canActivate: [ProfileGuard] },
+  { path: 'edit-profile/:id', component: EditProfileComponent, canActivate: [ProfileGuard] }
   // autres routes...
 ];
 

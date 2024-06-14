@@ -4,4 +4,11 @@
     (locationToggled)="onLocationToggled($event)"
     class="absolute bottom-4 right-4 z-10"
   ></app-geolocation-button>
+
+  <div class="absolute top-4 right-20 z-10 flex items-center">
+    <app-profile-photo></app-profile-photo>
+    <button class="btn btn-info btn-square ml-2" (click)="showTutorial()">
+      <i class="fas fa-info"></i>
+    </button>
+  </div>
 </div>

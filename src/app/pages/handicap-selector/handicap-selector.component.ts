@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Handicap, DispositifLieu, UserProfile } from '../../models/user-profile';
 import { ProfileService } from '../../services/profile/profile.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-handicap-selector',
@@ -18,21 +19,30 @@ export class HandicapSelectorComponent implements OnInit {
   autoSelectedDispositifLieu: DispositifLieu[] = [];
   manuallySelectedDispositifLieu: DispositifLieu[] = [];
 
+  private profileSubscription: Subscription | undefined;
+
   constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
     this.handicapTypes = this.profileService.getHandicapTypes();
     this.dispositifLieu = this.profileService.getDispositifLieu();
-    this.loadCurrentProfileData();
+    this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
+      this.loadCurrentProfileData(profile);
+    });
   }
 
-  loadCurrentProfileData(): void {
-    const currentProfile = this.profileService.getCurrentProfile();
-    if (currentProfile) {
-      this.selectedHandicaps = currentProfile.handicapList;
-      this.selectedDispositifLieu = currentProfile.dispositifLieu;
+  ngOnDestroy(): void {
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
+  }
+
+  loadCurrentProfileData(profile: UserProfile | null): void {
+    if (profile) {
+      this.selectedHandicaps = profile.handicapList;
+      this.selectedDispositifLieu = profile.dispositifLieu;
       this.autoSelectedDispositifLieu = []; // Reset auto-selected list
-      this.manuallySelectedDispositifLieu = currentProfile.dispositifLieu.filter(d => !this.isAutoSelected(d.id));
+      this.manuallySelectedDispositifLieu = profile.dispositifLieu.filter(d => !this.isAutoSelected(d.id));
     }
   }
 
