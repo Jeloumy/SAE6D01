@@ -80,6 +80,9 @@ export class EditProfileComponent implements OnInit {
     }
 
     this.profileService.updateProfile(this.editingProfile);
+    if (this.profileService.getCurrentProfileSettings()?.voiceCommands) {
+      this.speechService.checkPermission();
+    }
     this.router.navigate(['/']);
   }
 
@@ -103,10 +106,6 @@ export class EditProfileComponent implements OnInit {
         }
         this.photoPreview = reader.result;
       };
-    }
-
-    if (this.profileService.getCurrentProfileSettings()?.voiceCommands) {
-      this.speechService.checkPermission();
     }
   }
 
