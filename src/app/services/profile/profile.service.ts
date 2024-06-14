@@ -1,16 +1,53 @@
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/definitions';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
   private profilesList: UserProfile[] = [];
-  currentProfile: UserProfile | null = null;
+  private currentProfileSubject: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
+  currentProfile$: Observable<UserProfile | null> = this.currentProfileSubject.asObservable();
+  private preferencesSubject: BehaviorSubject<SystemPreferences | null> = new BehaviorSubject<SystemPreferences | null>(null);
+  preferences$: Observable<SystemPreferences | null> = this.preferencesSubject.asObservable();
+
+  private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
+  private geolocationSubject = new BehaviorSubject<{ latitude: number | null, longitude: number | null }>({ latitude: null, longitude: null });
+
+  private isLocationActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor() { 
     this.loadProfileFromStorage();
     this.loadProfilesListFromStorage();
+  }
+
+  setGeolocationData(latitude: number | null, longitude: number | null): void {
+    this.geolocationData = { latitude, longitude };
+    localStorage.setItem('geolocationData', JSON.stringify(this.geolocationData));
+    this.geolocationSubject.next(this.geolocationData);
+  }
+
+  getGeolocationData(): { latitude: number | null, longitude: number | null } | null {
+    if (!this.geolocationData) {
+      const storedData = localStorage.getItem('geolocationData');
+      if (storedData) {
+        this.geolocationData = JSON.parse(storedData);
+      }
+    }
+    return this.geolocationData;
+  }
+
+  getGeolocationUpdates() {
+    return this.geolocationSubject.asObservable();
+  }
+
+  setIsLocationActive(isActive: boolean): void {
+    this.isLocationActiveSubject.next(isActive);
+  }
+
+  getIsLocationActive() {
+    return this.isLocationActiveSubject.asObservable();
   }
 
   getHandicapTypes(): Handicap[] {
@@ -73,11 +110,10 @@ export class ProfileService {
 
   deleteProfile(profileId: number): void {
     this.profilesList = this.profilesList.filter(profile => profile.id !== profileId);
-    this.reassignIds(); // Réassigne les IDs pour maintenir une séquence continue
+    this.reassignIds();
     this.saveProfilesListToStorage();
-    if (this.currentProfile?.id === profileId) {
-      this.currentProfile = null;
-      localStorage.removeItem('currentProfile');
+    if (this.currentProfileSubject.value?.id === profileId) {
+      this.setCurrentProfile(null);
     }
   }
 
@@ -86,6 +122,9 @@ export class ProfileService {
     if (index !== -1) {
       this.profilesList[index] = profile;
       this.saveProfilesListToStorage();
+      if (profile.id === this.currentProfileSubject.value?.id) {
+        this.setCurrentProfile(profile);
+      }
     }
   }
 
@@ -103,25 +142,29 @@ export class ProfileService {
   loadProfileFromStorage(): void {
     const profileData = localStorage.getItem('currentProfile');
     if (profileData) {
-      this.currentProfile = JSON.parse(profileData);
+      const profile = JSON.parse(profileData);
+      this.currentProfileSubject.next(profile);
+      this.preferencesSubject.next(profile.systemPreferences || {});
     }
   }
   
   setCurrentProfile(profile: UserProfile | null): void {
-    this.currentProfile = profile;
+    this.currentProfileSubject.next(profile);
     if (profile) {
       localStorage.setItem('currentProfile', JSON.stringify(profile));
+      this.preferencesSubject.next(profile.systemPreferences || {});
     } else {
       localStorage.removeItem('currentProfile');
+      this.preferencesSubject.next(null);
     }
   }
 
   getCurrentProfile(): UserProfile | null {
-    return this.currentProfile;
+    return this.currentProfileSubject.value;
   }
 
   getCurrentProfileSettings(): SystemPreferences | null {
-    return this.currentProfile?.systemPreferences || null;
+    return this.currentProfileSubject.value?.systemPreferences || {};
   }
 
   private getNextId(): number {

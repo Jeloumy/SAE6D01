@@ -2,9 +2,7 @@
   <form (ngSubmit)="createProfile()" #profileForm="ngForm"
     class="flex items-center justify-center w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info border-success-content"
     aria-label="Formulaire de création de profil">
-
-
-
+    <h1>Profile</h1>
     <!-- Photo de Profil -->
     <label class="label">
       <span class="label-text">Sélectionner une photo de profil</span>
@@ -18,7 +16,7 @@
           </div>
         </div>
         <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
-          <div class="w-24 rounded-full bg-neutral text-neutral-content">
+          <div class="w-24 rounded-full bg-accent text-neutral-content">
             <span class="text-3xl">{{ profile.username | slice:0:2 }}</span>
           </div>
         </div>
@@ -31,17 +29,15 @@
       </label>
     </div>
 
-
-
     <!-- Nom d'utilisateur -->
     <div class="w-full mt-2">
       <label class="label" for="username">
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
       <input type="text" [(ngModel)]="profile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-        required class="w-full input input-bordered text-success border-success-content" #username="ngModel" aria-required="true">
+        required maxlength="25" class="w-full input input-bordered text-black border-success-content" #username="ngModel" aria-required="true">
       <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
-        Le nom d'utilisateur est requis.
+        Le nom d'utilisateur est requis et ne doit pas dépasser 25 caractères.
       </div>
     </div>
 
@@ -53,8 +49,7 @@
       </div>
     </div>
 
-
-    <!-- Préférences systeme -->
+    <!-- Préférences système -->
     <div class="mt-2" aria-label="Préférences système">
       <label class="mt-4 label">
         <span class="font-bold label-text">Préférences système</span>
@@ -64,6 +59,7 @@
       (preferencesChange)="updateSystemPreferences($event)" class="w-full"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
+<<<<<<< HEAD:src/app/pages/profile/create-profile.component.html
     <button class="w-full mt-4 text-lg border-none btn bg-accent text-info-content" type="submit" [disabled]="profileForm.invalid" (click)="reloadCurrentPage()">
       {{ editingProfile ? 'Modifier' : 'Créer' }}
     </button>
@@ -140,3 +136,10 @@
     </app-profile-selector-dialog>
   </div>
 </div>
+=======
+    <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit" [disabled]="profileForm.invalid">
+      Créer
+    </button>
+  </form>
+</div>
+>>>>>>> origin/movingComponents:src/app/pages/create-profile/create-profile.component.html
