@@ -53,6 +53,11 @@ export class SystemPreferencesComponent implements OnInit {
     this.updatePreferences(key, event.target.value);
   }
 
+  onRadioChange(size: string) {
+    this.preferences!.textSize = size; // Update textSize based on selected radio button
+    // Additional logic if needed
+  }
+
   onColorChange(event: any, key: string): void {
     this.updatePreferences(key, event.target.value);
   }
