@@ -4,6 +4,7 @@ import { ProfileService } from '../../services/profile/profile.service';
 import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { SpeechService } from '../../services/speech/speech.service';
 
 @Component({
   selector: 'app-create-profile',
@@ -29,7 +30,8 @@ export class CreateProfileComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private router: Router
+    private router: Router,
+    private speechService: SpeechService
   ) {}
 
   ngOnInit(): void {
@@ -103,6 +105,11 @@ export class CreateProfileComponent implements OnInit {
     this.loadProfiles();
 
     this.router.navigate(['/']);
+
+
+    if (this.profileService.getCurrentProfileSettings()?.voiceCommands) {
+      this.speechService.checkPermission();
+    }
   }
 
   onFileChange(event: any): void {
