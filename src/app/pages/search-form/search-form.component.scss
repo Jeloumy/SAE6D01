@@ -1,0 +1,15 @@
+@keyframes slide-up {
+    0% {
+      transform: translateY(300%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .filter-slide {
+    animation: slide-up 5s ease-out;
+  }
+  

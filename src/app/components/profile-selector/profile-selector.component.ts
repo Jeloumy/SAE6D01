@@ -140,4 +140,8 @@ export class ProfileSelectorComponent implements OnInit {
       confirmButtonText: 'OK'
     });
   }
+
+  stopPropagation(event: MouseEvent): void {
+    event.stopPropagation();
+  }
 }

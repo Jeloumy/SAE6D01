@@ -59,6 +59,15 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
     }
   }
 
+  
+
+  onRadioChange(size: string) {
+    this.preferences!.textSize = size; // Update textSize based on selected radio button
+    // Additional logic if needed
+  }
+
+  
+
   toggleHighContrast(event: any): void {
     this.highContrastEnabled = event.target.checked;
     this.updatePreferences('highContrast', this.highContrastEnabled);

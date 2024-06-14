@@ -52,13 +52,23 @@ export class ProfilePhotoComponent implements OnInit, OnDestroy {
   }
 
   closeProfileSelector(): void {
-    this.showModal = false;
+    if (!this.currentProfile) {
+      Swal.fire({
+        title: 'Aucun profil sélectionné',
+        text: 'Veuillez sélectionner un profil avant de fermer le sélecteur.',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      });
+    } else {
+      this.showModal = false;
+    }
   }
 
   onProfileSelected(profile: UserProfile): void {
     this.currentProfile = profile;
     this.photoPreview = profile.photo || null;
     this.profileService.setCurrentProfile(profile);
+    this.closeProfileSelector();
   }
 
   onProfileEdited(profile: UserProfile): void {
@@ -94,5 +104,21 @@ export class ProfilePhotoComponent implements OnInit, OnDestroy {
       };
     }
   }
-  
+
+  onBackdropClick(event: MouseEvent): void {
+    if (!this.currentProfile) {
+      Swal.fire({
+        title: 'Aucun profil sélectionné',
+        text: 'Veuillez sélectionner un profil avant de fermer le sélecteur.',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      });
+    } else {
+      this.closeProfileSelector();
+    }
+  }
+
+  stopPropagation(event: MouseEvent): void {
+    event.stopPropagation();
+  }
 }

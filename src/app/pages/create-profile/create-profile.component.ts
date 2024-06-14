@@ -27,6 +27,8 @@ export class CreateProfileComponent implements OnInit {
   handicapTypes: Handicap[] = [];
   photoPreview: string | ArrayBuffer | null = '';
 
+  private scrollInterval: any;
+
   constructor(
     private profileService: ProfileService,
     private router: Router
@@ -127,7 +129,6 @@ export class CreateProfileComponent implements OnInit {
       };
     }
   }
-  
 
   resetForm(): void {
     this.profile = {
@@ -149,5 +150,25 @@ export class CreateProfileComponent implements OnInit {
 
   updateSystemPreferences(preferences: SystemPreferences): void {
     this.systemPreferences = preferences;
+  }
+
+  startScrollingToTop() {
+    this.scrollInterval = setInterval(() => {
+      window.scrollBy(0, -10);
+    }, 50);
+  }
+
+  startScrollingToBottom() {
+    this.scrollInterval = setInterval(() => {
+      window.scrollBy(0, 10);
+    }, 50);
+  }
+
+  stopScrolling() {
+    clearInterval(this.scrollInterval);
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/']);
   }
 }

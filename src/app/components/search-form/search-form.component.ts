@@ -92,11 +92,8 @@ export class SearchFormComponent implements OnInit {
         geolocationData.longitude !== null
       ) {
         this.isLocationActive = true;
-        this.onLocationDetected();
-        this.setCommuneNameFromGeolocation(
-          geolocationData.latitude,
-          geolocationData.longitude
-        );
+        this.onLocationDetected(geolocationData as { latitude: number, longitude: number });  // Cast to ensure non-null
+        this.setCommuneNameFromGeolocation(geolocationData.latitude, geolocationData.longitude);
       }
     });
 
@@ -157,6 +154,7 @@ export class SearchFormComponent implements OnInit {
       }
     }
 
+    console.log('Filters before removing inactive:', filters); // Ajout de console.log
 
     // Si les dispositifs ou la géolocalisation sont désactivés, on les retire des filtres
     if (dispositifsFiltered.length === 0) {
@@ -169,13 +167,16 @@ export class SearchFormComponent implements OnInit {
       delete filters.radius;
     }
 
+    console.log('Filters:', filters); // Ajout de console.log
 
     this.accesLibreService.getErp(filters).subscribe((data) => {
       this.results = data;
       this.searchEvent.emit(data);
 
       // Mettre à jour les marqueurs sur la carte après la recherche
-      this.mapComponent.updateMarkers();
+      if (this.mapComponent) {
+        this.mapComponent.updateMarkers();
+      }
     });
 
     // Mettre à jour initialCommuneQuery après la recherche
@@ -193,7 +194,7 @@ export class SearchFormComponent implements OnInit {
     });
   }
 
-  onLocationDetected(): void {
+  onLocationDetected(geolocationData: { latitude: number; longitude: number }): void {
     this.isLocationActive = true;
     this.profileService.setIsLocationActive(this.isLocationActive);
     this.onSearch(); // Effectuez une nouvelle recherche avec les nouveaux filtres
@@ -213,15 +214,9 @@ export class SearchFormComponent implements OnInit {
   async getUserLocation(): Promise<void> {
     try {
       const position = await Geolocation.getCurrentPosition();
-      this.profileService.setGeolocationData(
-        position.coords.latitude,
-        position.coords.longitude
-      );
-      this.onLocationDetected();
-      await this.setCommuneNameFromGeolocation(
-        position.coords.latitude,
-        position.coords.longitude
-      ); // Ajout d'attente
+      this.profileService.setGeolocationData(position.coords.latitude, position.coords.longitude);
+      this.onLocationDetected(position.coords);
+      await this.setCommuneNameFromGeolocation(position.coords.latitude, position.coords.longitude); // Ajout d'attente
       this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position (${this.communeQuery})`; // Mettre à jour displayCommuneQuery
     } catch (error) {
       console.error('Geolocation error:', error);
@@ -275,6 +270,11 @@ export class SearchFormComponent implements OnInit {
         console.error('Error fetching communes:', error);
       }
     );
+  }
+
+  handleCommuneDetected(communeName: string): void {
+    this.communeQuery = communeName;
+    this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position (${communeName})`;
   }
 
   setSearchParams(searchQuery: string, communeQuery: string): void {
