@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class SearchComponent {
   searchResults: any;
-  showMap: boolean = true;
+  showMap: boolean = false;
 
   onSearchResults(results: any): void {
     this.searchResults = results;
@@ -19,5 +19,5 @@ export class SearchComponent {
 
   toggleView(): void {
     this.showMap = !this.showMap;
-  }
+  }  
 }
