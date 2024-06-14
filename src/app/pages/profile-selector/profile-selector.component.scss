@@ -1,21 +1,18 @@
-.profile-list-container {
-    max-height: 60vh; // Définir une hauteur maximale pour la liste
-    overflow-y: auto; // Permettre le défilement vertical
-  }
+:host {
+    .fixed {
+      z-index: 50;
+    }
   
-  .profile-list-container ul li {
-    border-radius: 0.5rem; /* Arrondir les bords des profils */
-  }
-  
-  .profile-list-container ul li .btn-square {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .profile-list-container ul li .btn-circle {
-    border-radius: 50%;
+    .relative {
+      z-index: 50;
+    }
+    
+    .bg-black {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .bg-white {
+      background-color: #fff;
+    }
   }
   

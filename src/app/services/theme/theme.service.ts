@@ -1,28 +1,25 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
   private readonly THEME_KEY = 'selected-theme';
-  private readonly BW_THEME_KEY = 'bw-theme';
+  private readonly themeSubject = new BehaviorSubject<string>(this.getSavedTheme());
+
+  themeChange = this.themeSubject.asObservable();
 
   constructor() {
-    const savedTheme = localStorage.getItem(this.THEME_KEY);
+    const savedTheme = this.getSavedTheme();
     if (savedTheme) {
       this.setTheme(savedTheme);
-    } else {
-      this.initializeTheme();
-    }
-
-    const bwThemeEnabled = localStorage.getItem(this.BW_THEME_KEY) === 'true';
-    if (bwThemeEnabled) {
-      this.enableBlackAndWhiteTheme();
     }
   }
 
   initializeTheme(preferences?: any): void {
     let darkModeEnabled = false;
+    let highContrastEnabled = false;
 
     if (preferences?.systemPreferences?.darkMode !== undefined) {
       darkModeEnabled = preferences.systemPreferences.darkMode;
@@ -30,38 +27,30 @@ export class ThemeService {
       darkModeEnabled = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
 
-    this.setTheme(darkModeEnabled);
-  }
-
-  setTheme(theme: string): void;
-  setTheme(isDarkMode: boolean): void;
-  setTheme(themeOrIsDarkMode: string | boolean): void {
-    let theme: string;
-    if (typeof themeOrIsDarkMode === 'boolean') {
-      theme = themeOrIsDarkMode ? 'dark' : 'light';
-    } else {
-      theme = themeOrIsDarkMode;
+    if (preferences?.systemPreferences?.highContrast !== undefined) {
+      highContrastEnabled = preferences.systemPreferences.highContrast;
     }
 
+    if (highContrastEnabled) {
+      this.setTheme('contrast');
+    } else if (darkModeEnabled) {
+      this.setTheme('dark');
+    } else {
+      this.setTheme('light');
+    }
+  }
+
+  setTheme(theme: string): void {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(this.THEME_KEY, theme);
+    this.themeSubject.next(theme); // Notify subscribers of the theme change
   }
 
   getTheme(): string {
     return localStorage.getItem(this.THEME_KEY) || 'light';
   }
 
-  enableBlackAndWhiteTheme(): void {
-    document.documentElement.classList.add('bw-theme');
-    localStorage.setItem(this.BW_THEME_KEY, 'true');
-  }
-
-  disableBlackAndWhiteTheme(): void {
-    document.documentElement.classList.remove('bw-theme');
-    localStorage.setItem(this.BW_THEME_KEY, 'false');
-  }
-
-  isBlackAndWhiteThemeEnabled(): boolean {
-    return localStorage.getItem(this.BW_THEME_KEY) === 'true';
+  private getSavedTheme(): string {
+    return localStorage.getItem(this.THEME_KEY) || 'light';
   }
 }

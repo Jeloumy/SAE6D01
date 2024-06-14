@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Inp
 import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import Swal from 'sweetalert2';
+import { ThemeService } from '../../services/theme/theme.service';
+import { ProfileService } from '../../services/profile/profile.service'; // Import ProfileService
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -23,19 +26,44 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
     }),
+    'Stadia.StamenTonerLite': L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen-toner-lite/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+    }),
   };
-  
+
+  private themeSubscription: Subscription | undefined;
+  private profileSubscription: Subscription | undefined;
+
+  constructor(private themeService: ThemeService, private profileService: ProfileService) {} // Inject ProfileService
+
   ngOnInit(): void {
-    this.setThemeLayer();
+    this.themeSubscription = this.themeService.themeChange.subscribe(theme => {
+      this.setMapLayer(theme);
+    });
+    this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
+      if (profile) {
+        const theme = profile.systemPreferences?.highContrast ? 'contrast' :
+                      profile.systemPreferences?.darkMode ? 'dark' : 'light';
+        this.themeService.setTheme(theme);
+      }
+    });
+    this.applyCurrentTheme(); // Appliquer le thème actuel lors de l'initialisation
   }
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.applyCurrentTheme(); 
   }
 
   ngOnDestroy(): void {
     if (this.map) {
       this.map.remove();
+    }
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
     }
   }
 
@@ -58,15 +86,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       minZoom: 5,
     }).setView(franceCenter, 5);
 
-    for (const layerName in this.layers) {
-      this.layers[layerName].addTo(this.map);
-    }
-
-    this.setThemeLayer();
-
-    const leafletContainer = document.querySelector('.leaflet-container');
-    leafletContainer?.classList.add('bg-base-100');
-
     this.markersLayer = L.layerGroup().addTo(this.map);
     this.layerControl = L.control.layers(this.layers).addTo(this.map);
 
@@ -82,16 +101,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
   }
 
-  private setThemeLayer(): void {
-    const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
-    
-    if (this.map) {
-      this.map.eachLayer((layer) => {
-        this.map.removeLayer(layer);
-      });
-      defaultLayer.addTo(this.map);
-    }
+  private applyCurrentTheme(): void {
+    const currentTheme = this.themeService.getTheme();
+    this.setMapLayer(currentTheme);
   }
 
   public updateMarkers(): void {
@@ -157,10 +169,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       'vetement': 'fa-shirt',
       'photo': 'fa-camera',
       'beauté': 'fa-spa',
-      'jeu vidéo': "fa-gamepad",
-      'chocolatier': "fa-candy-cane",
-      'confisier': "fa-candy-cane",
-      'bijou': "fa-gem",
+      'jeu vidéo': 'fa-gamepad',
+      'chocolatier': 'fa-candy-cane',
+      'confisier': 'fa-candy-cane',
+      'bijou': 'fa-gem',
       'restauration rapide': 'fa-burger',
       'opticien': 'fa-glasses',
       'Auto école': 'fa-car-side',
@@ -168,16 +180,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       'coiffeur': 'fa-scissors',
     };
 
-    let found = false;
-
     for (const pattern in icons) {
       const regex = new RegExp(pattern); // Convertir la chaîne de caractères en regex
       if (regex.test(activity.toLowerCase())) {
-        found = true;
         return '<span class="fa-stack fa-xl"> <i class="fa-solid fa-location-pin fa-stack-2x" style="color: #134e4a;"></i> <i class="fa-solid ' + icons[pattern] + ' fa-stack-1x fa-inverse" style="line-height: 1; margin: 10% 10% 0 0; font-size: 85%"></i> </span>';
       }
     }
-    return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;">';
+    return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;"></i>';
   }
 
   flyToLocation(lat: number, lon: number): void {
@@ -195,7 +204,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   onLocationToggled(isLocationActive: boolean): void {
-    console.log('Location toggled:', isLocationActive);
     if (isLocationActive) {
       this.getUserLocation();
     }
@@ -204,7 +212,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   async getUserLocation(): Promise<void> {
     try {
       const position = await Geolocation.getCurrentPosition();
-      console.log('User location detected:', position.coords);
       this.flyToLocation(position.coords.latitude, position.coords.longitude);
       this.locationDetected.emit();
     } catch (error) {
@@ -216,16 +223,130 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     Swal.fire({
       title: 'Bienvenue dans notre application!',
       html: `
-        <h3>Comment utiliser l'application:</h3>
-        <ul style="text-align: left;">
-          <li>1. Utilisez le bouton de géolocalisation pour détecter votre position.</li>
-          <li>2. Sélectionnez votre profil en cliquant sur la photo de profil.</li>
-          <li>3. Pour modifier ou supprimer un profil, cliquez sur les boutons correspondants dans la sélection de profil.</li>
-          <li>4. Pour créer un nouveau profil, cliquez sur le bouton "+ ajouter" en bas du sélecteur de profil.</li>
-        </ul>
+        <div id="modal-content" style="max-height: 40vh; overflow-y: auto; padding-right: 20px;">
+          <h3>Comment utiliser l'application:</h3>
+          <ul style="text-align: left; line-height: 1.6;">
+            <li><strong>1.</strong> Utilisez le <strong>bouton de géolocalisation</strong> pour détecter votre position.</li>
+            <li><strong>2.</strong> Sélectionnez votre profil en cliquant sur la <strong>photo de profil</strong>.</li>
+            <li><strong>3.</strong> Pour <strong>modifier ou supprimer un profil</strong>, cliquez sur les boutons correspondants dans la sélection de profil.</li>
+            <li><strong>4.</strong> Pour <strong>créer un nouveau profil</strong>, cliquez sur le bouton <strong>"+ ajouter"</strong> en bas du sélecteur de profil.</li>
+            <li><strong>5.</strong> Pour effectuer une <strong>recherche</strong>, tapez des mots-clés dans la barre de recherche.</li>
+            <li><strong>6.</strong> Pour une <strong>recherche avancée</strong>, cliquez sur le bouton <strong>"plus de filtres"</strong>. Notez que des pré-filtres peuvent être appliqués selon le profil sélectionné.</li>
+            <li><strong>7.</strong> Vous pouvez <strong>zoomer</strong> et <strong>dézoomer</strong> la carte.</li>
+            <li><strong>8.</strong> Vous pouvez également <strong>changer de calque</strong> sur la carte.</li>
+            <li><strong>9.</strong> Affichez les <strong>résultats sous forme de filtres</strong> pour mieux organiser les informations.</li>
+            <li><strong>10.</strong> Cliquez sur un <strong>résultat</strong> pour afficher une page plus détaillée du lieu.</li>
+          </ul>
+        </div>
       `,
       icon: 'info',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'modal-custom'
+      }
+    }).then(() => {
+      // Remove scroll buttons when modal is closed
+      const scrollUpButton = document.getElementById('scroll-up');
+      const scrollDownButton = document.getElementById('scroll-down');
+      if (scrollUpButton) scrollUpButton.remove();
+      if (scrollDownButton) scrollDownButton.remove();
     });
+  
+    // Add scroll buttons dynamically
+    setTimeout(() => {
+      const modalPopup = document.querySelector('.swal2-popup');
+      if (modalPopup) {
+        const scrollUpButton = document.createElement('button');
+        scrollUpButton.id = 'scroll-up';
+        scrollUpButton.className = 'btn  bg-accent';
+        scrollUpButton.textContent = '↑';
+        scrollUpButton.style.position = 'fixed';
+        scrollUpButton.style.left = 'calc(50% + 300px)'; // Adjust position as needed
+        scrollUpButton.style.top = 'calc(50% - 60px)';
+        scrollUpButton.style.zIndex = '9999'; // Ensure the button is on top of everything
+        scrollUpButton.style.width = '50px'; // Increase button size
+        scrollUpButton.style.height = '50px'; // Increase button size
+        scrollUpButton.style.fontSize = '30px'; // Increase font size
+  
+        const scrollDownButton = document.createElement('button');
+        scrollDownButton.id = 'scroll-down';
+        scrollDownButton.className = 'btn  bg-accent';
+        scrollDownButton.textContent = '↓';
+        scrollDownButton.style.position = 'fixed';
+        scrollDownButton.style.left = 'calc(50% + 300px)'; // Adjust position as needed
+        scrollDownButton.style.top = 'calc(50% + 20px)';
+        scrollDownButton.style.zIndex = '9999'; // Ensure the button is on top of everything
+        scrollDownButton.style.width = '50px'; // Increase button size
+        scrollDownButton.style.height = '50px'; // Increase button size
+        scrollDownButton.style.fontSize = '30px'; // Increase font size
+  
+        document.body.appendChild(scrollUpButton);
+        document.body.appendChild(scrollDownButton);
+  
+        // Add scroll event listeners
+        const modalContent = document.getElementById('modal-content');
+        if (modalContent) {
+          let scrollInterval: any;
+  
+          scrollUpButton.addEventListener('mousedown', () => {
+            scrollInterval = setInterval(() => {
+              modalContent.scrollBy(0, -10);
+            }, 50);
+          });
+  
+          scrollDownButton.addEventListener('mousedown', () => {
+            scrollInterval = setInterval(() => {
+              modalContent.scrollBy(0, 10);
+            }, 50);
+          });
+  
+          document.addEventListener('mouseup', () => {
+            clearInterval(scrollInterval);
+          });
+  
+          scrollUpButton.addEventListener('mouseleave', () => {
+            clearInterval(scrollInterval);
+          });
+  
+          scrollDownButton.addEventListener('mouseleave', () => {
+            clearInterval(scrollInterval);
+          });
+        }
+      }
+    }, 0); // Delay to ensure the modal is fully rendered
+  }
+  
+  
+  
+  
+  
+  
+
+
+  setMapLayer(theme: string): void {
+    console.log('Changement de thème détecté:', theme); // Log pour le debug
+    if (theme === 'dark') {
+      this.changeLayer(this.layers['CartoDB Dark']);
+    } else if (theme === 'contrast') {
+      this.changeLayer(this.layers['Stadia.StamenTonerLite']);
+    } else {
+      this.changeLayer(this.layers['OpenStreetMap']);
+    }
+  }
+
+  private changeLayer(layer: L.TileLayer): void {
+    console.log("Changement de la couche pour:", layer);
+    if (!this.map) {
+      return;
+    }
+    Object.values(this.layers).forEach(l => {
+      console.log("Vérification de la couche:", l);
+      if (this.map.hasLayer(l)) {
+        this.map.removeLayer(l);
+      }
+    });
+    layer.addTo(this.map);
   }
 }
+
+

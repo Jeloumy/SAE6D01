@@ -1,29 +1,51 @@
 <div class="form-control">
-  <!-- Thème -->
+  <!-- Thème Sombre -->
   <label class="label">
-    <span class="label-text">Thème</span>
+    <span class="label-text">Thème Sombre</span>
     <input type="checkbox" [checked]="darkModeEnabled" (change)="onThemeChange($event, 'darkMode')" class="toggle theme-controller"/>
+  </label>
+
+  <!-- Thème Contrasté -->
+  <label class="label">
+    <span class="label-text">Thème Contrasté</span>
+    <input type="checkbox" [checked]="highContrastEnabled" (change)="toggleHighContrast($event)" class="toggle"/>
   </label>
 
   <!-- Taille du Texte -->
   <label class="label">
     <span class="label-text">Taille du texte</span>
-    <select [value]="preferences?.textSize ?? 'medium'" (change)="onSelectChange($event, 'textSize')" class="select select-bordered">
-      <option value="small">Petit</option>
-      <option value="medium">Moyen</option>
-      <option value="large">Grand</option>
-    </select>
-  </label>
+    <div class="radio-group">
+        <label class="radio">
+            <input type="radio" [value]="'small'" [checked]="preferences?.textSize === 'small'" (change)="onRadioChange('small')"> Petit
+        </label>
+        <label class="radio">
+            <input type="radio" [value]="'medium'" [checked]="preferences?.textSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
+        </label>
+        <label class="radio">
+            <input type="radio" [value]="'large'" [checked]="preferences?.textSize === 'large'" (change)="onRadioChange('large')"> Grand
+        </label>
+    </div>
+</label>
 
   <!-- Taille des Boutons -->
   <label class="label">
     <span class="label-text">Taille des boutons</span>
-    <select [value]="preferences?.buttonSize ?? 'medium'" (change)="onSelectChange($event, 'buttonSize')" class="select select-bordered">
-      <option value="small">Petit</option>
-      <option value="medium">Moyen</option>
-      <option value="large">Grand</option>
-    </select>
-  </label>
+    <div class="radio-group">
+        <label class="radio">
+            <input type="radio" [value]="'small'" [checked]="preferences?.buttonSize === 'small'" (change)="onRadioChange('small')"> Petit
+        </label>
+        <label class="radio">
+            <input type="radio" [value]="'medium'" [checked]="preferences?.buttonSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
+        </label>
+        <label class="radio">
+            <input type="radio" [value]="'large'" [checked]="preferences?.buttonSize === 'large'" (change)="onRadioChange('large')"> Grand
+        </label>
+    </div>
+</label>
+
+
+
+  
 
   <!-- Lecture d'Écran -->
   <label class="label">
