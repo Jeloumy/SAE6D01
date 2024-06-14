@@ -33,4 +33,15 @@
   }
 .right-10-percent{
   right: 5%;
-}  
+}
+
+.modal-custom {
+  max-height: 80vh;
+  overflow-y: hidden;
+  padding: 20px;
+}
+
+#scroll-up, #scroll-down {
+  display: block;
+  margin: 20px auto;
+}
