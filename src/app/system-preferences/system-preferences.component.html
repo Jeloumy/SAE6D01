@@ -14,33 +14,21 @@
   <!-- Taille du Texte -->
   <label class="label">
     <span class="label-text">Taille du texte</span>
-    <div class="radio-group">
-        <label class="radio">
-            <input type="radio" [value]="'small'" [checked]="preferences?.textSize === 'small'" (change)="onRadioChange('small')"> Petit
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'medium'" [checked]="preferences?.textSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'large'" [checked]="preferences?.textSize === 'large'" (change)="onRadioChange('large')"> Grand
-        </label>
-    </div>
+    <select [value]="preferences?.textSize ?? 'medium'" (change)="onSelectChange($event, 'textSize')" class="select select-bordered">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
 </label>
 
   <!-- Taille des Boutons -->
   <label class="label">
     <span class="label-text">Taille des boutons</span>
-    <div class="radio-group">
-        <label class="radio">
-            <input type="radio" [value]="'small'" [checked]="preferences?.buttonSize === 'small'" (change)="onRadioChange('small')"> Petit
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'medium'" [checked]="preferences?.buttonSize === 'medium'" (change)="onRadioChange('medium')"> Moyen
-        </label>
-        <label class="radio">
-            <input type="radio" [value]="'large'" [checked]="preferences?.buttonSize === 'large'" (change)="onRadioChange('large')"> Grand
-        </label>
-    </div>
+    <select [value]="preferences?.buttonSize ?? 'medium'" (change)="onSelectChange($event, 'buttonSize')" class="select select-bordered">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
 </label>
 
 
