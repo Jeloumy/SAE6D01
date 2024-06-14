@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Inp
 import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import Swal from 'sweetalert2';
-import { ThemeService } from '../../services/theme/theme.service'; // Import ThemeService
+import { ThemeService } from '../../services/theme/theme.service';
+import { ProfileService } from '../../services/profile/profile.service'; // Import ProfileService
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,12 +32,20 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   };
 
   private themeSubscription: Subscription | undefined;
+  private profileSubscription: Subscription | undefined;
 
-  constructor(private themeService: ThemeService) {} // Inject ThemeService
+  constructor(private themeService: ThemeService, private profileService: ProfileService) {} // Inject ProfileService
 
   ngOnInit(): void {
     this.themeSubscription = this.themeService.themeChange.subscribe(theme => {
       this.setMapLayer(theme);
+    });
+    this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
+      if (profile) {
+        const theme = profile.systemPreferences?.highContrast ? 'contrast' :
+                      profile.systemPreferences?.darkMode ? 'dark' : 'light';
+        this.themeService.setTheme(theme);
+      }
     });
     this.applyCurrentTheme(); // Appliquer le thème actuel lors de l'initialisation
   }
@@ -52,6 +61,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
+    }
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
     }
   }
 
