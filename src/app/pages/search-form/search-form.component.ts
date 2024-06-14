@@ -28,6 +28,7 @@ export class SearchFormComponent implements OnInit {
   private searchTerms = new Subject<string>();
   isCommuneInputFocused: boolean = false;
   initialCommuneQuery: string = '';
+  showFilters: boolean =false;
 
   @Output() searchEvent = new EventEmitter<any>();
   @ViewChild(MapComponent) mapComponent!: MapComponent;
@@ -67,6 +68,9 @@ export class SearchFormComponent implements OnInit {
     private communeService: CommuneService
   ) {}
 
+  moreFilters(): void{
+    this.showFilters = !this.showFilters;
+  }
   ngOnInit(): void {
     this.loadProfilePreferences();
     this.searchTerms
