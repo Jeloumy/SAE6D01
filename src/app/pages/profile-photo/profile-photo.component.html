@@ -12,10 +12,15 @@
   <input type="file" id="fileInput" (change)="onFileChange($event)" class="hidden">
 
   <!-- Modal -->
-  <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <button class="absolute top-0 right-0 m-4 text-2xl" (click)="closeProfileSelector()">×</button>
-      <app-profile-selector (profileSelected)="onProfileSelected($event)" (profileEdited)="onProfileEdited($event)"
-        (profileDeleted)="onProfileDeleted($event)" (close)="closeProfileSelector()">
+  <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+       (click)="onBackdropClick($event)">
+    <div class="relative bg-white p-6 rounded shadow-lg z-50" (click)="stopPropagation($event)">
+      <app-profile-selector 
+        (profileSelected)="onProfileSelected($event)" 
+        (profileEdited)="onProfileEdited($event)"
+        (profileDeleted)="onProfileDeleted($event)" 
+        (close)="closeProfileSelector()">
       </app-profile-selector>
     </div>
+  </div>
 </div>

@@ -25,10 +25,13 @@ export class EditProfileComponent implements OnInit {
     systemPreferences: {} as SystemPreferences,
   };
 
+  private scrollInterval: any;
+  
   constructor(
     private profileService: ProfileService,
     private router: Router,
     private route: ActivatedRoute // Inject ActivatedRoute
+    
   ) {}
 
   ngOnInit(): void {
@@ -107,12 +110,20 @@ export class EditProfileComponent implements OnInit {
     this.systemPreferences = preferences;
   }
 
-  scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  startScrollingToTop() {
+    this.scrollInterval = setInterval(() => {
+      window.scrollBy(0, -10);
+    }, 50);
   }
 
-  scrollToBottom() {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  startScrollingToBottom() {
+    this.scrollInterval = setInterval(() => {
+      window.scrollBy(0, 10);
+    }, 50);
+  }
+
+  stopScrolling() {
+    clearInterval(this.scrollInterval);
   }
 
   navigateToHome() {
