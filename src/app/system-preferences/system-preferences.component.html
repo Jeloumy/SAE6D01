@@ -1,11 +1,17 @@
 <div class="form-control">
-  <!-- Thème -->
+  <!-- Thème Sombre -->
   <label class="label">
-    <span class="label-text">Thème</span>
+    <span class="label-text">Thème Sombre</span>
     <input type="checkbox" [checked]="darkModeEnabled" (change)="onThemeChange($event, 'darkMode')" class="toggle theme-controller"/>
   </label>
 
-  <!-- Taille du texte -->
+  <!-- Thème Contrasté -->
+  <label class="label">
+    <span class="label-text">Thème Contrasté</span>
+    <input type="checkbox" [checked]="highContrastEnabled" (change)="toggleHighContrast($event)" class="toggle"/>
+  </label>
+
+  <!-- Taille du Texte -->
   <label class="label">
     <span class="label-text">Taille du texte</span>
     <div class="radio-group">

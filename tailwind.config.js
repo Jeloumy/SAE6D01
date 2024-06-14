@@ -28,6 +28,17 @@ module.exports = {
           'info-content':'#000', //White to Black
         },
       },
+      {
+        dark:{
+          'primary': '#1e293b',
+          'neutral': '#1e293b',
+          'success': '#134E4A',
+          'success-content':'#ffffff',
+          'info': '#1e293b',
+          'info-content':'#ffffff',
+          'accent':'#1e293b',
+        },
+      }
     ],
   },
   important: true,
