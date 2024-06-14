@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
   private readonly THEME_KEY = 'selected-theme';
-  private readonly BW_THEME_KEY = 'bw-theme';
+  private readonly CONTRAST_THEME_KEY = 'contrast-theme';
+  private themeSubject = new BehaviorSubject<string>(this.getSavedTheme());
+
+  themeChange = this.themeSubject.asObservable();
 
   constructor() {
     const savedTheme = localStorage.getItem(this.THEME_KEY);
@@ -15,9 +19,11 @@ export class ThemeService {
       this.initializeTheme();
     }
 
-    const bwThemeEnabled = localStorage.getItem(this.BW_THEME_KEY) === 'true';
-    if (bwThemeEnabled) {
-      this.enableBlackAndWhiteTheme();
+    const contrastThemeEnabled = localStorage.getItem(this.CONTRAST_THEME_KEY) === 'true';
+    if (contrastThemeEnabled) {
+      this.enableHighContrastTheme();
+    } else {
+      this.disableHighContrastTheme();
     }
   }
 
@@ -45,23 +51,28 @@ export class ThemeService {
 
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(this.THEME_KEY, theme);
+    this.themeSubject.next(theme);  // Notify subscribers of the theme change
   }
 
   getTheme(): string {
     return localStorage.getItem(this.THEME_KEY) || 'light';
   }
 
-  enableBlackAndWhiteTheme(): void {
-    document.documentElement.classList.add('bw-theme');
-    localStorage.setItem(this.BW_THEME_KEY, 'true');
+  enableHighContrastTheme(): void {
+    document.body.classList.add('high-contrast');
+    localStorage.setItem(this.CONTRAST_THEME_KEY, 'true');
   }
 
-  disableBlackAndWhiteTheme(): void {
-    document.documentElement.classList.remove('bw-theme');
-    localStorage.setItem(this.BW_THEME_KEY, 'false');
+  disableHighContrastTheme(): void {
+    document.body.classList.remove('high-contrast');
+    localStorage.setItem(this.CONTRAST_THEME_KEY, 'false');
   }
 
-  isBlackAndWhiteThemeEnabled(): boolean {
-    return localStorage.getItem(this.BW_THEME_KEY) === 'true';
+  isHighContrastThemeEnabled(): boolean {
+    return localStorage.getItem(this.CONTRAST_THEME_KEY) === 'true';
+  }
+
+  private getSavedTheme(): string {
+    return localStorage.getItem(this.THEME_KEY) || 'light';
   }
 }

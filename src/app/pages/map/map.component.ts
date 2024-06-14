@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Inp
 import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import Swal from 'sweetalert2';
+import { ThemeService } from '../../services/theme/theme.service'; // Import ThemeService
 
 @Component({
   selector: 'app-map',
@@ -23,14 +24,23 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     'CartoDB Dark': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
     }),
+    'Stadia.StamenTonerLite': L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen-toner-lite/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+    }),
   };
-  
+
+  constructor(private themeService: ThemeService) {} // Inject ThemeService
+
   ngOnInit(): void {
-    this.setThemeLayer();
+    // Listen for theme changes
+    this.themeService.themeChange.subscribe(theme => {
+      this.setMapLayer(theme);
+    });
   }
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.applyCurrentTheme();
   }
 
   ngOnDestroy(): void {
@@ -58,15 +68,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       minZoom: 5,
     }).setView(franceCenter, 5);
 
-    for (const layerName in this.layers) {
-      this.layers[layerName].addTo(this.map);
-    }
-
-    this.setThemeLayer();
-
-    const leafletContainer = document.querySelector('.leaflet-container');
-    leafletContainer?.classList.add('bg-base-100');
-
     this.markersLayer = L.layerGroup().addTo(this.map);
     this.layerControl = L.control.layers(this.layers).addTo(this.map);
 
@@ -82,16 +83,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }
   }
 
-  private setThemeLayer(): void {
-    const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
-    
-    if (this.map) {
-      this.map.eachLayer((layer) => {
-        this.map.removeLayer(layer);
-      });
-      defaultLayer.addTo(this.map);
-    }
+  private applyCurrentTheme(): void {
+    const currentTheme = this.themeService.getTheme();
+    this.setMapLayer(currentTheme);
   }
 
   public updateMarkers(): void {
@@ -157,10 +151,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       'vetement': 'fa-shirt',
       'photo': 'fa-camera',
       'beauté': 'fa-spa',
-      'jeu vidéo': "fa-gamepad",
-      'chocolatier': "fa-candy-cane",
-      'confisier': "fa-candy-cane",
-      'bijou': "fa-gem",
+      'jeu vidéo': 'fa-gamepad',
+      'chocolatier': 'fa-candy-cane',
+      'confisier': 'fa-candy-cane',
+      'bijou': 'fa-gem',
       'restauration rapide': 'fa-burger',
       'opticien': 'fa-glasses',
       'Auto école': 'fa-car-side',
@@ -168,16 +162,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       'coiffeur': 'fa-scissors',
     };
 
-    let found = false;
-
     for (const pattern in icons) {
       const regex = new RegExp(pattern); // Convertir la chaîne de caractères en regex
       if (regex.test(activity.toLowerCase())) {
-        found = true;
         return '<span class="fa-stack fa-xl"> <i class="fa-solid fa-location-pin fa-stack-2x" style="color: #134e4a;"></i> <i class="fa-solid ' + icons[pattern] + ' fa-stack-1x fa-inverse" style="line-height: 1; margin: 10% 10% 0 0; font-size: 85%"></i> </span>';
       }
     }
-    return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;">';
+    return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;"></i>';
   }
 
   flyToLocation(lat: number, lon: number): void {
@@ -195,7 +186,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   onLocationToggled(isLocationActive: boolean): void {
-    console.log('Location toggled:', isLocationActive);
     if (isLocationActive) {
       this.getUserLocation();
     }
@@ -204,7 +194,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   async getUserLocation(): Promise<void> {
     try {
       const position = await Geolocation.getCurrentPosition();
-      console.log('User location detected:', position.coords);
       this.flyToLocation(position.coords.latitude, position.coords.longitude);
       this.locationDetected.emit();
     } catch (error) {
@@ -227,5 +216,24 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       icon: 'info',
       confirmButtonText: 'OK'
     });
+  }
+
+  setMapLayer(theme: string): void {
+    if (theme === 'dark') {
+      this.changeLayer(this.layers['CartoDB Dark']);
+    } else if (theme === 'contrast') {
+      this.changeLayer(this.layers['Stadia.StamenTonerLite']);
+    } else {
+      this.changeLayer(this.layers['OpenStreetMap']);
+    }
+  }
+
+  private changeLayer(layer: L.TileLayer): void {
+    Object.values(this.layers).forEach(l => {
+      if (this.map.hasLayer(l)) {
+        this.map.removeLayer(l);
+      }
+    });
+    layer.addTo(this.map);
   }
 }
