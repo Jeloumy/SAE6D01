@@ -1,15 +1,14 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-geolocation-dialog',
   templateUrl: './geolocation-dialog.component.html',
+  styleUrls: ['./geolocation-dialog.component.scss']
 })
 export class GeolocationDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<GeolocationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+
+  constructor(public dialogRef: MatDialogRef<GeolocationDialogComponent>) {}
 
   onAccept(): void {
     this.dialogRef.close(true);

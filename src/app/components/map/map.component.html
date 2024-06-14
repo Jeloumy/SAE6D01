@@ -1,14 +1,4 @@
-<div #map class="relative flex flex-1 w-screen">
-  <app-geolocation-button
-    (locationDetected)="locationDetected.emit()"
-    (locationToggled)="onLocationToggled($event)"
-    class="absolute z-10 bottom-4 right-4"
-  ></app-geolocation-button>
-
-  <div class="absolute z-10 flex items-center top-4 right-20">
-    <app-profile-photo></app-profile-photo>
-    <button class="ml-2 btn btn-info btn-square" (click)="showTutorial()">
-      <i class="fas fa-info"></i>
-    </button>
+<div class="h-full" role="region" aria-label="Carte interactive affichant des points d'intérêt">
+    <div #map class="flex flex-1 w-screen h-full" role="application" aria-label="Carte"></div>
   </div>
-</div>
+  
