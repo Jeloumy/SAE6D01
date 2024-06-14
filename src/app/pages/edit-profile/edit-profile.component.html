@@ -44,7 +44,7 @@
           <span class="font-bold label-text">Nom d'utilisateur</span>
         </label>
         <input type="text" [(ngModel)]="editingProfile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-          required class="w-full input input-bordered text-black border-success-content" #username="ngModel" aria-required="true">
+          required class="w-full input input-bordered text-black border-success-content bg-neutral" #username="ngModel" aria-required="true">
         <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
           Le nom d'utilisateur est requis.
         </div>
