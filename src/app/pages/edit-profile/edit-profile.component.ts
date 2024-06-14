@@ -106,4 +106,16 @@ export class EditProfileComponent implements OnInit {
   updateSystemPreferences(preferences: SystemPreferences): void {
     this.systemPreferences = preferences;
   }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/']);
+  }
 }
