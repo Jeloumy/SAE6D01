@@ -9,11 +9,12 @@ export class ProfileService {
   private profilesList: UserProfile[] = [];
   private currentProfileSubject: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
   currentProfile$: Observable<UserProfile | null> = this.currentProfileSubject.asObservable();
-  
+  private preferencesSubject: BehaviorSubject<SystemPreferences | null> = new BehaviorSubject<SystemPreferences | null>(null);
+  preferences$: Observable<SystemPreferences | null> = this.preferencesSubject.asObservable();
+
   private geolocationData: { latitude: number | null, longitude: number | null } | null = null;
   private geolocationSubject = new BehaviorSubject<{ latitude: number | null, longitude: number | null }>({ latitude: null, longitude: null });
 
-  // Ajout d'un BehaviorSubject pour isLocationActive
   private isLocationActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor() { 
@@ -24,7 +25,7 @@ export class ProfileService {
   setGeolocationData(latitude: number | null, longitude: number | null): void {
     this.geolocationData = { latitude, longitude };
     localStorage.setItem('geolocationData', JSON.stringify(this.geolocationData));
-    this.geolocationSubject.next(this.geolocationData); // Émettre les nouvelles coordonnées
+    this.geolocationSubject.next(this.geolocationData);
   }
 
   getGeolocationData(): { latitude: number | null, longitude: number | null } | null {
@@ -38,10 +39,9 @@ export class ProfileService {
   }
 
   getGeolocationUpdates() {
-    return this.geolocationSubject.asObservable(); // Retourner l'observable pour les mises à jour de la géolocalisation
+    return this.geolocationSubject.asObservable();
   }
 
-  // Méthodes pour isLocationActive
   setIsLocationActive(isActive: boolean): void {
     this.isLocationActiveSubject.next(isActive);
   }
@@ -110,7 +110,7 @@ export class ProfileService {
 
   deleteProfile(profileId: number): void {
     this.profilesList = this.profilesList.filter(profile => profile.id !== profileId);
-    this.reassignIds(); // Réassigne les IDs pour maintenir une séquence continue
+    this.reassignIds();
     this.saveProfilesListToStorage();
     if (this.currentProfileSubject.value?.id === profileId) {
       this.setCurrentProfile(null);
@@ -122,6 +122,9 @@ export class ProfileService {
     if (index !== -1) {
       this.profilesList[index] = profile;
       this.saveProfilesListToStorage();
+      if (profile.id === this.currentProfileSubject.value?.id) {
+        this.setCurrentProfile(profile);
+      }
     }
   }
 
@@ -141,6 +144,7 @@ export class ProfileService {
     if (profileData) {
       const profile = JSON.parse(profileData);
       this.currentProfileSubject.next(profile);
+      this.preferencesSubject.next(profile.systemPreferences || {});
     }
   }
   
@@ -148,8 +152,10 @@ export class ProfileService {
     this.currentProfileSubject.next(profile);
     if (profile) {
       localStorage.setItem('currentProfile', JSON.stringify(profile));
+      this.preferencesSubject.next(profile.systemPreferences || {});
     } else {
       localStorage.removeItem('currentProfile');
+      this.preferencesSubject.next(null);
     }
   }
 
@@ -158,7 +164,7 @@ export class ProfileService {
   }
 
   getCurrentProfileSettings(): SystemPreferences | null {
-    return this.currentProfileSubject.value?.systemPreferences || null;
+    return this.currentProfileSubject.value?.systemPreferences || {};
   }
 
   private getNextId(): number {

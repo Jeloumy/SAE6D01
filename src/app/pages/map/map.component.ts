@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-map',
@@ -14,7 +15,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
 
   private map!: L.Map;
   private markersLayer!: L.LayerGroup;
-  private layerControl: L.Control.Layers = L.control.layers();
+  private layerControl!: L.Control.Layers;
   private layers: { [name: string]: L.TileLayer } = {
     OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -56,7 +57,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }).setView(franceCenter, 5);
 
     for (const layerName in this.layers) {
-      this.layerControl.addBaseLayer(this.layers[layerName], layerName);
+      this.layers[layerName].addTo(this.map);
     }
 
     const theme = document.documentElement.getAttribute('data-theme');
@@ -65,10 +66,19 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     const leafletContainer = document.querySelector('.leaflet-container');
     leafletContainer?.classList.add('bg-base-100');
 
-    this.layerControl.addTo(this.map);
-    defaultLayer.addTo(this.map);
-
     this.markersLayer = L.layerGroup().addTo(this.map);
+    this.layerControl = L.control.layers(this.layers).addTo(this.map);
+
+    // Move the control to a custom position
+    const controlContainer = this.layerControl.getContainer();
+    if (controlContainer) {
+      controlContainer.style.position = 'absolute';
+      controlContainer.style.top = '100px'; // Adjust this value to position it lower
+      controlContainer.style.right = '10px'; // Adjust this value to position it to the right
+
+      const mapContainer = this.mapContainer.nativeElement;
+      mapContainer.appendChild(controlContainer);
+    }
   }
 
   public updateMarkers(): void {
@@ -174,5 +184,22 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     } catch (error) {
       console.error('Geolocation error:', error);
     }
+  }
+
+  showTutorial(): void {
+    Swal.fire({
+      title: 'Bienvenue dans notre application!',
+      html: `
+        <h3>Comment utiliser l'application:</h3>
+        <ul style="text-align: left;">
+          <li>1. Utilisez le bouton de géolocalisation pour détecter votre position.</li>
+          <li>2. Sélectionnez votre profil en cliquant sur la photo de profil.</li>
+          <li>3. Pour modifier ou supprimer un profil, cliquez sur les boutons correspondants dans la sélection de profil.</li>
+          <li>4. Pour créer un nouveau profil, cliquez sur le bouton "+ ajouter" en bas du sélecteur de profil.</li>
+        </ul>
+      `,
+      icon: 'info',
+      confirmButtonText: 'OK'
+    });
   }
 }
