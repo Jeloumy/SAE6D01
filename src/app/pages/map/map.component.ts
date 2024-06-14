@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import Swal from 'sweetalert2';
 import { ThemeService } from '../../services/theme/theme.service'; // Import ThemeService
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -29,10 +30,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }),
   };
 
+  private themeSubscription: Subscription | undefined;
+
   constructor(private themeService: ThemeService) {} // Inject ThemeService
 
   ngOnInit(): void {
-    // Listen for theme changes
     this.themeService.themeChange.subscribe(theme => {
       this.setMapLayer(theme);
     });
@@ -40,12 +42,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.applyCurrentTheme();
+    this.applyCurrentTheme(); 
   }
 
   ngOnDestroy(): void {
     if (this.map) {
       this.map.remove();
+    }
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
     }
   }
 
@@ -219,6 +224,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   setMapLayer(theme: string): void {
+    console.log('Changement de thème détecté:', theme); // Log pour le debug
     if (theme === 'dark') {
       this.changeLayer(this.layers['CartoDB Dark']);
     } else if (theme === 'contrast') {
@@ -229,7 +235,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private changeLayer(layer: L.TileLayer): void {
+    console.log("Changement de la couche pour:", layer);
+    if (!this.map) {
+      return;
+    }
     Object.values(this.layers).forEach(l => {
+      console.log("Vérification de la couche:", l);
       if (this.map.hasLayer(l)) {
         this.map.removeLayer(l);
       }

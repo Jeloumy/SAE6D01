@@ -38,8 +38,7 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
       }
 
       this.updatePreferences('darkMode', this.darkModeEnabled);
-      this.themeService.setTheme(this.darkModeEnabled ? 'dark' : 'light');
-      this.applyHighContrast(this.highContrastEnabled);
+      this.themeService.setTheme(this.highContrastEnabled ? 'contrast' : (this.darkModeEnabled ? 'dark' : 'light'));
     }
   }
 
@@ -64,10 +63,12 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
 
   onThemeChange(event: any, key: string): void {
     const isDarkMode = event.target.checked;
-    this.themeService.setTheme(isDarkMode ? 'dark' : 'light');
     this.updatePreferences(key, isDarkMode);
+    this.darkModeEnabled = isDarkMode; // Mise à jour de darkModeEnabled
+    this.themeService.setTheme(isDarkMode ? 'dark' : 'light');
     this.applyMapTheme();
   }
+  
 
   onSelectChange(event: any, key: string): void {
     const value = event.target.value;
@@ -131,6 +132,7 @@ export class SystemPreferencesComponent implements OnInit, AfterViewInit {
       case 'small':
         return '12px';
       case 'medium':
+        return '16px';
         return '16px';
       case 'large':
         return '20px';
