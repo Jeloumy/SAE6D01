@@ -25,7 +25,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     }),
   };
   
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setThemeLayer();
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -60,8 +62,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       this.layers[layerName].addTo(this.map);
     }
 
-    const theme = document.documentElement.getAttribute('data-theme');
-    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
+    this.setThemeLayer();
 
     const leafletContainer = document.querySelector('.leaflet-container');
     leafletContainer?.classList.add('bg-base-100');
@@ -78,6 +79,18 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
 
       const mapContainer = this.mapContainer.nativeElement;
       mapContainer.appendChild(controlContainer);
+    }
+  }
+
+  private setThemeLayer(): void {
+    const theme = document.documentElement.getAttribute('data-theme');
+    const defaultLayer = theme === 'dark' ? this.layers['CartoDB Dark'] : this.layers['OpenStreetMap'];
+    
+    if (this.map) {
+      this.map.eachLayer((layer) => {
+        this.map.removeLayer(layer);
+      });
+      defaultLayer.addTo(this.map);
     }
   }
 
@@ -122,38 +135,37 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private getIconHtml(activity: string): string {
-
-    const icons : { [key: string]: string }= {
-      'musée' : 'fa-landmark',
-      'restaurant' : 'fa-utensils',
-      'hôtel' : 'fa-solid fa-hotel',
-      'cinéma' : 'fa-film',
-      'théâtre' : 'fa-theater-masks',
+    const icons: { [key: string]: string } = {
+      'musée': 'fa-landmark',
+      'restaurant': 'fa-utensils',
+      'hôtel': 'fa-solid fa-hotel',
+      'cinéma': 'fa-film',
+      'théâtre': 'fa-theater-masks',
       'bibliothèque': 'fa-book',
-      'parc' : 'fa-tree',
-      'hôpital' : 'fa-hospital',
-      'pharmacie' : 'fa-prescription-bottle-alt',
-      'école' : 'fa-school',
-      'collège' : 'fa-school',
-      'lycée' : 'fa-school',
-      'magasin' : 'fa-store',
-      'bar' : 'fa-beer',
-      'boulangerie' : 'fa-bread-slice',
-      'café' : 'fa-mug-saucer',
-      'supermarché' : 'fa-basket-shopping',
-      'sport' : 'fa-dumbbell',
-      'vetement' : 'fa-shirt',
-      'photo' : 'fa-camera',
-      'beauté' : 'fa-spa',
-      'jeu vidéo' : "fa-gamepad",
-      'chocolatier' : "fa-candy-cane",
-      'confisier' : "fa-candy-cane",
-      'bijou' : "fa-gem",
-      'restauration rapide' : 'fa-burger',
-      'opticien' : 'fa-glasses',
-      'Auto école' : 'fa-car-side',
-      'art' : 'fa-palette',
-      'coiffeur' : 'fa-scissors',
+      'parc': 'fa-tree',
+      'hôpital': 'fa-hospital',
+      'pharmacie': 'fa-prescription-bottle-alt',
+      'école': 'fa-school',
+      'collège': 'fa-school',
+      'lycée': 'fa-school',
+      'magasin': 'fa-store',
+      'bar': 'fa-beer',
+      'boulangerie': 'fa-bread-slice',
+      'café': 'fa-mug-saucer',
+      'supermarché': 'fa-basket-shopping',
+      'sport': 'fa-dumbbell',
+      'vetement': 'fa-shirt',
+      'photo': 'fa-camera',
+      'beauté': 'fa-spa',
+      'jeu vidéo': "fa-gamepad",
+      'chocolatier': "fa-candy-cane",
+      'confisier': "fa-candy-cane",
+      'bijou': "fa-gem",
+      'restauration rapide': 'fa-burger',
+      'opticien': 'fa-glasses',
+      'Auto école': 'fa-car-side',
+      'art': 'fa-palette',
+      'coiffeur': 'fa-scissors',
     };
 
     let found = false;
@@ -162,10 +174,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       const regex = new RegExp(pattern); // Convertir la chaîne de caractères en regex
       if (regex.test(activity.toLowerCase())) {
         found = true;
-        return '<span class="fa-stack fa-xl"> <i class="fa-solid fa-location-pin fa-stack-2x" style="color: #134e4a;"></i> <i class="fa-solid ' + icons[pattern] +  ' fa-stack-1x fa-inverse" style="line-height: 1; margin: 10% 10% 0 0; font-size: 85%"></i> </span>';
+        return '<span class="fa-stack fa-xl"> <i class="fa-solid fa-location-pin fa-stack-2x" style="color: #134e4a;"></i> <i class="fa-solid ' + icons[pattern] + ' fa-stack-1x fa-inverse" style="line-height: 1; margin: 10% 10% 0 0; font-size: 85%"></i> </span>';
       }
     }
-      return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;">';
+    return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;">';
   }
 
   flyToLocation(lat: number, lon: number): void {
