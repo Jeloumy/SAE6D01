@@ -140,37 +140,50 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private getIconHtml(activity: string): string {
-    switch (activity.toLowerCase()) {
-      case 'musée':
-        return '<i class="fas fa-landmark fa-2x" style="color: green;"></i>';
-      case 'restaurant':
-        return '<i class="fas fa-utensils fa-2x" style="color: blue;"></i>';
-      case 'hôtel':
-        return '<i class="fas fa-bed fa-2x" style="color: red;"></i>';
-      case 'cinéma':
-        return '<i class="fas fa-film fa-2x" style="color: purple;"></i>';
-      case 'théâtre':
-        return '<i class="fas fa-theater-masks fa-2x" style="color: orange;"></i>';
-      case 'bibliothèque':
-        return '<i class="fas fa-book fa-2x" style="color: brown;"></i>';
-      case 'parc':
-        return '<i class="fas fa-tree fa-2x" style="color: green;"></i>';
-      case 'hôpital':
-        return '<i class="fas fa-hospital fa-2x" style="color: pink;"></i>';
-      case 'pharmacie':
-        return '<i class="fas fa-prescription-bottle-alt fa-2x" style="color: green;"></i>';
-      case 'école':
-        return '<i class="fas fa-school fa-2x" style="color: yellow;"></i>';
-      case 'magasin':
-        return '<i class="fas fa-store fa-2x" style="color: black;"></i>';
-      case 'bar':
-        return '<i class="fas fa-beer fa-2x" style="color: brown;"></i>';
-      case 'boulangerie':
-        return '<i class="fas fa-bread-slice fa-2x" style="color: wheat;"></i>';
-      // Ajoutez plus de cas pour d'autres types d'activités
-      default:
-        return '<i class="fas fa-map-marker-alt fa-2x" style="color: black;"></i>';
+
+    const icons : { [key: string]: string }= {
+      'musée' : 'fa-landmark',
+      'restaurant' : 'fa-utensils',
+      'hôtel' : 'fa-solid fa-hotel',
+      'cinéma' : 'fa-film',
+      'théâtre' : 'fa-theater-masks',
+      'bibliothèque': 'fa-book',
+      'parc' : 'fa-tree',
+      'hôpital' : 'fa-hospital',
+      'pharmacie' : 'fa-prescription-bottle-alt',
+      'école' : 'fa-school',
+      'collège' : 'fa-school',
+      'lycée' : 'fa-school',
+      'magasin' : 'fa-store',
+      'bar' : 'fa-beer',
+      'boulangerie' : 'fa-bread-slice',
+      'café' : 'fa-mug-saucer',
+      'supermarché' : 'fa-basket-shopping',
+      'sport' : 'fa-dumbbell',
+      'vetement' : 'fa-shirt',
+      'photo' : 'fa-camera',
+      'beauté' : 'fa-spa',
+      'jeu vidéo' : "fa-gamepad",
+      'chocolatier' : "fa-candy-cane",
+      'confisier' : "fa-candy-cane",
+      'bijou' : "fa-gem",
+      'restauration rapide' : 'fa-burger',
+      'opticien' : 'fa-glasses',
+      'Auto école' : 'fa-car-side',
+      'art' : 'fa-palette',
+      'coiffeur' : 'fa-scissors',
+    };
+
+    let found = false;
+
+    for (const pattern in icons) {
+      const regex = new RegExp(pattern); // Convertir la chaîne de caractères en regex
+      if (regex.test(activity.toLowerCase())) {
+        found = true;
+        return '<span class="fa-stack fa-xl"> <i class="fa-solid fa-location-pin fa-stack-2x" style="color: #134e4a;"></i> <i class="fa-solid ' + icons[pattern] +  ' fa-stack-1x fa-inverse" style="line-height: 1; margin: 10% 10% 0 0; font-size: 85%"></i> </span>';
+      }
     }
+      return '<i class="fa-solid fa-location-dot fa-stack-2x" style="color: #134e4a;">';
   }
 
   flyToLocation(lat: number, lon: number): void {

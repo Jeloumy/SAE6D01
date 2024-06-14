@@ -1,14 +1,22 @@
-.leaflet-container{
-    background: none;
-}
+// .container {
+//   position: relative;
+//   width: 24px; // La largeur du conteneur doit être ajustée selon la taille de vos icônes
+//   height: 24px; // La hauteur du conteneur doit être ajustée selon la taille de vos icônes
 
-#geolocation-button {
-    z-index: 1000; /* S'assurer que le bouton est au-dessus de la carte */
-  }
-  
-  .app-geolocation-button {
-    position: absolute;
-    bottom: 4rem;
-    right: 1rem;
-    z-index: 400;
-  }
+//   .icon {
+//     position: absolute;
+//     left: 50%;
+//     transform: translateX(-50%);
+//   }
+
+//   .icon-primary {
+//     color: #134e4a;
+//     top: 0;
+//   }
+
+//   .icon-secondary {
+//     color: #fff;
+//     top: 0;
+//     font-size: 0.8em; // Ajustez la taille selon vos besoins
+//   }
+// }
