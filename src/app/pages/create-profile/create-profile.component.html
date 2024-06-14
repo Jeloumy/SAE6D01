@@ -9,14 +9,14 @@
 
 <div class="flex flex-col items-center gap-4 m-4 align-middle">
   <form (ngSubmit)="createProfile()" #profileForm="ngForm"
-    class="flex items-center justify-center w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info border-success-content"
+    class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info flex justify-center items-center border-8 border-success-content"
     aria-label="Formulaire de création de profil">
     <h1>Profile</h1>
     <!-- Photo de Profil -->
     <label class="label">
       <span class="label-text">Sélectionner une photo de profil</span>
     </label>
-    <div class="relative flex items-center">
+    <div class="flex items-center relative">
       <label for="fileInput" class="relative cursor-pointer">
         <input type="file" id="fileInput" (change)="onFileChange($event)" class="hidden">
         <div class="ml-4 avatar" *ngIf="photoPreview">
@@ -39,12 +39,12 @@
     </div>
 
     <!-- Nom d'utilisateur -->
-    <div class="w-full mt-2">
+    <div class="mt-2 w-full">
       <label class="label" for="username">
         <span class="font-bold label-text">Nom d'utilisateur</span>
       </label>
       <input type="text" [(ngModel)]="profile.username" name="username" id="username" placeholder="Nom d'utilisateur"
-        required maxlength="25" class="w-full text-black input input-bordered border-success-content" #username="ngModel" aria-required="true">
+        required maxlength="25" class="w-full input input-bordered text-black border-success-content" #username="ngModel" aria-required="true">
       <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
         Le nom d'utilisateur est requis et ne doit pas dépasser 25 caractères.
       </div>
@@ -68,7 +68,7 @@
       (preferencesChange)="updateSystemPreferences($event)" class="w-full"></app-system-preferences>
 
     <!-- Submit button with DaisyUI class -->
-    <button class="w-full mt-4 text-lg border-none btn bg-accent text-info-content" type="submit" [disabled]="profileForm.invalid">
+    <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit" [disabled]="profileForm.invalid">
       Créer
     </button>
   </form>

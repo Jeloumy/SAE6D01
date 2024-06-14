@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap, SystemPreferences } from '../../models/definitions';
+import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
 import Swal from 'sweetalert2';
 
 @Component({

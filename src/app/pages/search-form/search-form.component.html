@@ -1,5 +1,5 @@
 <form *ngIf="!showFilters" (ngSubmit)="onSearch()"
-  class="absolute z-20 bottom-5 flex flex-col items-center sm:flex-row sm:justify-center w-full">
+  class="absolute z-50 bottom-5 flex flex-col items-center sm:flex-row sm:justify-center w-full">
   <!-- Champs de recherche -->
   <label class="flex items-center input input-bordered mb-2 w-4/5 sm:w-3/5 sm:mb-0 sm:mr-2">
     <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche" class="grow rounded-md" />
@@ -55,7 +55,7 @@
               </svg>
             </label>
             <ul *ngIf="communes.length > 0 && isCommuneInputFocused"
-              class="absolute left-0 z-20 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-white text-black border-base-300 max-h-60">
+              class="absolute left-0 z-10 w-full mt-1 overflow-auto transition-all border rounded-md shadow-lg bg-white text-success border-base-300 max-h-60">
               <li *ngFor="let commune of communes" (mousedown)="selectCommune(commune)"
                 class="p-4 cursor-pointer hover:bg-base-100">
                 {{ commune.name }}

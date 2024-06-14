@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProfileService } from './services/profile/profile.service';
 import { ThemeService } from './services/theme/theme.service';
-import { SystemPreferences } from './models/definitions';
+import { SystemPreferences } from './models/user-profile';
 import { Subscription } from 'rxjs';
 
 @Component({
