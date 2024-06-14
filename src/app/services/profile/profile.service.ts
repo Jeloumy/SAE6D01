@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/definitions';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ThemeService } from '../theme/theme.service'; // Import ThemeService
 
@@ -94,14 +94,12 @@ export class ProfileService {
   createProfile(profile: UserProfile): boolean {
     const existingProfile = this.profilesList.find(p => p.username.toLowerCase() === profile.username.toLowerCase());
     if (existingProfile) {
-      console.log('Profile creation failed: username already exists.');
       return false;
     }
 
     profile.id = this.getNextId();
     this.profilesList.push(profile);
     this.saveProfilesListToStorage();
-    console.log('Profile created:', profile);
     return true;
   }
 

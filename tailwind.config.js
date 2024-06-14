@@ -9,7 +9,7 @@ module.exports = {
   plugins: [
     require('daisyui'),
   ],
-  daisyui:{
+  daisyui: {
     themes: [
       {
         hightContrast:{
