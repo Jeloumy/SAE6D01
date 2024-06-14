@@ -317,7 +317,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   setMapLayer(theme: string): void {
-    console.log('Changement de thème détecté:', theme); // Log pour le debug
     if (theme === 'dark') {
       this.changeLayer(this.layers['CartoDB Dark']);
     } else if (theme === 'contrast') {
@@ -328,12 +327,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
   }
 
   private changeLayer(layer: L.TileLayer): void {
-    console.log("Changement de la couche pour:", layer);
     if (!this.map) {
       return;
     }
     Object.values(this.layers).forEach(l => {
-      console.log("Vérification de la couche:", l);
       if (this.map.hasLayer(l)) {
         this.map.removeLayer(l);
       }

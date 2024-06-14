@@ -10,6 +10,5 @@ export class SearchComponent {
 
   onSearchResults(results: any): void {
     this.searchResults = results;
-    console.log('Résultats de la recherche:', results);
   }
 }
