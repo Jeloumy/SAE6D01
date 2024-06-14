@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile } from '../../models/definitions';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';

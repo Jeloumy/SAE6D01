@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Subscription } from 'rxjs';
-import { Handicap, UserProfile } from '../../models/user-profile';
+import { Handicap, UserProfile } from '../../models/definitions';
 
 @Component({
   selector: 'app-handicap-form',

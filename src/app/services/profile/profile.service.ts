@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/user-profile';
+import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/definitions';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

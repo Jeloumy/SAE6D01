@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { Handicap, DispositifLieu } from '../../models/user-profile';
+import { Handicap, DispositifLieu } from '../../models/definitions';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AccesLibreService } from '../../services/acces-libre/acces-libre.service';
 import { CommuneService } from '../../services/commune/commune.service';

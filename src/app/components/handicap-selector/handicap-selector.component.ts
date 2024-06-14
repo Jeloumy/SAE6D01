@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Handicap, DispositifLieu, UserProfile } from '../../models/user-profile';
+import { Handicap, DispositifLieu, UserProfile } from '../../models/definitions';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Subscription } from 'rxjs';
 
