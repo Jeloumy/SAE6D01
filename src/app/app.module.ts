@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { CreateProfileComponent } from './pages/profile/create-profile.component';
+import { CreateProfileComponent } from './pages/create-profile/create-profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { MapComponent } from './components/map/map.component';
 import { HandicapFormComponent } from './components/handicap-form/handicap-form.component';
