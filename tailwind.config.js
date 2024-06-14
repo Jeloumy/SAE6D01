@@ -12,14 +12,14 @@ module.exports = {
   daisyui: {
     themes: [
       {
-        hightContrast:{
+        highContrast:{
           'primary': '#000000',
           'neutral': '#000000',
           'success': '#ffffff',
-          'success-content':'#000',
-          'info': '#000',
-          'info-content':'#fff',
-          'accent':'#000',
+          'success-content':'#000000',
+          'info': '#000000',
+          'info-content':'#ffffff',
+          'accent':'#000000',
         },
       },
       {
@@ -27,10 +27,21 @@ module.exports = {
           'success': '#134E4A',
           'success-content': '#ffffff',
           'accent': '#2DD4BF',
-          'info':'#fff',
-          'info-content':'#000',
+          'info':'#ffffff',
+          'info-content':'#000000',
         },
       },
+      {
+        dark:{
+          'primary': '#1e293b',
+          'neutral': '#1e293b',
+          'success': '#134E4A',
+          'success-content':'#ffffff',
+          'info': '#1e293b',
+          'info-content':'#ffffff',
+          'accent':'#1e293b',
+        },
+      }
     ],
   },
   important: true,

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserProfile, Handicap, DispositifLieu, SystemPreferences } from '../../models/definitions';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ThemeService } from '../theme/theme.service'; // Import ThemeService
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ProfileService {
 
   private isLocationActiveSubject = new BehaviorSubject<boolean>(false);
 
-  constructor() { 
+  constructor(private themeService: ThemeService) { // Inject ThemeService
     this.loadProfileFromStorage();
     this.loadProfilesListFromStorage();
   }
@@ -145,17 +146,34 @@ export class ProfileService {
       const profile = JSON.parse(profileData);
       this.currentProfileSubject.next(profile);
       this.preferencesSubject.next(profile.systemPreferences || {});
+      // Définir le thème en fonction des préférences du profil
+      if (profile.systemPreferences?.highContrast) {
+        this.themeService.setTheme('contrast');
+      } else if (profile.systemPreferences?.darkMode) {
+        this.themeService.setTheme('dark');
+      } else {
+        this.themeService.setTheme('light');
+      }
     }
   }
-  
+
   setCurrentProfile(profile: UserProfile | null): void {
     this.currentProfileSubject.next(profile);
     if (profile) {
       localStorage.setItem('currentProfile', JSON.stringify(profile));
       this.preferencesSubject.next(profile.systemPreferences || {});
+      // Définir le thème en fonction des préférences du profil
+      if (profile.systemPreferences?.highContrast) {
+        this.themeService.setTheme('contrast');
+      } else if (profile.systemPreferences?.darkMode) {
+        this.themeService.setTheme('dark');
+      } else {
+        this.themeService.setTheme('light');
+      }
     } else {
       localStorage.removeItem('currentProfile');
       this.preferencesSubject.next(null);
+      this.themeService.setTheme('light'); // Par défaut à 'light' si aucun profil
     }
   }
 

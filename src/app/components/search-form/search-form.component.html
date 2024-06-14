@@ -1,6 +1,6 @@
 <form *ngIf="!showFilters" (ngSubmit)="onSearch()" class="absolute z-50 flex justify-center w-full bottom-5">
   <!-- Champs de recherche -->
-  <label class="flex items-center w-3/5 mr-2 input input-bordered">
+  <label class="flex items-center w-3/5 mr-2 input input-bordered search-bar">
     <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche" class="rounded-md grow" />
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 ml-1 opacity-70">
       <path fill-rule="evenodd"
@@ -23,7 +23,7 @@
   <form (ngSubmit)="onSearch()">
     <div class="flex justify-center w-full bottom-5">
       <!-- Champs de recherche -->
-      <label class="flex items-center w-3/5 m-4 mr-2 input input-bordered">
+      <label class="flex items-center w-3/5 m-4 mr-2 input input-bordered search-bar">
         <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Recherche"
           class="text-black rounded-md grow" />
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 ml-1 opacity-70">
