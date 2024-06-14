@@ -9,7 +9,7 @@
         <ul class="space-y-4">
           <li *ngFor="let profile of profiles; let i = index"
               class="flex items-center justify-between p-2 rounded-lg cursor-pointer"
-              [ngClass]="{'bg-teal-600 text-white': profile.username === currentProfile?.username, 'bg-teal-100 text-teal-900': profile.username !== currentProfile?.username}"
+              [ngClass]="{'bg-accent text-white': profile.username === currentProfile?.username, 'border-4 border-accent text-black': profile.username !== currentProfile?.username}"
               (click)="selectProfile(profile)">
             <div class="flex items-center">
               <div *ngIf="profile.photo" class="avatar">
@@ -46,7 +46,7 @@
   
       <!-- Bouton pour créer un nouveau profil -->
       <div class="mt-4 flex justify-center">
-        <button class="btn btn-primary w-full max-w-xs" (click)="createNewProfile()">+ ajouter</button>
+        <button class="btn btn-accent w-full max-w-xs" (click)="createNewProfile()">+ ajouter</button>
       </div>
     </div>
   </div>
