@@ -24,6 +24,7 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
 import { ListComponent } from './pages/list/list.component';
 import { ErpListComponent } from './components/erp-list/erp-list.component';
 import { ErpDetailComponent } from './components/erp-detail/erp-detail.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ErpDetailComponent } from './components/erp-detail/erp-detail.component
     ListComponent,
     ErpListComponent,
     ErpDetailComponent,
+    TutorialComponent,
   ],
   imports: [
     BrowserModule,

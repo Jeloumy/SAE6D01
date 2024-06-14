@@ -74,7 +74,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     const controlContainer = this.layerControl.getContainer();
     if (controlContainer) {
       controlContainer.style.position = 'absolute';
-      controlContainer.style.top = '100px'; // Adjust this value to position it lower
+      controlContainer.style.top = '10px'; // Adjust this value to position it lower
       controlContainer.style.right = '10px'; // Adjust this value to position it to the right
 
       const mapContainer = this.mapContainer.nativeElement;

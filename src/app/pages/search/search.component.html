@@ -11,11 +11,18 @@
 </div>
 
 <div class="flex flex-1">
-  <app-map
-    *ngIf="showMap"
-    class="flex flex-grow h-full"
-    [results]="searchResults"
-  ></app-map>
+  <div>
+    <app-map
+      *ngIf="showMap"
+      class="flex flex-grow h-full"
+      [results]="searchResults"
+    ></app-map>
+    
+    <div class="absolute z-10 flex items-center top-4 right-20">
+      <app-profile-photo></app-profile-photo>
+      <app-tutorial></app-tutorial>
+    </div>
+  </div>
 
   <div class="flex flex-grow h-full" *ngIf="searchResults && !showMap">
     <app-erp-list class="overflow-y-auto max-h-[45vh]"></app-erp-list>

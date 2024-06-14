@@ -1,14 +1,7 @@
 <div #map class="relative flex flex-1 w-screen">
-  <app-geolocation-button
+    <app-geolocation-button
     (locationDetected)="locationDetected.emit()"
     (locationToggled)="onLocationToggled($event)"
     class="absolute z-10 bottom-4 right-4"
   ></app-geolocation-button>
-
-  <div class="absolute z-10 flex items-center top-4 right-20">
-    <app-profile-photo></app-profile-photo>
-    <button class="ml-2 btn btn-info btn-square" (click)="showTutorial()">
-      <i class="fas fa-info"></i>
-    </button>
-  </div>
 </div>
