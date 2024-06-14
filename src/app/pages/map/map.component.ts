@@ -315,13 +315,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
       }
     }, 0); // Delay to ensure the modal is fully rendered
   }
-  
-  
-  
-  
-  
-  
-
 
   setMapLayer(theme: string): void {
     console.log('Changement de thème détecté:', theme); // Log pour le debug

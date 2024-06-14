@@ -28,7 +28,7 @@ export class SearchFormComponent implements OnInit {
   private searchTerms = new Subject<string>();
   isCommuneInputFocused: boolean = false;
   initialCommuneQuery: string = '';
-  showFilters: boolean =false;
+  showFilters: boolean = false;
 
   @Output() searchEvent = new EventEmitter<any>();
   @ViewChild(MapComponent) mapComponent!: MapComponent;
@@ -68,9 +68,10 @@ export class SearchFormComponent implements OnInit {
     private communeService: CommuneService
   ) {}
 
-  moreFilters(): void{
+  moreFilters(): void {
     this.showFilters = !this.showFilters;
   }
+
   ngOnInit(): void {
     this.loadProfilePreferences();
     this.searchTerms
@@ -93,7 +94,7 @@ export class SearchFormComponent implements OnInit {
     this.profileService.getGeolocationUpdates().subscribe((geolocationData) => {
       if (geolocationData.latitude !== null && geolocationData.longitude !== null) {
         this.isLocationActive = true;
-        this.onLocationDetected();
+        this.onLocationDetected(geolocationData as { latitude: number, longitude: number });  // Cast to ensure non-null
         this.setCommuneNameFromGeolocation(geolocationData.latitude, geolocationData.longitude);
       }
     });
@@ -180,7 +181,7 @@ export class SearchFormComponent implements OnInit {
     this.initialCommuneQuery = this.communeQuery;
   }
 
-  onLocationDetected(): void {
+  onLocationDetected(geolocationData: { latitude: number; longitude: number }): void {
     console.log('Location detected event received'); // Ajout de console.log
     this.isLocationActive = true;
     this.profileService.setIsLocationActive(this.isLocationActive);
@@ -204,7 +205,7 @@ export class SearchFormComponent implements OnInit {
       const position = await Geolocation.getCurrentPosition();
       this.profileService.setGeolocationData(position.coords.latitude, position.coords.longitude);
       console.log('User location detected:', position.coords); // Ajout de console.log
-      this.onLocationDetected();
+      this.onLocationDetected(position.coords);
       await this.setCommuneNameFromGeolocation(position.coords.latitude, position.coords.longitude); // Ajout d'attente
       this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position (${this.communeQuery})`; // Mettre à jour displayCommuneQuery
     } catch (error) {
@@ -260,5 +261,10 @@ export class SearchFormComponent implements OnInit {
         console.error('Error fetching communes:', error);
       }
     );
+  }
+
+  handleCommuneDetected(communeName: string): void {
+    this.communeQuery = communeName;
+    this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position (${communeName})`;
   }
 }
