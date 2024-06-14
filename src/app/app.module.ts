@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileService } from './services/profile/profile.service';
 import { GeolocationButtonComponent } from './pages/geolocation-button/geolocation-button.component';
+import { SpeechService } from './services/speech/speech.service';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { GeolocationButtonComponent } from './pages/geolocation-button/geolocati
   ],
   providers: [
     provideAnimationsAsync(),
+    SpeechService,
     ProfileService
   ],
   bootstrap: [AppComponent]
