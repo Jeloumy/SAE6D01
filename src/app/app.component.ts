@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private profileService: ProfileService,
     private themeService: ThemeService,
-    private speechService: SpeechService
+    private speechService: SpeechService,
   ) {
   }
 
