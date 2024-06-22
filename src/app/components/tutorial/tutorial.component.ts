@@ -9,11 +9,10 @@ import Swal from 'sweetalert2';
 export class TutorialComponent {
   showTutorial(): void {
     Swal.fire({
-      title: 'Bienvenue dans notre application!',
+      title: "Comment utiliser l'application",
       html: `
-        <div id="modal-content" style="max-height: 40vh; overflow-y: auto; padding-right: 20px;">
-          <h3>Comment utiliser l'application:</h3>
-          <ul style="text-align: left; line-height: 1.6;">
+        <div id="modal-content" class="max-h-[40vh] overflow-y-auto">
+          <ul class="text-left flex flex-col gap-2">
             <li><strong>1.</strong> Utilisez le <strong>bouton de géolocalisation</strong> pour détecter votre position.</li>
             <li><strong>2.</strong> Sélectionnez votre profil en cliquant sur la <strong>photo de profil</strong>.</li>
             <li><strong>3.</strong> Pour <strong>modifier ou supprimer un profil</strong>, cliquez sur les boutons correspondants dans la sélection de profil.</li>
