@@ -12,6 +12,7 @@ import { SpeechService } from '../../services/speech/speech.service';
   styleUrls: ['./create-profile.component.scss']
 })
 export class CreateProfileComponent implements OnInit {
+[x: string]: any;
   @ViewChild('profileForm') profileForm!: NgForm;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -33,7 +34,7 @@ export class CreateProfileComponent implements OnInit {
   constructor(
     private profileService: ProfileService,
     private router: Router,
-    private speechService: SpeechService
+    private speechService: SpeechService,
   ) {}
 
   ngOnInit(): void {
@@ -177,5 +178,10 @@ export class CreateProfileComponent implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+
+  startListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.startListening();
   }
 }

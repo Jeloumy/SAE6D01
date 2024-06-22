@@ -133,4 +133,9 @@ export class EditProfileComponent implements OnInit {
   navigateToHome() {
     this.router.navigate(['/']);
   }
+
+  startListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.startListening();
+  }
 }
