@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../../services/profile/profile.service';
 import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
 import Swal from 'sweetalert2';
+import { SpeechService } from '../../services/speech/speech.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -26,12 +27,12 @@ export class EditProfileComponent implements OnInit {
   };
 
   private scrollInterval: any;
-  
+
   constructor(
     private profileService: ProfileService,
     private router: Router,
-    private route: ActivatedRoute // Inject ActivatedRoute
-    
+    private route: ActivatedRoute, // Inject ActivatedRoute
+    private speechService: SpeechService
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +81,9 @@ export class EditProfileComponent implements OnInit {
     }
 
     this.profileService.updateProfile(this.editingProfile);
+    if (this.profileService.getCurrentProfileSettings()?.voiceCommands) {
+      this.speechService.checkPermission();
+    }
     this.router.navigate(['/']);
   }
 
@@ -128,5 +132,10 @@ export class EditProfileComponent implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+
+  startListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.startListening();
   }
 }

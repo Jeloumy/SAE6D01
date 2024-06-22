@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProfileService } from './services/profile/profile.service';
 import { ThemeService } from './services/theme/theme.service';
+import { SpeechService } from './services/speech/speech.service';
 import { SystemPreferences } from './models/user-profile';
 import { Subscription } from 'rxjs';
 
@@ -9,6 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit, OnDestroy {
   title = 'SAE6D01';
   private preferencesSubscription: Subscription | undefined;
@@ -16,8 +18,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private profileService: ProfileService,
-    private themeService: ThemeService
-  ) {}
+    private themeService: ThemeService,
+    private speechService: SpeechService,
+  ) {
+  }
 
   ngOnInit(): void {
     this.profileSubscription = this.profileService.currentProfile$.subscribe(profile => {
@@ -53,6 +57,16 @@ export class AppComponent implements OnInit, OnDestroy {
     const currentTheme = this.themeService.getTheme();
     const newTheme = currentTheme === 'light' ? 'highContrast' : 'light';
     this.themeService.setTheme(newTheme);
+  }
+
+  startListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.startListening();
+  }
+
+  stopListening(): void {
+    console.log('Stop listening button clicked');
+    this.speechService.stopListening();
   }
 
   applyPreferences(preferences: SystemPreferences): void {
@@ -146,3 +160,4 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 }
+  

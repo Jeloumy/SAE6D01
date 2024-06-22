@@ -23,6 +23,7 @@ import { ProfileSelectorComponent } from './pages/profile-selector/profile-selec
 import { ProfilePhotoComponent } from './pages/profile-photo/profile-photo.component';
 import { ProfileSelectorDialogComponent } from './pages/profile-selector-dialog/profile-selector-dialog.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+import { SpeechService } from './services/speech/speech.service';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
   ],
   providers: [
     provideAnimationsAsync(),
+    SpeechService,
     ProfileService
   ],
   bootstrap: [AppComponent]
