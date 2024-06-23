@@ -113,7 +113,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
 
     if (this.results && this.results.results) {
       this.results.results.forEach((result: any) => {
-        const { geom, nom, adresse, activite } = result;
+        const { geom, nom, adresse, activite, slug } = result;
         if (geom && geom.coordinates && geom.coordinates.length === 2) {
           const [longitude, latitude] = geom.coordinates;
 
@@ -126,7 +126,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
             popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`<b>${nom}</b><br>${adresse}`);
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`
+            <div class="stats">
+              <div class="stat p-2 gap-2">
+                <div class="stat-title font-bold">${nom}</div>
+                <div class="stat-desc">${adresse}</div>
+                <a href="/erp/${slug}" class="btn btn-primary btn-sm">Voir l'ERP</a>
+              </div>
+            </div>
+          `);
 
           this.markersLayer.addLayer(marker);
 
