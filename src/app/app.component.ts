@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProfileService } from './services/profile/profile.service';
 import { ThemeService } from './services/theme/theme.service';
 import { SpeechService } from './services/speech/speech.service';
-// import { SystemPreferences } from './models/definitions';
-import { SystemPreferences } from './models/user-profile';
+import { SystemPreferences } from './models/definitions';
 import { Subscription } from 'rxjs';
 
 @Component({
