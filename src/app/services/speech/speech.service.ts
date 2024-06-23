@@ -7,6 +7,9 @@ import { ProfileService } from '../profile/profile.service';
   providedIn: 'root',
 })
 export class SpeechService {
+  isListening = false;
+  transcript: string = '';
+
   constructor(private router: Router, private profileService: ProfileService) {}
 
   public async checkPermission(): Promise<any> {
@@ -67,9 +70,7 @@ export class SpeechService {
         })
         .catch((error: any) => {
           console.error('Recognition error:', error);
-        });
-    
-    
+        });  
   }
 
   stopListening(): void {
@@ -116,5 +117,62 @@ export class SpeechService {
           reject(error);
         });
     });
+  }
+
+  async continuousListening() {
+    if (this.isListening) return;
+
+    const available = await SpeechRecognition.available();
+    if (!available) {
+      console.error('Speech recognition is not available on this device.');
+      return;
+    }
+
+    const hasPermission = await this.checkPermission();
+    if (hasPermission.speechRecognition !== 'granted') {
+      console.log(
+        "Vous devez autoriser l'utilisation du micro par l'application pour utiliser la commande vocale"
+      );
+      return;
+    }
+
+    this.isListening = true;
+    this.listen();
+  }
+
+  listen() {
+    SpeechRecognition.start({
+      maxResults: 1,
+      language: 'fr-FR',
+    })
+      .then((result) => {
+        if (result.matches && result.matches.length > 0) {
+          this.transcript = result.matches.toString();
+          if (this.transcript == "ok toi") {
+            this.startListening();
+          }
+        }
+        this.restartListening();
+      })
+      .catch((error) => {
+        console.error('Recognition error: ', error);
+        this.restartListening();
+      });
+  }
+
+  restartListening() {
+    // Delay before restarting to avoid continuous loop issues
+    setTimeout(() => {
+      if (this.isListening) {
+        this.listen();
+      }
+    }, 1000);
+  }
+
+  stopContinuousListening() {
+    if (this.isListening) {
+      SpeechRecognition.stop();
+      this.isListening = false;
+    }
   }
 }

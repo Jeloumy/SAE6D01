@@ -131,7 +131,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
               <div class="stat p-2 gap-2">
                 <div class="stat-title font-bold">${nom}</div>
                 <div class="stat-desc">${adresse}</div>
-                <a href="/erp/${slug}" class="btn btn-primary btn-sm bg-success text-white">Voir l'ERP</a>
+                <a href="/erp/${slug}" class="btn btn-primary btn-sm">Voir l'ERP</a>
               </div>
             </div>
           `);
