@@ -7,6 +7,9 @@ import { ProfileService } from '../profile/profile.service';
   providedIn: 'root',
 })
 export class SpeechService {
+  isListening = false;
+  transcript: string = '';
+
   constructor(private router: Router, private profileService: ProfileService) {}
 
   public async checkPermission(): Promise<any> {
@@ -23,53 +26,50 @@ export class SpeechService {
   }
 
   async startListening(): Promise<void> {
-      const available = await SpeechRecognition['available']();
-      console.log('Speech recognition available:', available);
-      if (!available) {
-        console.log('Speech recognition not available');
-        return;
-      }
-  
-      const hasPermission = await this.checkPermission();
-      console.log('hasPermission: ', JSON.stringify(hasPermission));
-      if (hasPermission.speechRecognition !== 'granted') {
-        console.log(
-          "Vous devez autoriser l'utilisation du micro par l'application pour utiliser la commande vocale"
-        );
-        return;
-      }
-  
-      SpeechRecognition.start({
-        language: 'fr-FR',
-        maxResults: 5,
-        prompt: 'Say something',
-        popup: true,
-        partialResults: true,
-      })
-        .then((result: any) => {
-          console.log('Recognition result:', JSON.stringify(result));
-  
-          const navigation: { [key: string]: string } = {
-            recherche: '',
-            'nouveau profil': 'create-profile',
-            'modifier profil':
-              'edit-profile/' + this.profileService.getCurrentProfile()?.id,
-          };
-  
-          for (const match of result.matches) {
-            for (const page in navigation) {
-              const regex = new RegExp(page); // Convertir la chaîne de caractères en regex
-              if (regex.test(match.toLowerCase())) {
-                this.router.navigate([navigation[page]]);
-              }
+    const available = await SpeechRecognition['available']();
+    console.log('Speech recognition available:', available);
+    if (!available) {
+      console.log('Speech recognition not available');
+      return;
+    }
+
+    const hasPermission = await this.checkPermission();
+    if (hasPermission.speechRecognition !== 'granted') {
+      console.log(
+        "Vous devez autoriser l'utilisation du micro par l'application pour utiliser la commande vocale"
+      );
+      return;
+    }
+
+    SpeechRecognition.start({
+      language: 'fr-FR',
+      maxResults: 5,
+      prompt: 'Say something',
+      popup: true,
+      partialResults: true,
+    })
+      .then((result: any) => {
+        console.log('Recognition result:', JSON.stringify(result));
+
+        const navigation: { [key: string]: string } = {
+          recherche: '',
+          'nouveau profil': 'create-profile',
+          'modifier profil':
+            'edit-profile/' + this.profileService.getCurrentProfile()?.id,
+        };
+
+        for (const match of result.matches) {
+          for (const page in navigation) {
+            const regex = new RegExp(page); // Convertir la chaîne de caractères en regex
+            if (regex.test(match.toLowerCase())) {
+              this.router.navigate([navigation[page]]);
             }
           }
-        })
-        .catch((error: any) => {
-          console.error('Recognition error:', error);
-        });
-    
-    
+        }
+      })
+      .catch((error: any) => {
+        console.error('Recognition error:', error);
+      });
   }
 
   stopListening(): void {
@@ -80,6 +80,7 @@ export class SpeechService {
       .catch((error: any) => {
         console.error(error);
       });
+      this.continuousListening();
   }
 
   requestPermissions() {
@@ -116,5 +117,62 @@ export class SpeechService {
           reject(error);
         });
     });
+  }
+
+  async continuousListening() {
+    if (this.isListening) return;
+
+    const available = await SpeechRecognition.available();
+    if (!available) {
+      console.error('Speech recognition is not available on this device.');
+      return;
+    }
+
+    const hasPermission = await this.checkPermission();
+    if (hasPermission.speechRecognition !== 'granted') {
+      console.log(
+        "Vous devez autoriser l'utilisation du micro par l'application pour utiliser la commande vocale"
+      );
+      return;
+    }
+
+    this.isListening = true;
+    this.listen();
+  }
+
+  listen() {
+    SpeechRecognition.start({
+      maxResults: 1,
+      language: 'fr-FR',
+    })
+      .then((result) => {
+        if (result.matches && result.matches.length > 0) {
+          this.transcript = result.matches.toString();
+          if (this.transcript == "commande vocale") {
+            this.startListening();
+          }
+        }
+        this.restartListening();
+      })
+      .catch((error) => {
+        console.error('Recognition error: ', error);
+        this.restartListening();
+      });
+  }
+
+  restartListening() {
+    // Delay before restarting to avoid continuous loop issues
+    setTimeout(() => {
+      if (this.isListening) {
+        this.listen();
+      }
+    }, 1000);
+  }
+
+  stopContinuousListening() {
+    if (this.isListening) {
+      SpeechRecognition.stop();
+      this.isListening = false;
+    }
   }
 }

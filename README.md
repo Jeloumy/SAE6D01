@@ -1,54 +1,27 @@
-# README - Application d'Accessibilité
+# SAE6D01
 
-## Introduction
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
 
-Bienvenue dans notre application d'accessibilité, conçue pour aider les utilisateurs en situation de handicap à trouver des établissements répondant à leurs besoins spécifiques. Grâce à notre plateforme, les utilisateurs peuvent facilement rechercher des établissements équipés de dispositifs d'accessibilité et correspondant à leurs critères de recherche.
+## Development server
 
-## Fonctionnalités Principales
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-- **Recherche par Filtres** : Permet de trouver des établissements en fonction de divers critères d'accessibilité (rampe d'accès, ascenseur, toilettes adaptées, signalétique en braille, etc.).
-- **Localisation Géographique** : Recherche basée sur la localisation pour trouver des établissements proches de l'utilisateur.
-- **Critiques et Évaluations** : Accès aux avis et évaluations des autres utilisateurs pour chaque établissement.
-- **Ajout d'Établissements** : Les utilisateurs peuvent ajouter de nouveaux établissements et les évaluer en fonction de leurs dispositifs d'accessibilité.
-- **Interface Intuitive** : Interface conviviale et accessible, conçue pour être utilisée facilement par toutes les personnes, indépendamment de leur handicap.
+## Code scaffolding
 
-## Installation
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-### Prérequis
+## Build
 
-- Node.js
-- npm
-- Angular CLI
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-### Étapes d'installation
+## Running unit tests
 
-1. Clonez le dépôt :
-   git clone https://github.com/votre-utilisateur/accessibilite-app.git
-2. Accédez au répertoire du projet :
-   `cd accessibilite-app`
-3. Installez les dépendances :
-   `npm install`
-4. Démarrez l'application :
-   ng serve
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-L'application sera accessible sur `http://localhost:4200`.
+## Running end-to-end tests
 
-## Utilisation
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-1. **Recherche** : Entrez les critères de recherche dans la barre de recherche (par exemple, "rampe d'accès", "toilettes adaptées").
-2. **Filtres** : Appliquez des filtres pour affiner les résultats de la recherche.
-3. **Établissements** : Consultez la liste des établissements correspondant à vos critères.
-4. **Détails** : Cliquez sur un établissement pour voir les détails, les avis et les évaluations.
-5. **Ajout d'Établissements** : Utilisez l'option "Ajouter un Établissement" pour contribuer à la base de données.
+## Further help
 
-## Contribution
-
-Les contributions sont les bienvenues ! Si vous souhaitez contribuer, veuillez suivre les étapes suivantes :
-
-1. Forkez le dépôt.
-2. Créez une branche pour votre fonctionnalité (`git checkout -b fonctionnalite-amelioree`).
-3. Commitez vos modifications (`git commit -m 'Ajout d'une nouvelle fonctionnalité'`).
-4. Poussez vos modifications (`git push origin fonctionnalite-amelioree`).
-5. Ouvrez une Pull Request.
-
-Merci d'utiliser notre application d'accessibilité. Nous espérons qu'elle vous sera utile et facilitera vos déplacements et choix d'établissements accessibles.
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
