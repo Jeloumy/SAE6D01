@@ -2,7 +2,11 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap, SystemPreferences } from '../../models/definitions';
+import {
+  UserProfile,
+  Handicap,
+  SystemPreferences,
+} from '../../models/definitions';
 import Swal from 'sweetalert2';
 import { SpeechService } from '../../services/speech/speech.service';
 
@@ -27,7 +31,7 @@ export class EditProfileComponent implements OnInit {
   };
 
   private scrollInterval: any;
-  
+
   constructor(
     private profileService: ProfileService,
     private router: Router,
@@ -39,7 +43,9 @@ export class EditProfileComponent implements OnInit {
     this.handicapTypes = this.profileService.getHandicapTypes();
     const profileId = this.route.snapshot.paramMap.get('id');
     if (profileId) {
-      const profile = this.profileService.getProfilesList().find(p => p.id === +profileId);
+      const profile = this.profileService
+        .getProfilesList()
+        .find((p) => p.id === +profileId);
       if (profile) {
         this.editingProfile = { ...profile };
         this.photoPreview = this.editingProfile.photo || '';
@@ -52,6 +58,22 @@ export class EditProfileComponent implements OnInit {
         this.router.navigate(['/']);
       }
     }
+    
+    const initialProfile = this.profileService.getCurrentProfile();
+    if (initialProfile?.systemPreferences?.voiceCommands) {
+      this.continousListening();
+    } else {
+      this.stopContinuousListening();
+    }
+  }
+
+  continousListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.continuousListening();
+  }
+
+  stopContinuousListening(): void {
+    this.speechService.stopContinuousListening();
   }
 
   get systemPreferences(): SystemPreferences {
@@ -65,7 +87,10 @@ export class EditProfileComponent implements OnInit {
   }
 
   updateProfile(): void {
-    if (!this.editingProfile.username || this.editingProfile.handicapList.length === 0) {
+    if (
+      !this.editingProfile.username ||
+      this.editingProfile.handicapList.length === 0
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Oups...',
@@ -76,7 +101,9 @@ export class EditProfileComponent implements OnInit {
 
     if (!this.editingProfile.photo) {
       const bgColor = this.generateRandomColor().slice(1);
-      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(this.editingProfile.username)}`;
+      const avatarUrl = `https://ui-avatars.com/api/?background=${bgColor}&color=fff&name=${encodeURIComponent(
+        this.editingProfile.username
+      )}`;
       this.editingProfile.photo = avatarUrl;
     }
 
