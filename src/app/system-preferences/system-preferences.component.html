@@ -38,13 +38,13 @@
   <!-- Lecture d'Écran -->
   <label class="label">
     <span class="label-text">Lecture d'écran</span>
-    <input type="checkbox" [checked]="preferences?.screenReader ?? false" (change)="onCheckboxChange($event, 'screenReader')" class="toggle text-success"/>
+    <input type="checkbox" [checked]="preferences?.screenReader ?? false" (change)="onCheckboxChange($event, 'screenReader')" class="toggle text-error"/>
   </label>
 
   <!-- Commandes Vocales -->
   <label class="label">
     <span class="label-text">Commandes vocales</span>
-    <input type="checkbox" [checked]="preferences?.voiceCommands ?? false" (change)="onCheckboxChange($event, 'voiceCommands')" class="toggle text-success"/>
+    <input type="checkbox" [checked]="preferences?.voiceCommands ?? false" (change)="onCheckboxChange($event, 'voiceCommands')" class="toggle bg-error"/>
   </label>
 
   <!-- Filtres de Daltonisme -->
