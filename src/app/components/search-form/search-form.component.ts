@@ -282,6 +282,13 @@ export class SearchFormComponent implements OnInit {
     this.isCommuneInputFocused = false;
   }
 
+  setSearchParams(searchQuery: string, communeQuery: string): void {
+    this.searchQuery = searchQuery;
+    this.communeQuery = communeQuery;
+    this.displayCommuneQuery = communeQuery;
+    this.onSearch();
+  }
+
   fetchCommunes(query: string): void {
     this.communeService.fetchCommunes(query).subscribe(
       (communes: { id: string; name: string }[]) => {
