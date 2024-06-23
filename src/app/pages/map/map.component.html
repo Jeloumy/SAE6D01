@@ -1,0 +1,15 @@
+<div #map class="w-screen flex flex-1 relative">
+  <app-geolocation-button (locationDetected)="locationDetected.emit()" (locationToggled)="onLocationToggled($event)"
+    class="absolute bottom-4 right-4 z-10"></app-geolocation-button>
+
+  <div class="absolute top-4 right-10-percent z-10 flex items-center">
+    <app-profile-photo class="mr-2"></app-profile-photo>
+  </div>
+  
+  <!-- Ajoutez cette section pour le bouton info en dessous des couches de la carte -->
+  <div class="absolute top-40 z-10">
+    <button class="btn btn-info btn-square" (click)="showTutorial()">
+      <i class="fas fa-info"></i>
+    </button>
+  </div>
+</div>

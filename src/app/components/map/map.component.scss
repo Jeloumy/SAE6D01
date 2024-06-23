@@ -1,0 +1,47 @@
+// .container {
+//   position: relative;
+//   width: 24px; // La largeur du conteneur doit être ajustée selon la taille de vos icônes
+//   height: 24px; // La hauteur du conteneur doit être ajustée selon la taille de vos icônes
+
+#geolocation-button {
+  z-index: 1000; /* S'assurer que le bouton est au-dessus de la carte */
+}
+
+.app-geolocation-button {
+  position: absolute;
+  bottom: 4rem;
+  right: 1rem;
+  z-index: 400;
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  color: #fff;
+
+  &:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+}
+
+
+.leaflet-control-layers {
+  top: auto !important;
+  bottom: 100px !important; // Adjust this value as needed
+  right: 10px !important;  // Ensure the control is positioned correctly
+}
+.right-10-percent{
+right: 5%;
+}
+
+.modal-custom {
+max-height: 80vh;
+overflow-y: hidden;
+padding: 20px;
+}
+
+#scroll-up, #scroll-down {
+display: block;
+margin: 20px auto;
+}

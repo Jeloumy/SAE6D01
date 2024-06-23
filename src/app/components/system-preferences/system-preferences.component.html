@@ -1,0 +1,82 @@
+<div class="form-control">
+  <!-- Choix du Theme -->
+  <label class="label">
+    <span class="label-text">Choisir le Thème</span>
+    <select (change)="onThemeChange($event)" class="select select-bordered text-success">
+      <option value="light" [selected]="!darkModeEnabled && !highContrastEnabled">Thème Clair</option>
+      <option value="dark" [selected]="darkModeEnabled">Thème Sombre</option>
+      <option value="contrast" [selected]="highContrastEnabled">Thème Contrasté</option>
+    </select>
+  </label>
+  
+
+
+  <!-- Taille du Texte -->
+  <label class="label">
+    <span class="label-text">Taille du texte</span>
+    <select [value]="preferences?.textSize ?? 'medium'" (change)="onSelectChange($event, 'textSize')" class="select select-bordered text-success">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
+</label>
+
+  <!-- Taille des Boutons -->
+  <label class="label">
+    <span class="label-text">Taille des boutons</span>
+    <select [value]="preferences?.buttonSize ?? 'medium'" (change)="onSelectChange($event, 'buttonSize')" class="select select-bordered text-success">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
+</label>
+
+
+
+  
+
+  <!-- Lecture d'Écran -->
+  <label class="label">
+    <span class="label-text">Lecture d'écran</span>
+    <input type="checkbox" [checked]="preferences?.screenReader ?? false" (change)="onCheckboxChange($event, 'screenReader')" class="toggle text-success"/>
+  </label>
+
+  <!-- Commandes Vocales -->
+  <label class="label">
+    <span class="label-text">Commandes vocales</span>
+    <input type="checkbox" [checked]="preferences?.voiceCommands ?? false" (change)="onCheckboxChange($event, 'voiceCommands')" class="toggle text-success"/>
+  </label>
+
+  <!-- Filtres de Daltonisme -->
+  <label class="label">
+    <span class="label-text">Filtres de Daltonisme</span>
+    <select [value]="preferences?.colorBlindMode ?? 'none'" (change)="onSelectChange($event, 'colorBlindMode')" class="select select-bordered text-success">
+      <option value="none">Aucun</option>
+      <option value="protanopia">Protanopie</option>
+      <option value="deuteranopia">Deutéranopie</option>
+      <option value="tritanopia">Tritanopie</option>
+    </select>
+  </label>
+
+  <!-- Personnalisation des Couleurs -->
+  <label class="label">
+    <span class="label-text">Couleur de fond</span>
+    <input type="color" [value]="preferences?.customColors?.background ?? '#ffffff'" (change)="onColorChange($event, 'customColors.background')" class="input input-bordered"/>
+  </label>
+  <label class="label">
+    <span class="label-text">Couleur du texte</span>
+    <input type="color" [value]="preferences?.customColors?.text ?? '#000000'" (change)="onColorChange($event, 'customColors.text')" class="input input-bordered"/>
+  </label>
+
+  <!-- Aide Contextuelle -->
+  <label class="label">
+    <span class="label-text">Aide contextuelle</span>
+    <input type="checkbox" [checked]="preferences?.contextualHelp ?? false" (change)="onCheckboxChange($event, 'contextualHelp')" class="toggle text-success"/>
+  </label>
+
+  <!-- Tutoriels Interactifs -->
+  <label class="label">
+    <span class="label-text">Tutoriels interactifs</span>
+    <input type="checkbox" [checked]="preferences?.interactiveTutorials ?? false" (change)="onCheckboxChange($event, 'interactiveTutorials')" class="toggle text-success"/>
+  </label>
+</div>

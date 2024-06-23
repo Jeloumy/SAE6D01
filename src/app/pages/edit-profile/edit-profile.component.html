@@ -1,0 +1,103 @@
+<!-- Bouton pour revenir à la page d'accueil -->
+<div class="fixed top-4 left-4">
+  <button (click)="navigateToHome()" class="btn bg-accent">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+</div>
+
+<div class="flex flex-col items-center gap-4 m-4 align-middle">
+    <form (ngSubmit)="updateProfile()" #profileForm="ngForm"
+      class="w-full max-w-screen-md p-4 rounded-md sm:w-2/3 form-control bg-success text-info flex justify-center items-center border-8 border-success-content"
+      aria-label="Formulaire de modification de profil">
+      <h1>Modifier le Profil</h1>
+      <!-- Photo de Profil -->
+      <label class="label">
+        <span class="label-text">Sélectionner une photo de profil</span>
+      </label>
+      <div class="flex items-center relative">
+        <label for="fileInput" class="relative cursor-pointer">
+          <input type="file" id="fileInput" (change)="onFileChange($event)" class="hidden">
+          <div class="ml-4 avatar" *ngIf="photoPreview">
+            <div class="w-24 rounded-full">
+              <img [src]="photoPreview" alt="Aperçu de la photo de profil" title="Cliquez pour afficher la photo">
+            </div>
+          </div>
+          <div class="ml-4 avatar placeholder" *ngIf="!photoPreview">
+            <div class="w-24 rounded-full bg-accent text-neutral-content">
+              <span class="text-3xl">{{ editingProfile.username | slice:0:2 }}</span>
+            </div>
+          </div>
+          <div class="absolute bottom-0 right-0 p-1 bg-white rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke="#134E4A">
+              <path fill="currentColor"
+                d="M6.385 19.616q-.587 0-1.168-.204q-.58-.204-1.025-.566q.496-.327.844-.878t.349-1.352q0-.847.577-1.424q.577-.576 1.423-.576t1.423.576t.577 1.424q0 1.246-.877 2.123t-2.123.877M11.25 14.5l-1.711-1.711l8.18-8.181q.275-.275.688-.288t.712.288l.312.311q.3.3.3.7t-.3.7z" />
+            </svg>
+          </div>
+        </label>
+      </div>
+  
+      <!-- Nom d'utilisateur -->
+      <div class="mt-2 w-full">
+        <label class="label" for="username">
+          <span class="font-bold label-text">Nom d'utilisateur</span>
+        </label>
+        <input type="text" [(ngModel)]="editingProfile.username" name="username" id="username" placeholder="Nom d'utilisateur"
+          required class="w-full input input-bordered text-black border-success-content" #username="ngModel" aria-required="true">
+        <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-red-500">
+          Le nom d'utilisateur est requis.
+        </div>
+      </div>
+  
+      <!-- Handicap Selector Component -->
+      <div class="mt-2">
+        <app-handicap-selector [(selectedHandicaps)]="editingProfile.handicapList" [(selectedDispositifLieu)]="editingProfile.dispositifLieu" (selectedHandicapsChange)="editingProfile.handicapList = $event" (selectedDispositifLieuChange)="editingProfile.dispositifLieu = $event"></app-handicap-selector>
+        <div *ngIf="editingProfile.handicapList.length === 0 && (username.dirty || username.touched)" class="text-red-500">
+          Au moins un type d'handicap est requis.
+        </div>
+      </div>
+  
+      <!-- Préférences système -->
+      <div class="mt-2" aria-label="Préférences système">
+        <label class="mt-4 label">
+          <span class="font-bold label-text">Préférences système</span>
+        </label>
+      </div>
+      <app-system-preferences [(preferences)]="systemPreferences"
+        (preferencesChange)="updateSystemPreferences($event)" class="w-full"></app-system-preferences>
+  
+      <!-- Submit button with DaisyUI class -->
+      <button class="w-full mt-4 btn bg-accent border-none text-lg text-info-content" type="submit" [disabled]="profileForm.invalid">
+        Modifier
+      </button>
+    </form>
+  </div>
+
+  <!-- Boutons pour monter et descendre la page -->
+  <div class="fixed bottom-4 right-4 flex flex-col gap-2">
+    <!-- Bouton pour les comandes vocales -->
+  <button (click)="startListening()" class="btn btn-circle btn-outline">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+      <g fill="#2dd4bf">
+        <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0z" />
+        <path
+          d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5" />
+      </g>
+    </svg>
+  </button>
+  
+    <!-- Bouton pour monter -->
+    <button (mousedown)="startScrollingToTop()" (mouseup)="stopScrolling()" (mouseleave)="stopScrolling()" class="btn bg-accent">
+      <svg xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+    <!-- Bouton pour descendre -->
+    <button (mousedown)="startScrollingToBottom()" (mouseup)="stopScrolling()" (mouseleave)="stopScrolling()" class="btn bg-accent">
+      <svg xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  </div>
+  

@@ -1,4 +1,92 @@
-/* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* styles.scss */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.active {
+  @apply text-primary;
+}
+
+.link-hover:hover {
+  text-decoration: none;
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+.leaflet-pane, .leaflet-top, .leaflet-bottom {
+  z-index: 0 !important;
+}
+
+.disable-map-interaction {
+  pointer-events: none;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  background-color: white !important;
+  color: black !important;
+}
+
+.high-contrast a {
+  color: black !important;
+  text-decoration: underline;
+}
+
+.high-contrast button,
+.high-contrast select,
+.high-contrast textarea {
+  background-color: white !important;
+  color: black !important;
+  border: 2px solid black !important;
+}
+
+.high-contrast input {
+  background-color: white !important;
+  color: black !important;
+}
+
+.high-contrast .leaflet-container {
+  filter: none !important;
+}
+
+.high-contrast .leaflet-popup-content-wrapper {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black !important;
+}
+
+.high-contrast .leaflet-popup-tip {
+  background-color: white !important;
+  border: 1px solid black !important;
+}
+
+.high-contrast .search-bar {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black !important;
+}
+
+.high-contrast .map-container {
+  &::after {
+    content: "contrast";
+    display: none;
+  }
+}
+
+/* Protanopia (Red-green color blindness) */
+.protanopia {
+  filter: url('#protanopia');
+}
+
+/* Deuteranopia (Red-green color blindness) */
+.deuteranopia {
+  filter: url('#deuteranopia');
+}
+
+/* Tritanopia (Blue-yellow color blindness) */
+.tritanopia {
+  filter: url('#tritanopia');
+}
