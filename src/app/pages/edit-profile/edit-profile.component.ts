@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../../services/profile/profile.service';
 import { UserProfile, Handicap, SystemPreferences } from '../../models/definitions';
 import Swal from 'sweetalert2';
+import { SpeechService } from '../../services/speech/speech.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -30,8 +31,8 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private profileService: ProfileService,
     private router: Router,
-    private route: ActivatedRoute // Inject ActivatedRoute
-    
+    private route: ActivatedRoute, // Inject ActivatedRoute
+    private speechService: SpeechService
   ) {}
 
   ngOnInit(): void {
@@ -128,5 +129,9 @@ export class EditProfileComponent implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+
+  startListening() {
+    this.speechService.startListening();
   }
 }
