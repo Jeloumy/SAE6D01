@@ -231,20 +231,26 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
     Swal.fire({
       title: 'Bienvenue dans notre application!',
       html: `
-        <div id="modal-content" style="max-height: 40vh; overflow-y: auto; padding-right: 20px;">
-          <h3>Comment utiliser l'application:</h3>
-          <ul style="text-align: left; line-height: 1.6;">
-            <li><strong>1.</strong> Utilisez le <strong>bouton de géolocalisation</strong> pour détecter votre position.</li>
-            <li><strong>2.</strong> Sélectionnez votre profil en cliquant sur la <strong>photo de profil</strong>.</li>
-            <li><strong>3.</strong> Pour <strong>modifier ou supprimer un profil</strong>, cliquez sur les boutons correspondants dans la sélection de profil.</li>
-            <li><strong>4.</strong> Pour <strong>créer un nouveau profil</strong>, cliquez sur le bouton <strong>"+ ajouter"</strong> en bas du sélecteur de profil.</li>
-            <li><strong>5.</strong> Pour effectuer une <strong>recherche</strong>, tapez des mots-clés dans la barre de recherche.</li>
-            <li><strong>6.</strong> Pour une <strong>recherche avancée</strong>, cliquez sur le bouton <strong>"plus de filtres"</strong>. Notez que des pré-filtres peuvent être appliqués selon le profil sélectionné.</li>
-            <li><strong>7.</strong> Vous pouvez <strong>zoomer</strong> et <strong>dézoomer</strong> la carte.</li>
-            <li><strong>8.</strong> Vous pouvez également <strong>changer de calque</strong> sur la carte.</li>
-            <li><strong>9.</strong> Affichez les <strong>résultats sous forme de filtres</strong> pour mieux organiser les informations.</li>
-            <li><strong>10.</strong> Cliquez sur un <strong>résultat</strong> pour afficher une page plus détaillée du lieu.</li>
-          </ul>
+        <div id="modal-content-wrapper" style="position: relative; max-height: 40vh; overflow-y: auto; padding-right: 20px;">
+          <div id="modal-content" style="padding: 10px;">
+            <h3>Comment utiliser l'application:</h3>
+            <ul style="text-align: left; line-height: 1.6;">
+              <li><strong>1.</strong> Utilisez le <strong>bouton de géolocalisation</strong> pour détecter votre position.</li>
+              <li><strong>2.</strong> Sélectionnez votre profil en cliquant sur la <strong>photo de profil</strong>.</li>
+              <li><strong>3.</strong> Pour <strong>modifier ou supprimer un profil</strong>, cliquez sur les boutons correspondants dans la sélection de profil.</li>
+              <li><strong>4.</strong> Pour <strong>créer un nouveau profil</strong>, cliquez sur le bouton <strong>"+ ajouter"</strong> en bas du sélecteur de profil.</li>
+              <li><strong>5.</strong> Pour effectuer une <strong>recherche</strong>, tapez des mots-clés dans la barre de recherche.</li>
+              <li><strong>6.</strong> Pour une <strong>recherche avancée</strong>, cliquez sur le bouton <strong>"plus de filtres"</strong>. Notez que des pré-filtres peuvent être appliqués selon le profil sélectionné.</li>
+              <li><strong>7.</strong> Vous pouvez <strong>zoomer</strong> et <strong>dézoomer</strong> la carte.</li>
+              <li><strong>8.</strong> Vous pouvez également <strong>changer de calque</strong> sur la carte.</li>
+              <li><strong>9.</strong> Affichez les <strong>résultats sous forme de filtres</strong> pour mieux organiser les informations.</li>
+              <li><strong>10.</strong> Cliquez sur un <strong>résultat</strong> pour afficher une page plus détaillée du lieu.</li>
+            </ul>
+          </div>
+          <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px;">
+            <button id="scroll-up" class="btn bg-accent" style="width: 50px; height: 50px; font-size: 30px;">↑</button>
+            <button id="scroll-down" class="btn bg-accent" style="width: 50px; height: 50px; font-size: 30px;">↓</button>
+          </div>
         </div>
       `,
       icon: 'info',
@@ -253,76 +259,51 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
         popup: 'modal-custom'
       }
     }).then(() => {
-      // Remove scroll buttons when modal is closed
+      // Clean up when modal is closed
       const scrollUpButton = document.getElementById('scroll-up');
       const scrollDownButton = document.getElementById('scroll-down');
       if (scrollUpButton) scrollUpButton.remove();
       if (scrollDownButton) scrollDownButton.remove();
     });
   
-    // Add scroll buttons dynamically
     setTimeout(() => {
-      const modalPopup = document.querySelector('.swal2-popup');
-      if (modalPopup) {
-        const scrollUpButton = document.createElement('button');
-        scrollUpButton.id = 'scroll-up';
-        scrollUpButton.className = 'btn  bg-accent';
-        scrollUpButton.textContent = '↑';
-        scrollUpButton.style.position = 'fixed';
-        scrollUpButton.style.left = 'calc(50% + 300px)'; // Adjust position as needed
-        scrollUpButton.style.top = 'calc(50% - 60px)';
-        scrollUpButton.style.zIndex = '9999'; // Ensure the button is on top of everything
-        scrollUpButton.style.width = '50px'; // Increase button size
-        scrollUpButton.style.height = '50px'; // Increase button size
-        scrollUpButton.style.fontSize = '30px'; // Increase font size
+      const modalContent = document.getElementById('modal-content');
+      const scrollUpButton = document.getElementById('scroll-up');
+      const scrollDownButton = document.getElementById('scroll-down');
   
-        const scrollDownButton = document.createElement('button');
-        scrollDownButton.id = 'scroll-down';
-        scrollDownButton.className = 'btn  bg-accent';
-        scrollDownButton.textContent = '↓';
-        scrollDownButton.style.position = 'fixed';
-        scrollDownButton.style.left = 'calc(50% + 300px)'; // Adjust position as needed
-        scrollDownButton.style.top = 'calc(50% + 20px)';
-        scrollDownButton.style.zIndex = '9999'; // Ensure the button is on top of everything
-        scrollDownButton.style.width = '50px'; // Increase button size
-        scrollDownButton.style.height = '50px'; // Increase button size
-        scrollDownButton.style.fontSize = '30px'; // Increase font size
+      if (modalContent && scrollUpButton && scrollDownButton) {
+        let scrollInterval: any;
   
-        document.body.appendChild(scrollUpButton);
-        document.body.appendChild(scrollDownButton);
+        scrollUpButton.addEventListener('mousedown', () => {
+          scrollInterval = setInterval(() => {
+            modalContent.scrollBy(0, -10);
+          }, 50);
+        });
   
-        // Add scroll event listeners
-        const modalContent = document.getElementById('modal-content');
-        if (modalContent) {
-          let scrollInterval: any;
+        scrollDownButton.addEventListener('mousedown', () => {
+          scrollInterval = setInterval(() => {
+            modalContent.scrollBy(0, 10);
+          }, 50);
+        });
   
-          scrollUpButton.addEventListener('mousedown', () => {
-            scrollInterval = setInterval(() => {
-              modalContent.scrollBy(0, -10);
-            }, 50);
-          });
+        document.addEventListener('mouseup', () => {
+          clearInterval(scrollInterval);
+        });
   
-          scrollDownButton.addEventListener('mousedown', () => {
-            scrollInterval = setInterval(() => {
-              modalContent.scrollBy(0, 10);
-            }, 50);
-          });
+        scrollUpButton.addEventListener('mouseleave', () => {
+          clearInterval(scrollInterval);
+        });
   
-          document.addEventListener('mouseup', () => {
-            clearInterval(scrollInterval);
-          });
-  
-          scrollUpButton.addEventListener('mouseleave', () => {
-            clearInterval(scrollInterval);
-          });
-  
-          scrollDownButton.addEventListener('mouseleave', () => {
-            clearInterval(scrollInterval);
-          });
-        }
+        scrollDownButton.addEventListener('mouseleave', () => {
+          clearInterval(scrollInterval);
+        });
       }
     }, 0); // Delay to ensure the modal is fully rendered
   }
+  
+  
+  
+  
   
   
   

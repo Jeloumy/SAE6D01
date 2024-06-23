@@ -128,4 +128,13 @@ export class HandicapSelectorComponent implements OnInit {
   private isAutoSelected(dispositiflieuId: number): boolean {
     return this.autoSelectedDispositifLieu.some(d => d.id === dispositiflieuId);
   }
+
+  reset(): void {
+    this.selectedHandicaps = [];
+    this.selectedDispositifLieu = [];
+    this.autoSelectedDispositifLieu = [];
+    this.manuallySelectedDispositifLieu = [];
+    this.selectedHandicapsChange.emit(this.selectedHandicaps);
+    this.selectedDispositifLieuChange.emit(this.selectedDispositifLieu);
+  }
 }

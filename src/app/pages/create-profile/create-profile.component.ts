@@ -14,6 +14,7 @@ import { SpeechService } from '../../services/speech/speech.service';
 export class CreateProfileComponent implements OnInit {
   @ViewChild('profileForm') profileForm!: NgForm;
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('handicapSelector') handicapSelector: any;
 
   profile: UserProfile = {
     id: 0,
@@ -103,7 +104,8 @@ export class CreateProfileComponent implements OnInit {
 
     this.profileService.createProfile(this.profile);
     this.profileService.setCurrentProfile(this.profile); // Sélectionne le nouveau profil comme profil courant
-    this.resetForm();
+    
+    this.resetForm(); // Réinitialise le formulaire après la création du profil
     this.loadProfiles();
 
     this.router.navigate(['/']);
@@ -147,6 +149,11 @@ export class CreateProfileComponent implements OnInit {
     }
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
+    }
+
+    // Explicitly reset the handicap selector
+    if (this.handicapSelector) {
+      this.handicapSelector.reset();
     }
   }
 
