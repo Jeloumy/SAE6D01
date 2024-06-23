@@ -126,7 +126,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges
             popupAnchor: [0, -35],
           });
 
-          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`<b>${nom}</b><br>${adresse}`);
+          const marker = L.marker([latitude, longitude], { icon }).bindPopup(`
+            <div class="stats">
+              <div class="stat p-2 gap-2">
+                <div class="stat-title font-bold">${nom}</div>
+                <div class="stat-desc">${adresse}</div>
+                <a href="/erp/${slug}" class="btn btn-primary btn-sm bg-success text-white">Voir l'ERP</a>
+              </div>
+            </div>
+          `);
 
           this.markersLayer.addLayer(marker);
 
