@@ -25,7 +25,7 @@
               <p class="ml-4 font-bold">{{ profile.username }}</p>
             </div>
             <div class="flex items-center gap-2" *ngIf="profile.username === currentProfile?.username">
-              <button class="btn btn-primary btn-square" (click)="editProfile(profile); $event.stopPropagation();">
+              <button class="btn  btn-primary bg-accent btn-square text-lg text-info-content" (click)="editProfile(profile); $event.stopPropagation();">
                 <i class="fas fa-edit"></i>
               </button>
               <button class="btn btn-error btn-square" (click)="deleteProfile(profile.id); $event.stopPropagation();" aria-label="Supprimer le profil">
@@ -46,7 +46,7 @@
   
       <!-- Bouton pour créer un nouveau profil -->
       <div class="flex justify-center mt-4">
-        <button class="w-full max-w-xs btn btn-primary" (click)="createNewProfile()">Ajouter un profil</button>
+        <button class="w-full max-w-xs btn btn-primary bg-accent border-none text-lg text-info-content" (click)="createNewProfile()">Ajouter un profil +</button>
       </div>
     </div>
   </div>
