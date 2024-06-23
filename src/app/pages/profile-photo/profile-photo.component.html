@@ -1,8 +1,11 @@
 <div>
   <div class="avatar" (click)="onClick()" style="cursor: pointer;">
-    <div class="w-16 h-16 rounded-full overflow-hidden">
-      <img *ngIf="currentProfile?.photo" [src]="currentProfile?.photo" alt="Photo de profil" class="object-cover w-full h-full">
-      <span *ngIf="!currentProfile?.photo" class="flex items-center justify-center w-full h-full bg-neutral text-neutral-content text-3xl">{{ currentProfile?.username | slice: 0:2 }}</span>
+    <div class="w-24 h-24 rounded-full overflow-hidden">
+      <img *ngIf="currentProfile?.photo" [src]="currentProfile?.photo" alt="Photo de profil"
+        class="object-cover w-full h-full">
+      <span *ngIf="!currentProfile?.photo"
+        class="flex items-center justify-center w-full h-full bg-neutral text-neutral-content text-3xl">{{
+        currentProfile?.username | slice: 0:2 }}</span>
     </div>
   </div>
 
