@@ -32,7 +32,8 @@ export class CreateProfileComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private router: Router
+    private router: Router,
+    private speechService: SpeechService
   ) {}
 
   ngOnInit(): void {
@@ -171,5 +172,9 @@ export class CreateProfileComponent implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+
+  startListening() {
+    this.speechService.startListening();
   }
 }
