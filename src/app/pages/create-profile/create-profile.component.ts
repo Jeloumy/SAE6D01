@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ProfileService } from '../../services/profile/profile.service';
-import { UserProfile, Handicap, SystemPreferences } from '../../models/user-profile';
+import { UserProfile, Handicap, SystemPreferences } from '../../models/definitions';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { SpeechService } from '../../services/speech/speech.service';
@@ -12,7 +12,6 @@ import { SpeechService } from '../../services/speech/speech.service';
   styleUrls: ['./create-profile.component.scss']
 })
 export class CreateProfileComponent implements OnInit {
-[x: string]: any;
   @ViewChild('profileForm') profileForm!: NgForm;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -41,23 +40,6 @@ export class CreateProfileComponent implements OnInit {
     this.loadProfiles();
     this.handicapTypes = this.profileService.getHandicapTypes();
     this.resetForm(); // Assurez-vous que le formulaire est vierge au chargement de la page
-   
-    const initialProfile = this.profileService.getCurrentProfile();
-    if (initialProfile?.systemPreferences?.voiceCommands) {
-      this.continousListening();
-    }
-    else {
-      this.stopContinuousListening();
-    }
-  }
-
-  continousListening(): void {
-    console.log('Start listening button clicked');
-    this.speechService.continuousListening();
-  }
-
-  stopContinuousListening(): void {
-    this.speechService.stopContinuousListening();
   }
 
   get systemPreferences(): SystemPreferences {
@@ -125,11 +107,6 @@ export class CreateProfileComponent implements OnInit {
     this.loadProfiles();
 
     this.router.navigate(['/']);
-
-
-    if (this.profileService.getCurrentProfileSettings()?.voiceCommands) {
-      this.speechService.checkPermission();
-    }
   }
 
   onFileChange(event: any): void {

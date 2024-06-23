@@ -41,7 +41,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (initialProfile && initialProfile.systemPreferences) {
       this.themeService.initializeTheme(initialProfile.systemPreferences);
       this.applyPreferences(initialProfile.systemPreferences);
-      console.log(initialProfile.systemPreferences)
     }
   }
 
@@ -63,11 +62,6 @@ export class AppComponent implements OnInit, OnDestroy {
   startListening(): void {
     console.log('Start listening button clicked');
     this.speechService.startListening();
-  }
-
-  continousListening(): void {
-    console.log('Start listening button clicked');
-    this.speechService.continuousListening();
   }
 
   stopListening(): void {

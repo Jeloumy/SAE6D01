@@ -1,0 +1,87 @@
+<div class="flex items-center justify-center bg-base-100">
+  <div *ngIf="erp" class="container py-4">
+    <div class="flex flex-col mx-4">
+      <button class="mb-4 btn btn-square" (click)="goBack()">
+        <svg
+          fill="#000000"
+          height="16px"
+          width="16px"
+          version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 512 512"
+          xml:space="preserve"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <g>
+              <g>
+                <path
+                  d="M317.959,115.859H210.158V58.365h-44.864L0,223.66l165.294,165.294h44.864V331.46h136.548 c67.367,0,122.174,54.807,122.174,122.174H512V309.9C512,202.905,424.953,115.859,317.959,115.859z M468.88,342.412 c-30.253-33.206-73.82-54.071-122.174-54.071H167.038v41.378L60.981,223.661l106.057-106.057v41.375h150.921 c83.219,0,150.921,67.703,150.921,150.921V342.412z"
+                ></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </button>
+
+      <h1 class="text-2xl font-bold capitalize">{{ erp.nom }}</h1>
+      <p class="mt-4 capitalize">{{ erp.adresse }}</p>
+      <a
+        *ngIf="erp.site_internet"
+        class="btn-link"
+        [href]="erp.site_internet"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Se rendre sur le site web
+      </a>
+    </div>
+    <div class="flex items-center justify-center my-8">
+      <app-erp-map [erp]="erp" class="flex flex-grow w-8 h-96"></app-erp-map>
+    </div>
+    <div class="flex flex-col gap-4 mx-4">
+      <h2
+        class="mb-4 text-2xl font-bold leading-none tracking-tight text-base-content"
+      >
+        Informations sur l'accessibilité
+      </h2>
+      <h3
+        class="text-xl font-semibold leading-none tracking-tight text-base-content"
+      >
+        Dernière mise à jour :
+        <mark class="px-2 text-white rounded" [ngClass]="backgroundClass">
+          {{ erp.updated_at | date : "dd/MM/yyyy" }}
+        </mark>
+      </h3>
+      <h4 class="text-xl font-semibold text-base-content">Dispositifs :</h4>
+      <ng-container *ngFor="let section of getNonNullEntries(accessibility)">
+        <!-- Check if section[1] has non-null entries before displaying the label -->
+        <ng-container *ngIf="getNonNullEntries(section[1]).length > 0">
+          <h5 class="text-lg font-bold capitalize">
+            {{ getLabel(section[0]) }}
+          </h5>
+          <ul>
+            <ng-container *ngFor="let item of getNonNullEntries(section[1])">
+              <li>
+                <ng-container *ngIf="item[1] === true; else elseTemplate">
+                  <strong>{{ getLabel(item[0]) }}</strong>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <strong>{{ getLabel(item[0]) }} :</strong
+                  ><span class="capitalize"> {{ item[1] }}</span>
+                </ng-template>
+              </li>
+            </ng-container>
+          </ul>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
