@@ -4,6 +4,7 @@ import { ProfileService } from '../../services/profile/profile.service';
 import { UserProfile, Handicap, SystemPreferences } from '../../models/definitions';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { SpeechService } from '../../services/speech/speech.service';
 
 @Component({
   selector: 'app-create-profile',
