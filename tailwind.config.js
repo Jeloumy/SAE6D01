@@ -18,7 +18,7 @@ module.exports = {
           'info': '#000', //Black to White
           'info-content':'#fff', //White to Black
           'accent':'#000', //Button
-          'error':'#666'
+          'success-content':'#000',
           
         },
       },
