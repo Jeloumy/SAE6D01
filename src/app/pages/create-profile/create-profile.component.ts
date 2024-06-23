@@ -41,6 +41,23 @@ export class CreateProfileComponent implements OnInit {
     this.loadProfiles();
     this.handicapTypes = this.profileService.getHandicapTypes();
     this.resetForm(); // Assurez-vous que le formulaire est vierge au chargement de la page
+   
+    const initialProfile = this.profileService.getCurrentProfile();
+    if (initialProfile?.systemPreferences?.voiceCommands) {
+      this.continousListening();
+    }
+    else {
+      this.stopContinuousListening();
+    }
+  }
+
+  continousListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.continuousListening();
+  }
+
+  stopContinuousListening(): void {
+    this.speechService.stopContinuousListening();
   }
 
   get systemPreferences(): SystemPreferences {

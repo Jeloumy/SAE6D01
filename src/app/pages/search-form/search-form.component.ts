@@ -127,6 +127,23 @@ export class SearchFormComponent implements OnInit {
         this.displayCommuneQuery = `${SEARCH_RADIUS_KM} km autour de ma position`;
       }
     });
+
+    const initialProfile = this.profileService.getCurrentProfile();
+    if (initialProfile?.systemPreferences?.voiceCommands) {
+      this.continousListening();
+    }
+    else {
+      this.stopContinuousListening();
+    }
+  }
+
+  continousListening(): void {
+    console.log('Start listening button clicked');
+    this.speechService.continuousListening();
+  }
+
+  stopContinuousListening(): void {
+    this.speechService.stopContinuousListening();
   }
 
   loadProfilePreferences(): void {
